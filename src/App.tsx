@@ -1,7 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import HomeIcon from "@mui/icons-material/Home";
-import { AppBar } from "@mui/material";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./NavBar";
 
 // This site has 3 pages, all of which are rendered
