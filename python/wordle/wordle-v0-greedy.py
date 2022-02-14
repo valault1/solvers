@@ -156,7 +156,7 @@ def generateGuessSmallList(possibleWords, lettersGuessed, guesses):
 #   We also add 1 point for every r that has showed up ever
 # the data structure for points is {0: {'r': 30}}
 def generateGuess(possibleWords, lettersGuessed, guesses):
-  if len(possibleWords) <= 20:
+  if len(possibleWords) <= SMALL_WORDS:
     return generateGuessSmallList(possibleWords, lettersGuessed, guesses)
   points = generatePointsV1(possibleWords)
   maxWordPoints = 0
@@ -257,13 +257,15 @@ MAX_GUESSES = 6
 guesses = 0
 guess = ""
 lettersGuessed = initialLettersGuessed()
-startingGuess = "cares"
+
 
 #---------------------------------------------------
-HUMAN_INPUT = True
+HUMAN_INPUT = False
 NUM_GAMES = len(realGuessWords)
 DISPLAY_GUESSES = not HUMAN_INPUT and NUM_GAMES < 5
-WEIGHTS = {'y': 1, 'g': 10}
+WEIGHTS = {'y': 1, 'g': 3}
+SMALL_WORDS = 20
+startingGuess = "pious"
 #---------------------------------------------------
 
 
@@ -300,7 +302,7 @@ if not HUMAN_INPUT:
       failedWords.append(WORD_TO_GUESS)
       print("FAILED THIS GAME")
     else:
-      guessesTotal += guesses - 1
+      guessesTotal += guesses
     
     
   averageGuesses = guessesTotal / (NUM_GAMES - failures)
