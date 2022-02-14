@@ -115,8 +115,7 @@ def generatePointsSmall(possibleWords, lettersGuessed):
           score += 1
     points[word] = score
     newPossibleWords.append(word)
-    #print(score)
-    if score >= 5: return newPossibleWords, points
+    #if score >= 5: return newPossibleWords, points
   return possibleWords, points
 
 def getPointsForWordSmall(word, points):
@@ -140,7 +139,10 @@ def generateGuessSmallList(possibleWords, lettersGuessed, guesses, startTime):
   lettersGuessed = eliminateNotPresentLetters(possibleWords, lettersGuessed)
   if guesses >= MAX_GUESSES - 1 or len(possibleWords) == 1:
     wordsToGuessFrom = possibleWords
+  smallPointsStartTime = datetime.now()
   wordsToGuessFrom, points = generatePointsSmall(wordsToGuessFrom, lettersGuessed)
+  if DISPLAY_GUESSES and SHOW_TIMES:
+    print("time to get points (small): %s" % (datetime.now() - smallPointsStartTime))
   maxWordPoints = 0
   bestWord = possibleWords[0]
   for word in wordsToGuessFrom:
@@ -277,7 +279,7 @@ lettersGuessed = initialLettersGuessed()
 
 #---------------------------------------------------
 HUMAN_INPUT = False
-NUM_GAMES = len(realGuessWords)
+NUM_GAMES = 2#len(realGuessWords)
 WEIGHTS = {'y': 1, 'g': 3}
 SMALL_WORDS = 20
 STARTING_GUESS = "cares"
