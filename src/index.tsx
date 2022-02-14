@@ -1,12 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import { App } from "./App";
+import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <div>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      />
+      <App />
+    </div>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -5,8 +5,10 @@
     "module": "es6",
     "target": "es5",
     "allowJs": true,
-    "jsx": "react-jsx"
+    "jsx": "react",
+    "moduleResolution": "node",
+    "outDir": "./dist"
   },
   "include": ["./**/*"],
-  "exclude": ["./plugins/**/*", "./typings/**/*", "./node_modules/**/*"]
+  "exclude": ["./node_modules/**/*", "./dist"]
 }
