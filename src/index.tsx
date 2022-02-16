@@ -7,6 +7,9 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { theme } from "./theme";
+// Sets the background color
+document.body.style.backgroundColor = theme.colors.background;
 
 ReactDOM.render(
   <React.StrictMode>

@@ -115,7 +115,7 @@ def generatePointsSmall(possibleWords, lettersGuessed):
           score += 1
     points[word] = score
     newPossibleWords.append(word)
-    #if score >= 5: return newPossibleWords, points
+    if score >= 5: return newPossibleWords, points
   return possibleWords, points
 
 def getPointsForWordSmall(word, points):
@@ -134,13 +134,14 @@ def eliminateNotPresentLetters(possibleWords, lettersGuessed):
 
 # on a small list, the goal is just to eliminate possible letters
 def generateGuessSmallList(possibleWords, lettersGuessed, guesses, startTime):
-  global allWords
+  global allWords, TOTAL_TIME_IN_GENERATE_POINTS
   wordsToGuessFrom = allWords
   lettersGuessed = eliminateNotPresentLetters(possibleWords, lettersGuessed)
   if guesses >= MAX_GUESSES - 1 or len(possibleWords) == 1:
     wordsToGuessFrom = possibleWords
   smallPointsStartTime = datetime.now()
   wordsToGuessFrom, points = generatePointsSmall(wordsToGuessFrom, lettersGuessed)
+  TOTAL_TIME_IN_GENERATE_POINTS += datetime.now() - smallPointsStartTime
   if DISPLAY_GUESSES and SHOW_TIMES:
     print("time to get points (small): %s" % (datetime.now() - smallPointsStartTime))
   maxWordPoints = 0
@@ -279,13 +280,14 @@ lettersGuessed = initialLettersGuessed()
 
 #---------------------------------------------------
 HUMAN_INPUT = False
-NUM_GAMES = 2#len(realGuessWords)
+NUM_GAMES = len(realGuessWords)
 WEIGHTS = {'y': 1, 'g': 3}
-SMALL_WORDS = 20
+SMALL_WORDS = 0
 STARTING_GUESS = "cares"
 SHOW_TIMES = True
 #---------------------------------------------------
 DISPLAY_GUESSES = not HUMAN_INPUT and NUM_GAMES < 5
+TOTAL_TIME_IN_GENERATE_POINTS = datetime.now() - datetime.now()
 
 totalStartTime = datetime.now()
 if not HUMAN_INPUT:
@@ -340,8 +342,7 @@ else:
     possibleWords = eliminateImpossibleWords(guess, possibleWords)
     lettersGuessed = getLettersGuessed(guess, lettersGuessed)
     print(waitMessage)
-    
-  
+print ("total time in generate points: %s" % TOTAL_TIME_IN_GENERATE_POINTS)
 
 
 
