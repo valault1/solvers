@@ -1,17 +1,17 @@
 import { MenuItem, Select } from "@mui/material";
 import React, { useState } from "react";
 import { theme } from "../../theme";
-import { InputField } from "./InputField";
+import { FieldType, InputField } from "./InputField";
 import { MainCard, TheTowerContainer } from "./TheTower.elements";
 
 type TheTowerControllerProps = {};
 
 export const TheTowerController = ({}: TheTowerControllerProps) => {
   const fields = [
-    { name: "testField1" },
-    { name: "testField2" },
-    { name: "testField3" },
-    { name: "testField4" },
+    { name: "testField1", type: FieldType.STRING },
+    { name: "testField2", type: FieldType.STRING },
+    { name: "testField3", type: FieldType.STRING },
+    { name: "testField4", type: FieldType.STRING },
   ];
   const initialState: Record<string, any> = {};
   const [values, SetValues] = useState(initialState);
@@ -27,7 +27,13 @@ export const TheTowerController = ({}: TheTowerControllerProps) => {
       <MainCard>
         Welcome to the tower!
         {fields.map((field) => {
-          return <InputField name={field.name} handleChange={handleChange} />;
+          return (
+            <InputField
+              name={field.name}
+              handleChange={handleChange}
+              fieldType={field.type}
+            />
+          );
         })}
         The current values:
         {JSON.stringify(values)}
