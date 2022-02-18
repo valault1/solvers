@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import { Calculate } from "@mui/icons-material";
 import { theme } from "./theme";
 
-const pages = ["home", "wordle", "wordhunt"];
+const pages = ["home", "wordle", "wordhunt", "thetower"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const ResponsiveAppBar = () => {

@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@mui/material";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { TheTowerController } from "./domains/TheTower/TheTowerController";
 import { WordHuntController } from "./domains/WordHunt/WordHuntController";
 import { WordleController } from "./domains/Wordle/WordleController";
 import NavBar from "./NavBar";
@@ -16,6 +17,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/wordhunt" element={<WordHuntController />} />
             <Route path="/wordle" element={<WordleController />} />
+            <Route path="/thetower" element={<TheTowerController />} />
             <Route path="/*" element={<Home />}></Route>
           </Routes>
         </Router>

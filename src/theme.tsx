@@ -34,8 +34,8 @@ declare module "@mui/material/styles" {
 let myGray = "#979dac";
 let primary = "#C8B6FF";
 let secondary = "#c8b6ff";
-let textPrimary = "#001233";
-let background = "#343a40";
+let textPrimary = "#BBD0FF";
+let background = "#000000";
 
 // Default theme object: https://mui.com/customization/default-theme/
 // My colors: https://coolors.co/palette/ffd6ff-e7c6ff-c8b6ff-b8c0ff-bbd0ff

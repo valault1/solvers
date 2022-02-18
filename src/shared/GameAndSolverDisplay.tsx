@@ -1,5 +1,6 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import React from "react";
+import { theme } from "../theme";
 import { TabsWrapper } from "./GameAndSolverDisplay.elements";
 
 type GameAndSolverProps = {
@@ -47,7 +48,7 @@ export const GameAndSolver = ({ game, solver }: GameAndSolverProps) => {
     setValue(newValue);
   };
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%", color: theme.colors.textPrimary }}>
       <Tabs
         value={value}
         onChange={handleChange}
