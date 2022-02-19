@@ -1,21 +1,31 @@
-import tensorflow as tf
-print("TensorFlow version:", tf.__version__)
+real_values = open('data/alldata.csv', 'r')
+real_values.readline()
 
-import pyforest
-import warnings
-warnings.filterwarnings("ignore")
-from sklearn import metrics
-from sklearn.metrics import accuracy_score
+cachedAttackValues = {1: 1.18}
+attackValues = {}
+defenseValues = {}
+for line in real_values.readlines():
+  vals = line.split(',')
+  attackValues[vals[0]] = vals[1]
+  defenseValues[vals[0]] = vals[2]
 
-# importing .csv files using Pandas
-train = pd.read_csv('wavedata.csv')
-test = pd.read_csv('testdata.csv')
 
-import lazypredict
-from lazypredict.Supervised import LazyClassifier
+def getAttack(x):
+  if x in cachedAttackValues:
+    return cachedAttackValues[x]
+  if x % 10 == 0: 
+    result = getAttack(x - 1) * (.01* x) ** 4
+    cachedAttackValues[x] = result
+    return result
+  if x % 5 == 0: 
+    result = getAttack(x - 1) * x ** 3
+    cachedAttackValues[x] = result
+    return result
+  result = getAttack(x - 1) * x ** 2
+  cachedAttackValues[x] = result
+  return result
 
-clf = LazyClassifier(verbose=0,ignore_warnings=True)
-models, predictions = clf.fit(X_train, X_test, y_train, y_test)
-models
 
-print("Done!")
+
+for (wave, attack) in attackValues.items():
+  print(wave, attack, getAttack(int(wave)))
