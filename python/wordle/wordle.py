@@ -344,7 +344,7 @@ guess = ""
 lettersGuessed = initialLettersGuessed()
 
 
-HUMAN_INPUT = False
+HUMAN_INPUT = True
 NUM_GAMES = len(allWords)
 DISPLAY_GUESSES = not HUMAN_INPUT and NUM_GAMES < 5
 WEIGHTS = {'y': 1, 'g': 10}
