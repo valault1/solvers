@@ -1,6 +1,7 @@
 {
   "projects": {
-    "prod": "web-wordle-solver-ca3be"
+    "prod": "web-wordle-solver-ca3be",
+    "default": "web-wordle-solver-ca3be"
   },
   "targets": {}
 }

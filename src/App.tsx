@@ -14,11 +14,11 @@ export default function App() {
         <Router>
           <NavBar />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<WordleController />} />
             <Route path="/wordhunt" element={<WordHuntController />} />
             <Route path="/wordle" element={<WordleController />} />
             <Route path="/thetower" element={<TheTowerController />} />
-            <Route path="/*" element={<Home />}></Route>
+            <Route path="/*" element={<WordleController />}></Route>
           </Routes>
         </Router>
       </ThemeProvider>
