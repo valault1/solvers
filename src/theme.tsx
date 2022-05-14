@@ -33,7 +33,7 @@ declare module "@mui/material/styles" {
 }
 let myGray = "#979dac";
 let primary = "#C8B6FF";
-let secondary = "#9b5de5";
+let secondary = "#560bad";
 let textPrimary = "#BBD0FF";
 let background = "#000000";
 
