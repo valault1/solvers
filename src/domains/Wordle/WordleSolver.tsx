@@ -1,5 +1,5 @@
 import { Button, Dialog, TextField } from "@mui/material";
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { BEST_INITIAL_GUESS, getBestGuess, getPossibleWords } from "./nextGuessCalculator";
 
 import {
@@ -27,9 +27,13 @@ type GuessInputProps = {
   onChange?: (value: Guess) => void;
   onSubmit?: () => void;
   showPossibleWords: (i: number) => void;
+  handleKeyPress?: (e: React.KeyboardEvent) => void;
+  resultErrorText?: string;
+  guessErrorText?: string;
+  guessInputRef?: React.RefObject<HTMLDivElement>
 };
 
-const GuessInput = ({ guessNumber, guess, bestGuess, showSubmit, onChange, onSubmit, showPossibleWords }: GuessInputProps) => {
+const GuessInput = ({ guessNumber, guess, bestGuess, showSubmit, onChange, onSubmit, showPossibleWords, handleKeyPress, resultErrorText, guessErrorText, guessInputRef }: GuessInputProps) => {
   return (
     <InputWrapper>
       <LabelWrapper>Guess #{guessNumber}</LabelWrapper>
@@ -51,6 +55,12 @@ const GuessInput = ({ guessNumber, guess, bestGuess, showSubmit, onChange, onSub
           value={guess.guess}
           onChange={(event) => onChange({guess: event.target.value, result: guess.result})}
           disabled={!showSubmit}
+          onKeyUp={handleKeyPress}
+          error={!!guessErrorText}
+          helperText={guessErrorText}
+          ref={guessInputRef}
+          autoFocus={!!guessInputRef}
+          key={"guess_input" + guessNumber}
         />
         <TextField
           variant="filled"
@@ -59,6 +69,10 @@ const GuessInput = ({ guessNumber, guess, bestGuess, showSubmit, onChange, onSub
           value={guess.result}
           onChange={(event) => onChange({guess: guess.guess, result: event.target.value})}
           disabled={!showSubmit}
+          onKeyUp={handleKeyPress}
+          error={!!resultErrorText}
+          helperText={resultErrorText}
+          key={"result_input" + guessNumber}
         />
         {showSubmit && <SubmitButton onClick={onSubmit} variant="contained">Submit</SubmitButton>}
       </InputRow>
@@ -84,12 +98,30 @@ export const WordleSolver = ({}: WordleSolverProps) => {
   var [possibleWords, setPossibleWords] = React.useState(legalWords);
   var [dialogContent, setDialogContent] = React.useState(possibleWords);
   var [showDialog, setShowDialog] = React.useState(false);
+  var [resultErrorText, setResultErrorText] = React.useState("");
+  var [guessErrorText, setGuessErrorText] = React.useState("");
+  const guessInputRef: React.RefObject<HTMLDivElement> = React.useRef(null);
+  const checkErrors = () => {
+    var newGuessErrorText = "";
+    var newResultErrorText = "";
+    if (currentGuess.guess.length != 5) newGuessErrorText += "Guess must be 5 letters.";
+
+    if (currentGuess.result.length != 5) newResultErrorText += "Result must be 5 letters."
+    const incorrectLetters = currentGuess.result.toLowerCase().split('').filter((letter) => !"byg".includes(letter));
+    if (incorrectLetters.length > 0) newResultErrorText = "Only use letters 'b', 'y', and 'g'.";
+
+    setGuessErrorText(newGuessErrorText);
+    setResultErrorText(newResultErrorText);
+    
+    return (newGuessErrorText || newResultErrorText)
+  }
   const addGuess = () => {
+    if (checkErrors()) {return;}
     const newPossibleWords = getPossibleWords(possibleWords, currentGuess);
     setPastGuesses([...pastGuesses, {...currentGuess, bestGuess, possibleWords}]);
     setPossibleWords(newPossibleWords);
     setCurrentGuess({ guess: "", result: "" });
-    setBestGuess(getBestGuess(possibleWords));
+    setBestGuess(getBestGuess(newPossibleWords));
 
   }
 
@@ -97,14 +129,32 @@ export const WordleSolver = ({}: WordleSolverProps) => {
     setShowDialog(true);
     setDialogContent(i === pastGuesses.length ? possibleWords : pastGuesses[i].possibleWords);
   }
-  console.log(showDialog);
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if(e.key === 'Enter'){
+      addGuess();
+      e.preventDefault();
+      //setTimeout(() => guessInputRef.current.focus(), 100);
+      guessInputRef.current.focus()
+    }
+
+  }
+
+  const clear = () => {
+    setPastGuesses([]);
+    setPossibleWords(legalWords);
+    setCurrentGuess({ guess: "", result: "" });
+    setBestGuess(BEST_INITIAL_GUESS);
+    setResultErrorText("");
+    setGuessErrorText("");
+  }
 
   return (
     <MainContainer>
       <MainCard>
         <h1>Wordle Solver</h1>
         {pastGuesses.map((guess, index) => {
-          return <GuessInput guessNumber={index} guess={guess} bestGuess={bestGuess} showPossibleWords={showPossibleWords}/>;
+          return <GuessInput guessNumber={index} guess={guess} bestGuess={guess.bestGuess} showPossibleWords={showPossibleWords}/>;
         })}
         {pastGuesses.length < NUM_GUESSES && (
           <GuessInput
@@ -114,9 +164,14 @@ export const WordleSolver = ({}: WordleSolverProps) => {
             onSubmit={addGuess}
             onChange={setCurrentGuess}
             showPossibleWords={showPossibleWords}
-            bestGuess={BEST_INITIAL_GUESS}
+            bestGuess={bestGuess}
+            handleKeyPress={handleKeyPress}
+            guessErrorText={guessErrorText}
+            resultErrorText={resultErrorText}
+            guessInputRef={guessInputRef}
           />
         )}
+        <SubmitButton  variant="contained" onClick={clear}>Clear</SubmitButton>
       </MainCard>
       <Dialog open={showDialog} onClose={() => setShowDialog(false)}> 
       <DialogContent>
