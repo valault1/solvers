@@ -83,12 +83,17 @@ const ResponsiveAppBar = () => {
               }}
             >
               {NAVBAR_PAGES.map((page) => (
-                
-                  <MenuItem key={page.route} onClick={handleCloseNavMenu}>
-                    <Link to={"/" + page.route} style={{ textDecoration: "none", color: theme.colors.textPrimary }}>
-                      <Typography textAlign="center">{page.label}</Typography>
-                    </Link>
-                  </MenuItem>
+                <MenuItem key={page.route} onClick={handleCloseNavMenu}>
+                  <Link
+                    to={"/" + page.route}
+                    style={{
+                      textDecoration: "none",
+                      color: "#000000",
+                    }}
+                  >
+                    <Typography textAlign="center">{page.label}</Typography>
+                  </Link>
+                </MenuItem>
               ))}
             </Menu>
           </Box>
