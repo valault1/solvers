@@ -1,11 +1,12 @@
 import { ThemeProvider } from "@mui/material";
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { TheTowerController } from "./domains/TheTower/TheTowerController";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import NavBar from "./NavBar";
+import { AppRoutes } from "./AppRoutes";
+import { muiTheme, theme } from "./theme";
+import { Calculators } from "./domains/InvestmentCalculators/Calculators";
 import { WordHuntController } from "./domains/WordHunt/WordHuntController";
 import { WordleController } from "./domains/Wordle/WordleController";
-import NavBar from "./NavBar";
-import { muiTheme, theme } from "./theme";
 
 export default function App() {
   return (
@@ -17,7 +18,7 @@ export default function App() {
             <Route path="/" element={<WordleController />} />
             <Route path="/wordhunt" element={<WordHuntController />} />
             <Route path="/wordle" element={<WordleController />} />
-            <Route path="/thetower" element={<TheTowerController />} />
+            <Route path="/calculators" element={<Calculators />} />
             <Route path="/*" element={<WordleController />}></Route>
           </Routes>
         </Router>

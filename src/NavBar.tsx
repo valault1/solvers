@@ -14,8 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { Calculate } from "@mui/icons-material";
 import { theme } from "./theme";
-
-const pages = ["home", "wordle", "wordhunt", "thetower"];
+import { NAVBAR_PAGES } from "./AppRoutes";
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const ResponsiveAppBar = () => {
@@ -83,9 +82,9 @@ const ResponsiveAppBar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              {NAVBAR_PAGES.map((page) => (
+                <MenuItem key={page.route} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -99,10 +98,10 @@ const ResponsiveAppBar = () => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Link to={"/" + page} style={{ textDecoration: "none" }}>
+            {NAVBAR_PAGES.map((page) => (
+              <Link to={"/" + page.route} style={{ textDecoration: "none" }}>
                 <Button
-                  key={page}
+                  key={page.route}
                   onClick={handleCloseNavMenu}
                   sx={{
                     my: 2,
@@ -110,7 +109,7 @@ const ResponsiveAppBar = () => {
                     display: "block",
                   }}
                 >
-                  {page}
+                  {page.label}
                 </Button>
               </Link>
             ))}
