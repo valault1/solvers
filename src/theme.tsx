@@ -33,8 +33,10 @@ declare module "@mui/material/styles" {
 }
 let myGray = "#979dac";
 let primary = "#560bad";
-//let primary = "#C8B6FF";
-let secondary = "#C8B6FF";
+//let secondary = "#C8B6FF; //Light purple color
+let secondary = "#4D96FF"; // light blue
+//secondary = "#FFA1C9"; // Light pink
+//secondary="#FF008E"; // Vivid pink
 let textPrimary = "#FFFFFF";
 //let background = "#FFFFFF";
 let background = "#121213"; // Wordle background color

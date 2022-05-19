@@ -80,7 +80,7 @@ export const InvestmentCalculatorController =
                 />
               );
             })}
-            <Button onClick={calculate}>Submit</Button>
+            <Button variant="contained" onClick={calculate}>Submit</Button>
           </FieldsWrapper>
           <div>
             If you start with{" "}
