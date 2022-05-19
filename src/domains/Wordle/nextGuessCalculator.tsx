@@ -75,7 +75,6 @@ const scoreWords: (currentPossibleWords: string[]) => ScoreTable = (currentPossi
     new Set(word.split('')).forEach((nextLetter) => sum += letterFrequencies[nextLetter]);
     scores[word] = sum;
   })
-  console.log({scores})
   return scores;
 }
 
@@ -84,7 +83,6 @@ export const getBestGuess: (currentPossibleWords: string[]) => string = (
 ) => {
 
   const wordScores = scoreWords(currentPossibleWords);
-  console.log(wordScores);
   let key: keyof ScoreTable;
   var scoresList = [];
   for (key in wordScores) {
@@ -95,7 +93,6 @@ export const getBestGuess: (currentPossibleWords: string[]) => string = (
     if (a.score < b.score) return 1;
     return 0;
   });
-  console.log(scoresList);
 
   return scoresList?.[0]?.word || "cares";
 

@@ -34,7 +34,6 @@ export const InvestmentCalculatorController =
     const {inputFieldsState: fields, handleChange} = useCalculatorInputForm(INVESTMENT_CALCULATOR_FIELDS);
     const [result, setResult] = React.useState(0);
     // DEBUG-----------------------------------------------------
-    console.log(fields);
     const fieldNames = Array.from(fields.keys());
     const fieldsAsList = fieldNames.map((key) => [key, fields.get(key)])
     // DEBUG-----------------------------------------------------
@@ -44,9 +43,7 @@ export const InvestmentCalculatorController =
       const numMonths = parseInt(fields.get("numberYears")) * 12;
       const periodInterestRate = 1 + (parseFloat(fields.get("interestRate")) / 12);
       const monthlyDeposit = parseFloat(fields.get("monthlyDeposit"));
-      console.log({numMonths, monthlyDeposit, periodInterestRate, interest: fields.get("interestRate")})
       for (let i=0; i < numMonths; i++) {
-        console.log({i, answer});
         answer += monthlyDeposit;
         answer *= periodInterestRate;
       }
