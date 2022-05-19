@@ -34,8 +34,9 @@ declare module "@mui/material/styles" {
 let myGray = "#979dac";
 let primary = "#C8B6FF";
 let secondary = "#560bad";
-let textPrimary = "#FFFFFF";
-let background = "#121213";
+let textPrimary = "#000000";
+let background = "#FFFFFF"
+//let background = "#121213"; // Wordle background color
 
 // Default theme object: https://mui.com/customization/default-theme/
 // My colors: https://coolors.co/palette/ffd6ff-e7c6ff-c8b6ff-b8c0ff-bbd0ff

@@ -3,7 +3,7 @@ import React from "react";
 import { TabsWrapper } from "../../shared/GameAndSolverDisplay.elements";
 import { TabPanel, a11yProps } from "../../shared/tabHelpers";
 import { theme } from "../../theme";
-import { InvestmentCalculatorController } from "./controllers/InvestmentCalculatorController";
+import { InvestmentCalculatorController } from "./calculators/InvestmentCalculator/InvestmentCalculatorController";
 
 type CalculatorsProps = {};
 
