@@ -61,7 +61,7 @@ const GuessInput = ({
         </LabelWrapper>
         {guessNumber !== 0 && (
           <ShowDialogButton
-            variant="outlined"
+            variant="text"
             color="secondary"
             onClick={() => showPossibleWords(guessNumber)}
           >
