@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { theme } from "../../theme";
 
 export const MainContainer = styled.div(() => ({
@@ -14,8 +14,7 @@ export const MainContainer = styled.div(() => ({
   paddingTop: 12,
 }));
 export const MainCard = styled.div(() => ({
-  backgroundColor: theme.colors.primary,
-  color: theme.colors.background,
+  color: theme.colors.textPrimary,
   padding: 20,
   display: "flex",
   flexDirection: "column",
@@ -29,7 +28,7 @@ export const InputWrapper = styled.div(() => ({
   gap: 8,
 }));
 export const LabelWrapper = styled.div(() => ({
- // paddingBottom: 8,
+  // paddingBottom: 8,
 }));
 
 export const InputRow = styled.div(() => ({
@@ -37,14 +36,38 @@ export const InputRow = styled.div(() => ({
   gap: 8,
 }));
 
-export const SubmitButton = styled(Button)<{}>({
-  backgroundColor: theme.colors.secondary,
+export const StyledTextField = styled(TextField)<{}>({
+  // input: {
+  //   color: theme.colors.textPrimary,
+  //   "&::placeholder": {
+  //     color: "white",
+  //   },
+  // },
+  // "& label.Mui-focused": {
+  //   color: theme.colors.primary,
+  // },
+  // "& label": {
+  //   color: theme.colors.primary,
+  // },
+  // "& .MuiOutlinedInput-root": {
+  //   "& fieldset": {
+  //     borderColor: theme.colors.primary,
+  //   },
+  //   "&:hover fieldset": {
+  //     borderColor: theme.colors.primary,
+  //   },
+  //   "&.Mui-focused fieldset": {
+  //     borderColor: theme.colors.primary,
+  //   },
+  // },
 });
+
+export const SubmitButton = styled(Button)<{}>({});
 
 export const DialogContent = styled.div(() => ({
   display: "flex",
   flexWrap: "wrap",
-  paddingLeft:16,
+  paddingLeft: 16,
   paddingBottom: 16,
 }));
 
@@ -65,8 +88,8 @@ export const ShowDialogButton = styled(Button)<{}>({
 });
 
 export const Recommendations = styled.div(() => ({
-  display:"flex",
+  display: "flex",
   alignContent: "center",
   paddingBottom: 12,
-  gap: 12
+  gap: 12,
 }));

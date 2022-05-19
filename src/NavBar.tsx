@@ -41,7 +41,14 @@ const ResponsiveAppBar = () => {
   };
 
   return (
-    <AppBar position="static" color="primary">
+    <AppBar
+      position="static"
+      color="primary"
+      sx={{
+        backgroundColor: theme.colors.primary,
+        color: theme.colors.background,
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -103,7 +110,7 @@ const ResponsiveAppBar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            <Calculate/>
+            <Calculate />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {NAVBAR_PAGES.map((page) => (

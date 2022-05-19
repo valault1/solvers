@@ -25,3 +25,11 @@ export const FieldsWrapper = styled.div(() => ({
   justifyContent: "center",
   gap: 12,
 }));
+
+export const TabsWrapper = styled.div(() => ({
+  display: "flex",
+  justifyContent: "center",
+  width: "100%",
+  borderBottom: "2",
+  borderColor: "divider",
+}));

@@ -60,33 +60,40 @@ export const getPossibleWords: (
 
 type ScoreTable = {
   [key: string]: number;
-}
+};
 
-const scoreWords: (currentPossibleWords: string[]) => ScoreTable = (currentPossibleWords) => {
+const scoreWords: (currentPossibleWords: string[]) => ScoreTable = (
+  currentPossibleWords
+) => {
   const letters = "abcdefghijklmnopqrstuvwxyz";
-  const letterFrequencies = letters.split('').reduce<ScoreTable>((accumulator, nextLetter) => {
-    accumulator[nextLetter] = currentPossibleWords.filter((word) => word.includes(nextLetter)).length;
-    return accumulator;
-  }, {});
-  const dedup = (str: string) => new Set(str.split(''));
+  const letterFrequencies = letters
+    .split("")
+    .reduce<ScoreTable>((accumulator, nextLetter) => {
+      accumulator[nextLetter] = currentPossibleWords.filter((word) =>
+        word.includes(nextLetter)
+      ).length;
+      return accumulator;
+    }, {});
+  const dedup = (str: string) => new Set(str.split(""));
   var scores: ScoreTable = {};
   currentPossibleWords.forEach((word) => {
     var sum = 0;
-    new Set(word.split('')).forEach((nextLetter) => sum += letterFrequencies[nextLetter]);
+    new Set(word.split("")).forEach(
+      (nextLetter) => (sum += letterFrequencies[nextLetter])
+    );
     scores[word] = sum;
-  })
+  });
   return scores;
-}
+};
 
 export const getBestGuess: (currentPossibleWords: string[]) => string = (
   currentPossibleWords
 ) => {
-
   const wordScores = scoreWords(currentPossibleWords);
   let key: keyof ScoreTable;
   var scoresList = [];
   for (key in wordScores) {
-    scoresList.push({word: key, score:wordScores[key]})
+    scoresList.push({ word: key, score: wordScores[key] });
   }
   scoresList.sort((a, b) => {
     if (a.score > b.score) return -1;
@@ -95,5 +102,4 @@ export const getBestGuess: (currentPossibleWords: string[]) => string = (
   });
 
   return scoresList?.[0]?.word || "cares";
-
 };

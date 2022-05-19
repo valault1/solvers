@@ -1,8 +1,8 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
-import { TabsWrapper } from "../../shared/GameAndSolverDisplay.elements";
 import { TabPanel, a11yProps } from "../../shared/tabHelpers";
 import { theme } from "../../theme";
+import { TabsWrapper } from "./calculators/InvestmentCalculator/InvestmentCalculator.elements";
 import { InvestmentCalculatorController } from "./calculators/InvestmentCalculator/InvestmentCalculatorController";
 
 type CalculatorsProps = {};
