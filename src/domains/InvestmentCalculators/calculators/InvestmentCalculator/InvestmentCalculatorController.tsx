@@ -10,6 +10,11 @@ type InvestmentCalculatorControllerProps = {};
 
 export const INVESTMENT_CALCULATOR_FIELDS: FieldMetadata[] = [
   {
+    name: "startingBalance",
+    label: "Starting Balance",
+    type: FieldType.NUMBER
+  },
+  {
     name: "interestRate",
     label: "Interest Rate",
     type: FieldType.NUMBER
@@ -25,6 +30,7 @@ export const INVESTMENT_CALCULATOR_FIELDS: FieldMetadata[] = [
     type: FieldType.NUMBER
   },
 
+
 ]
 
 
@@ -39,7 +45,7 @@ export const InvestmentCalculatorController =
     // DEBUG-----------------------------------------------------
 
     const calculate = () => {
-      var answer = 0;
+      var answer = parseFloat(fields.get("startingBalance"));
       const numMonths = parseInt(fields.get("numberYears")) * 12;
       const periodInterestRate = 1 + (parseFloat(fields.get("interestRate")) / 12);
       const monthlyDeposit = parseFloat(fields.get("monthlyDeposit"));
@@ -68,7 +74,7 @@ export const InvestmentCalculatorController =
         })}
         <Button onClick={calculate}>Submit</Button>
       </FieldsWrapper>
-      <div>After investing {formatDollars(parseFloat(fields.get("monthlyDeposit")))} every month for {fields.get("numberYears")} years,<br></br> assuming a {parseFloat(fields.get("interestRate")) *100}% ROI, you would have:</div>
+      <div>If you start with {formatDollars(parseFloat(fields.get("startingBalance")))}, after investing {formatDollars(parseFloat(fields.get("monthlyDeposit")))} every month <br/>for {fields.get("numberYears")} years, assuming a {parseFloat(fields.get("interestRate")) *100}% ROI, you would have:</div>
       {formatDollars(result)}
       </MainCalculatorContainer>
     </>);
