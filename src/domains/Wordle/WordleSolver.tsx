@@ -213,7 +213,10 @@ export const WordleSolver = ({}: WordleSolverProps) => {
             guess={currentGuess}
             showSubmit
             onSubmit={addGuess}
-            onChange={setCurrentGuess}
+            onChange={({guess, result}) => {
+
+              setCurrentGuess({guess: guess.trim(), result: result.trim()});
+            }}
             showPossibleWords={showPossibleWords}
             bestGuess={bestGuess}
             handleKeyPress={handleKeyPress}
