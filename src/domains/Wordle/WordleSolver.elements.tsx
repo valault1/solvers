@@ -84,7 +84,7 @@ export const DialogHeader = styled.h2(() => ({
 }));
 
 export const ShowDialogButton = styled(Button)<{}>({
-  color: theme.colors.secondary,
+  
 });
 
 export const Recommendations = styled.div(() => ({

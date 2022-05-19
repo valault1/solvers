@@ -65,7 +65,7 @@ const GuessInput = ({
             color="secondary"
             onClick={() => showPossibleWords(guessNumber)}
           >
-            All possible words
+            Show all possible words
           </ShowDialogButton>
         )}
       </Recommendations>
