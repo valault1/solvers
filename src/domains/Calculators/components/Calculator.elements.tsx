@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { theme } from "../../../../theme";
+import { theme } from "../../../theme";
 
 export const MainContainer = styled.div(() => ({
   display: "flex",
@@ -33,3 +33,8 @@ export const TabsWrapper = styled.div(() => ({
   borderBottom: "2",
   borderColor: "divider",
 }));
+
+export const ResultWrapper = styled.div(() => ({
+}));
+
+

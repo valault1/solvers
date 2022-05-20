@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { Calculators } from "./domains/InvestmentCalculators/Calculators";
+import { Calculators } from "./domains/Calculators/CalculatorsView";
 import { WordHuntController } from "./domains/WordHunt/WordHuntController";
 import { WordleController } from "./domains/Wordle/WordleController";
 

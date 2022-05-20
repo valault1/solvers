@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import NavBar from "./NavBar";
 import { AppRoutes } from "./AppRoutes";
 import { muiTheme, theme } from "./theme";
-import { Calculators } from "./domains/InvestmentCalculators/Calculators";
+import { Calculators } from "./domains/Calculators/CalculatorsView";
 import { WordHuntController } from "./domains/WordHunt/WordHuntController";
 import { WordleController } from "./domains/Wordle/WordleController";
 
