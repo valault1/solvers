@@ -7,7 +7,7 @@ import {
   DialogWord,
   InputRow,
   WordGeneratorContainer,
-} from "../WordleSolver/WordleSolver.elements";
+} from "../Wordle.elements";
 import { legalWords } from "../words";
 
 type WordGeneratorProps = {};

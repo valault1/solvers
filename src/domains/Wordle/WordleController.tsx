@@ -1,7 +1,7 @@
 import React from "react";
 import { WordGenerator } from "./WordGenerator/WordGeneratorController";
 import { WordleSolver } from "./WordleSolver/WordleSolver";
-import { MainCard, MainContainer } from "./WordleSolver/WordleSolver.elements";
+import { MainCard, MainContainer } from "./Wordle.elements";
 
 type WordleControllerProps = {};
 

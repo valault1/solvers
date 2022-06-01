@@ -19,7 +19,7 @@ import {
   ShowDialogButton,
   StyledTextField,
   SubmitButton,
-} from "./WordleSolver.elements";
+} from "../Wordle.elements";
 import { legalWords } from "../words";
 const NUM_GUESSES = 6;
 type WordleSolverProps = {};
