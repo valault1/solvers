@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Button, TextField } from "@mui/material";
-import { theme } from "../../theme";
+import { theme } from "../../../theme";
 
 export const MainContainer = styled.div(() => ({
   display: "flex",
@@ -83,13 +83,17 @@ export const DialogHeader = styled.h2(() => ({
   flex: "1 1 100%",
 }));
 
-export const ShowDialogButton = styled(Button)<{}>({
-  
-});
+export const ShowDialogButton = styled(Button)<{}>({});
 
 export const Recommendations = styled.div(() => ({
   display: "flex",
   alignContent: "center",
   paddingBottom: 12,
+  gap: 12,
+}));
+
+export const WordGeneratorContainer = styled.div(() => ({
+  display: "flex",
+  flexDirection: "column",
   gap: 12,
 }));

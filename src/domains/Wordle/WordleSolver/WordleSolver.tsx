@@ -20,7 +20,7 @@ import {
   StyledTextField,
   SubmitButton,
 } from "./WordleSolver.elements";
-import { legalWords } from "./words";
+import { legalWords } from "../words";
 const NUM_GUESSES = 6;
 type WordleSolverProps = {};
 
@@ -194,9 +194,8 @@ export const WordleSolver = ({}: WordleSolverProps) => {
   };
 
   return (
-    <MainContainer>
-      <MainCard>
-        <h1>Wordle Solver</h1>
+    <>
+      <>
         {pastGuesses.map((guess, index) => {
           return (
             <GuessInput
@@ -213,9 +212,8 @@ export const WordleSolver = ({}: WordleSolverProps) => {
             guess={currentGuess}
             showSubmit
             onSubmit={addGuess}
-            onChange={({guess, result}) => {
-
-              setCurrentGuess({guess: guess.trim(), result: result.trim()});
+            onChange={({ guess, result }) => {
+              setCurrentGuess({ guess: guess.trim(), result: result.trim() });
             }}
             showPossibleWords={showPossibleWords}
             bestGuess={bestGuess}
@@ -228,7 +226,7 @@ export const WordleSolver = ({}: WordleSolverProps) => {
         <SubmitButton variant="contained" onClick={clear}>
           Start Over
         </SubmitButton>
-      </MainCard>
+      </>
       <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
         <DialogContent>
           <DialogHeader>
@@ -240,6 +238,6 @@ export const WordleSolver = ({}: WordleSolverProps) => {
           ))}
         </DialogContent>
       </Dialog>
-    </MainContainer>
+    </>
   );
 };

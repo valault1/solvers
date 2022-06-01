@@ -10,7 +10,12 @@ import { WordleController } from "./domains/Wordle/WordleController";
 
 export default function App() {
   return (
-    <div style={{ backgroundColor: theme.colors.background }}>
+    <div
+      style={{
+        backgroundColor: theme.colors.background,
+        color: theme.colors.textPrimary,
+      }}
+    >
       <ThemeProvider theme={muiTheme}>
         <Router>
           <NavBar />

@@ -1,8 +1,18 @@
 import React from "react";
-import { WordleSolver } from "./WordleSolver";
+import { WordGenerator } from "./WordGenerator/WordGeneratorController";
+import { WordleSolver } from "./WordleSolver/WordleSolver";
+import { MainCard, MainContainer } from "./WordleSolver/WordleSolver.elements";
 
 type WordleControllerProps = {};
 
 export const WordleController = ({}: WordleControllerProps) => {
-  return <WordleSolver />;
+  return (
+    <MainContainer>
+      <h1>Wordle Solver</h1>
+      <MainCard>
+        <WordleSolver />
+        <WordGenerator />
+      </MainCard>
+    </MainContainer>
+  );
 };

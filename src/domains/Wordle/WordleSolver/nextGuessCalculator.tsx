@@ -1,4 +1,5 @@
 import { stringify } from "querystring";
+import { legalWords } from "../words";
 import { Guess } from "./WordleSolver";
 
 export const BEST_INITIAL_GUESS = "cares";
@@ -102,4 +103,37 @@ export const getBestGuess: (currentPossibleWords: string[]) => string = (
   });
 
   return scoresList?.[0]?.word || "cares";
+};
+
+export const findWordsWithLetters: (letters: string) => string[] = (
+  letters
+) => {
+  const scores: ScoreTable = {};
+
+  var scoresList = [];
+  let key: keyof ScoreTable;
+
+  legalWords.forEach((nextWord) => {
+    let score = 0;
+    for (let i = 0; i < letters.length; i++) {
+      if (nextWord.includes(letters[i])) {
+        score += 1;
+      }
+    }
+    scores[nextWord] = score;
+  });
+
+  for (key in scores) {
+    scoresList.push({ word: key, score: scores[key] });
+  }
+
+  scoresList.sort((a, b) => {
+    if (a.score > b.score) return -1;
+    if (a.score < b.score) return 1;
+    return 0;
+  });
+
+  return scoresList
+    .slice(0, scoresList.length >= 4 ? 4 : scoresList.length)
+    .map((score) => score.word);
 };
