@@ -1,5 +1,5 @@
-import { Button, Dialog, TextField } from "@mui/material";
-import React, { SyntheticEvent } from "react";
+import { Dialog } from "@mui/material";
+import React from "react";
 import {
   BEST_INITIAL_GUESS,
   getBestGuess,
@@ -13,8 +13,6 @@ import {
   InputRow,
   InputWrapper,
   LabelWrapper,
-  MainCard,
-  MainContainer,
   Recommendations,
   ShowDialogButton,
   StyledTextField,
@@ -137,10 +135,10 @@ export const WordleSolver = ({}: WordleSolverProps) => {
   const checkErrors = () => {
     var newGuessErrorText = "";
     var newResultErrorText = "";
-    if (currentGuess.guess.length != 5)
+    if (currentGuess.guess.length !== 5)
       newGuessErrorText += "Guess must be 5 letters.";
 
-    if (currentGuess.result.length != 5)
+    if (currentGuess.result.length !== 5)
       newResultErrorText += "Result must be 5 letters.";
     const incorrectLetters = currentGuess.result
       .toLowerCase()
