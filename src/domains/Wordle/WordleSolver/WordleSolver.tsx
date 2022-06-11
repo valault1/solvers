@@ -10,15 +10,17 @@ import {
   DialogContent,
   DialogHeader,
   DialogWord,
-  InputRow,
-  InputWrapper,
-  LabelWrapper,
   Recommendations,
   ShowDialogButton,
-  StyledTextField,
   SubmitButton,
 } from "../Wordle.elements";
 import { legalWords } from "../words";
+import {
+  InputRow,
+  InputWrapper,
+  LabelWrapper,
+  TextInput,
+} from "components/Form.elements";
 const NUM_GUESSES = 6;
 type WordleSolverProps = {};
 
@@ -68,8 +70,7 @@ const GuessInput = ({
         )}
       </Recommendations>
       <InputRow>
-        <StyledTextField
-          variant="outlined"
+        <TextInput
           label={"Your Guess"}
           id={"guess" + guessNumber}
           value={guess.guess}
@@ -84,8 +85,7 @@ const GuessInput = ({
           autoFocus={!!guessInputRef}
           key={"guess_input" + guessNumber}
         />
-        <StyledTextField
-          variant="outlined"
+        <TextInput
           label={"Result"}
           id={"result" + guessNumber}
           value={guess.result}

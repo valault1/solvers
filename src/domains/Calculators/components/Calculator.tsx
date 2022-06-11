@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import {
+  CalculatorFieldsWrapper,
   MainCalculatorContainer,
-  FieldsWrapper,
   ResultWrapper,
 } from "domains/Calculators/components/Calculator.elements";
 import { InputFieldComponent } from "domains/Calculators/components/InputField";
@@ -40,7 +40,7 @@ export const Calculator = ({
   return (
     <>
       <MainCalculatorContainer>
-        <FieldsWrapper>
+        <CalculatorFieldsWrapper>
           {Array.from(fields.keys()).map((key) => {
             return (
               <InputFieldComponent
@@ -55,7 +55,7 @@ export const Calculator = ({
           <Button variant="contained" onClick={calculate}>
             Submit
           </Button>
-        </FieldsWrapper>
+        </CalculatorFieldsWrapper>
         <ResultWrapper>
           {explanation}
           {result}

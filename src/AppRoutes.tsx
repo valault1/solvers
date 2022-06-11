@@ -1,5 +1,5 @@
-import { Calculators } from "domains/Calculators/CalculatorsView";
-import { FoodPickerController } from "domains/FoodPicker/WordHuntController";
+import { CalculatorsView } from "domains/Calculators/CalculatorsView";
+import { FoodPickerController } from "domains/FoodPicker/FoodPickerController";
 import { WordHuntController } from "domains/WordHunt/WordHuntController";
 import { WordleController } from "domains/Wordle/WordleController";
 import React from "react";
@@ -21,7 +21,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/" element={<WordleController />} />
       <Route path="/wordhunt" element={<WordHuntController />} />
       <Route path="/wordle" element={<WordleController />} />
-      <Route path="/calculators" element={<Calculators />} />
+      <Route path="/calculators" element={<CalculatorsView />} />
       <Route path="/food" element={<FoodPickerController />} />
       <Route path="/*" element={<WordleController />}></Route>
     </Routes>

@@ -4,10 +4,10 @@ import {
   DialogContent,
   DialogHeader,
   DialogWord,
-  InputRow,
   WordGeneratorContainer,
 } from "domains/Wordle/Wordle.elements";
 import { findWordsWithLetters } from "domains/Wordle/WordleSolver/nextGuessCalculator";
+import { InputRow } from "components/Form.elements";
 
 type WordGeneratorProps = {};
 
