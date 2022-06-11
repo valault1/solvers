@@ -14,7 +14,6 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Wordle Solver", route: "wordle" },
   { label: "Calculators", route: "calculators" },
   { label: "Food Picker", route: "food" },
-  { label: "Fake Tab", route: "fake" },
 ];
 export const AppRoutes: React.FC = () => {
   return (
