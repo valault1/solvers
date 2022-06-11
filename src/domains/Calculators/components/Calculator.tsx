@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import { PrimaryButton } from "components/Form.elements";
 import {
   CalculatorFieldsWrapper,
   MainCalculatorContainer,
@@ -52,9 +53,7 @@ export const Calculator = ({
               />
             );
           })}
-          <Button variant="contained" onClick={calculate}>
-            Submit
-          </Button>
+          <PrimaryButton onClick={calculate}>Submit</PrimaryButton>
         </CalculatorFieldsWrapper>
         <ResultWrapper>
           {explanation}

@@ -12,13 +12,13 @@ import {
   DialogWord,
   Recommendations,
   ShowDialogButton,
-  SubmitButton,
 } from "../Wordle.elements";
 import { legalWords } from "../words";
 import {
   InputRow,
   InputWrapper,
   LabelWrapper,
+  PrimaryButton,
   TextInput,
 } from "components/Form.elements";
 const NUM_GUESSES = 6;
@@ -98,11 +98,7 @@ const GuessInput = ({
           helperText={resultErrorText}
           key={"result_input" + guessNumber}
         />
-        {showSubmit && (
-          <SubmitButton onClick={onSubmit} variant="contained">
-            Submit
-          </SubmitButton>
-        )}
+        {showSubmit && <PrimaryButton onClick={onSubmit}>Submit</PrimaryButton>}
       </InputRow>
     </InputWrapper>
   );
@@ -221,9 +217,7 @@ export const WordleSolver = ({}: WordleSolverProps) => {
             guessInputRef={guessInputRef}
           />
         )}
-        <SubmitButton variant="contained" onClick={clear}>
-          Start Over
-        </SubmitButton>
+        <PrimaryButton onClick={clear}>Start Over</PrimaryButton>
       </>
       <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
         <DialogContent>

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { TextField, TextFieldProps } from "@mui/material";
+import { Button, ButtonProps, TextField, TextFieldProps } from "@mui/material";
 import React from "react";
 
 export const InputWrapper = styled.div(() => ({
@@ -45,4 +45,14 @@ const StyledTextInput = styled(TextField)<{}>({
 // Normal Text Field, but using the style defined above and defaulting variant to outlined
 export const TextInput = (props: TextFieldProps) => (
   <StyledTextInput variant="outlined" {...props} />
+);
+
+const StyledPrimaryButton = styled(Button)<{}>({});
+export const PrimaryButton = (props: ButtonProps) => (
+  <StyledPrimaryButton variant="contained" {...props} />
+);
+
+const StyledSecondaryButton = styled(Button)<{}>({});
+export const SecondaryButton = (props: ButtonProps) => (
+  <StyledSecondaryButton color="secondary" variant="contained" {...props} />
 );

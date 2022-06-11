@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 import { theme } from "theme";
 
 export const MainCard = styled.div(() => ({
@@ -9,8 +9,6 @@ export const MainCard = styled.div(() => ({
   flexDirection: "column",
   gap: 8,
 }));
-
-export const SubmitButton = styled(Button)<{}>({});
 
 export const DialogContent = styled.div(() => ({
   display: "flex",
