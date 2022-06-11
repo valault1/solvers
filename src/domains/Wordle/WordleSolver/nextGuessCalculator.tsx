@@ -1,6 +1,5 @@
-import { stringify } from "querystring";
-import { legalWords } from "../words";
-import { Guess } from "./WordleSolver";
+import { Guess } from "domains/Wordle/WordleSolver/WordleSolver";
+import { legalWords } from "domains/Wordle/words";
 
 export const BEST_INITIAL_GUESS = "cares";
 

@@ -4,7 +4,7 @@ import {
   BEST_INITIAL_GUESS,
   getBestGuess,
   getPossibleWords,
-} from "./nextGuessCalculator";
+} from "domains/Wordle/WordleSolver/nextGuessCalculator";
 
 import {
   DialogContent,

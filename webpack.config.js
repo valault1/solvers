@@ -49,9 +49,13 @@ const config = {
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
-  },
+    alias: {
+      src: path.resolve(__dirname, 'src/') // added this
+    },
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
+  }
 };
+
 
 module.exports = () => {
   if (isProduction) {

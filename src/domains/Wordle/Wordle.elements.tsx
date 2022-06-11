@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Button, TextField } from "@mui/material";
-import { theme } from "../../theme";
+import { theme } from "theme";
 
 export const MainContainer = styled.div(() => ({
   display: "flex",

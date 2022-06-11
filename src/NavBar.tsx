@@ -13,8 +13,8 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { Calculate } from "@mui/icons-material";
-import { theme } from "./theme";
-import { NAVBAR_PAGES } from "./AppRoutes";
+import { theme } from "theme";
+import { NAVBAR_PAGES } from "AppRoutes";
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const ResponsiveAppBar = () => {

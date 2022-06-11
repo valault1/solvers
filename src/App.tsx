@@ -1,11 +1,9 @@
 import { ThemeProvider } from "@mui/material";
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import NavBar from "./NavBar";
-import { muiTheme, theme } from "./theme";
-import { Calculators } from "./domains/Calculators/CalculatorsView";
-import { WordHuntController } from "./domains/WordHunt/WordHuntController";
-import { WordleController } from "./domains/Wordle/WordleController";
+import { BrowserRouter as Router } from "react-router-dom";
+import NavBar from "NavBar";
+import { AppRoutes } from "AppRoutes";
+import { muiTheme, theme } from "theme";
 
 export default function App() {
   return (
@@ -18,13 +16,7 @@ export default function App() {
       <ThemeProvider theme={muiTheme}>
         <Router>
           <NavBar />
-          <Routes>
-            <Route path="/" element={<WordleController />} />
-            <Route path="/wordhunt" element={<WordHuntController />} />
-            <Route path="/wordle" element={<WordleController />} />
-            <Route path="/calculators" element={<Calculators />} />
-            <Route path="/*" element={<WordleController />}></Route>
-          </Routes>
+          <AppRoutes />
         </Router>
       </ThemeProvider>
     </div>

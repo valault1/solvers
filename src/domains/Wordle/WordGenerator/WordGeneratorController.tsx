@@ -1,14 +1,13 @@
 import { Button, Checkbox, Dialog, TextField } from "@mui/material";
 import React from "react";
-import { findWordsWithLetters } from "../WordleSolver/nextGuessCalculator";
 import {
   DialogContent,
   DialogHeader,
   DialogWord,
   InputRow,
   WordGeneratorContainer,
-} from "../Wordle.elements";
-import { legalWords } from "../words";
+} from "domains/Wordle/Wordle.elements";
+import { findWordsWithLetters } from "domains/Wordle/WordleSolver/nextGuessCalculator";
 
 type WordGeneratorProps = {};
 

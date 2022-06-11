@@ -1,6 +1,6 @@
-import { FieldType, FieldMetadata, Field } from "../sharedTypes";
 import * as React from "react";
 import { TextField } from "@mui/material";
+import { Field, FieldType } from "domains/Calculators/sharedTypes";
 // converts an input field into a component to enter that field
 type InputFieldComponentInputs = {
   field: Field;

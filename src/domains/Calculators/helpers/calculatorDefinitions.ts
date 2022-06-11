@@ -1,4 +1,4 @@
-import { FieldMetadata, FieldType } from "../sharedTypes";
+import { FieldMetadata, FieldType } from "domains/Calculators/sharedTypes";
 
 export const INVESTMENT_CALCULATOR_FIELDS_METADATA: FieldMetadata[] = [
   {
@@ -35,4 +35,3 @@ export const RETIREMENT_CALCULATOR_FIELDS_METADATA: FieldMetadata[] = [
     type: FieldType.NUMBER,
   },
 ];
-

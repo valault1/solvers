@@ -1,4 +1,4 @@
-import { FieldMetadata } from "../sharedTypes";
+import { FieldMetadata } from "domains/Calculators/sharedTypes";
 
 export const getFieldMetadataByName = (
   fieldsMetadata: FieldMetadata[],

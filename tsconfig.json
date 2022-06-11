@@ -7,7 +7,11 @@
     "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "src/*": ["./src/*"]
+    },
   },
   "include": ["./**/*"],
   "exclude": ["./node_modules/**/*", "./dist"]

@@ -1,6 +1,10 @@
 // A hook to let you use all features of a form with unknown fields, accessing by name
+import {
+  FieldMetadata,
+  InputFieldsState,
+  FieldType,
+} from "domains/Calculators/sharedTypes";
 import * as React from "react";
-import { FieldType, FieldMetadata, InputFieldsState } from "../sharedTypes";
 
 export const useCalculatorInputForm = (inputFields: FieldMetadata[]) => {
   const initialState = inputFields.reduce<InputFieldsState>(

@@ -1,7 +1,7 @@
+import { WordGenerator } from "domains/Wordle/WordGenerator/WordGeneratorController";
+import { MainCard, MainContainer } from "domains/Wordle/Wordle.elements";
+import { WordleSolver } from "domains/Wordle/WordleSolver/WordleSolver";
 import React from "react";
-import { WordGenerator } from "./WordGenerator/WordGeneratorController";
-import { WordleSolver } from "./WordleSolver/WordleSolver";
-import { MainCard, MainContainer } from "./Wordle.elements";
 
 type WordleControllerProps = {};
 

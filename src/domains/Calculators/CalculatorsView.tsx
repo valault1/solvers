@@ -1,11 +1,10 @@
 import { Box, Tab, Tabs } from "@mui/material";
+import { TabsWrapper } from "domains/Calculators/components/Calculator.elements";
+import { InvestmentCalculatorController } from "domains/Calculators/controllers/InvestmentCalculatorController";
+import { RetirementCalculatorController } from "domains/Calculators/controllers/RetirementCalculatorController";
 import React from "react";
-import { TabPanel, a11yProps } from "../../shared/tabHelpers";
-import { theme } from "../../theme";
-import { Calculator } from "./components/Calculator";
-import { TabsWrapper } from "./components/Calculator.elements";
-import { InvestmentCalculatorController } from "./controllers/InvestmentCalculatorController";
-import { RetirementCalculatorController } from "./controllers/RetirementCalculatorController";
+import { a11yProps, TabPanel } from "shared/tabHelpers";
+import { theme } from "theme";
 type CalculatorsProps = {};
 
 export const Calculators = ({}: CalculatorsProps) => {
@@ -26,7 +25,7 @@ export const Calculators = ({}: CalculatorsProps) => {
           <InvestmentCalculatorController />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <RetirementCalculatorController/>
+          <RetirementCalculatorController />
         </TabPanel>
       </TabsWrapper>
     </Box>
