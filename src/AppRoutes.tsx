@@ -23,7 +23,6 @@ export const AppRoutes: React.FC = () => {
       <Route path="/wordle" element={<WordleController />} />
       <Route path="/calculators" element={<Calculators />} />
       <Route path="/food" element={<FoodPickerController />} />
-      <Route path="/fake" element={<div> fake tab ;) </div>} />
       <Route path="/*" element={<WordleController />}></Route>
     </Routes>
   );
