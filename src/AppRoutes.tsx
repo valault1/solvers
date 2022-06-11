@@ -14,6 +14,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Wordle Solver", route: "wordle" },
   { label: "Calculators", route: "calculators" },
   { label: "Food Picker", route: "food" },
+  { label: "Fake Tab", route: "fake" },
 ];
 export const AppRoutes: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/wordle" element={<WordleController />} />
       <Route path="/calculators" element={<Calculators />} />
       <Route path="/food" element={<FoodPickerController />} />
+      <Route path="/fake" element={<div> fake tab ;) </div>} />
       <Route path="/*" element={<WordleController />}></Route>
     </Routes>
   );
