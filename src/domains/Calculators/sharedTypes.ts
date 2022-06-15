@@ -14,7 +14,7 @@ export enum FieldType {
 export type FieldMetadata = {
   type: FieldType;
   name: string;
-  label: React.ReactNode;
+  label: string;
 };
 
 export type Field = {
