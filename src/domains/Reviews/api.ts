@@ -64,7 +64,7 @@ async function getTitles() {
   return new Promise((resolve) => setTimeout(resolve, 1000, currentTitles));
 }
 
-async function getRatings() {
+async function getPossibleRatings() {
   return new Promise((resolve) => setTimeout(resolve, 1000, ratings));
 }
 

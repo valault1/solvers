@@ -12,10 +12,6 @@ const ReviewCardMain = styled.div(() => ({
   gap: 4,
 }));
 
-type ReviewDrawerProps = {
-  titleInfo: Title;
-};
-
 const ReviewCardContent = styled.div(() => ({
   padding: 20,
   display: "flex",
@@ -35,10 +31,24 @@ const RowWrapper = styled.div(() => ({
   },
 }));
 
-export const ReviewDrawer: React.VFC<ReviewDrawerProps> = ({ titleInfo }) => {
+type ReviewDrawerProps = {
+  titleInfo: Title;
+  possibleRatings: string[];
+};
+
+export const ReviewDrawer: React.VFC<ReviewDrawerProps> = ({
+  titleInfo,
+  possibleRatings,
+}) => {
   return (
-    <Card>
-      <RowWrapper>{titleInfo.title}</RowWrapper>
-    </Card>
+    <>
+      <Card>
+        <RowWrapper>{titleInfo.title}</RowWrapper>
+      </Card>
+      <ReviewCard
+        titleInfo={titleInfo}
+        possibleRatings={possibleRatings}
+      ></ReviewCard>
+    </>
   );
 };
