@@ -58,17 +58,17 @@ if (localStorage.getItem(titlesKey) === null || forceUpdateTitles) {
   localStorage.setItem(titlesKey, JSON.stringify(titles));
 }
 
-async function getTitles() {
+export async function getTitles(): Promise<Title[]> {
   var currentTitles = JSON.parse(localStorage.getItem(titlesKey));
 
-  return new Promise((resolve) => setTimeout(resolve, 1000, currentTitles));
+  return new Promise((resolve) => setTimeout(resolve, 5000, currentTitles));
 }
 
-async function getPossibleRatings() {
+export async function getPossibleRatings(): Promise<string[]> {
   return new Promise((resolve) => setTimeout(resolve, 1000, ratings));
 }
 
-async function updateRating(titleId: string, newRating: string) {
+export async function updateRating(titleId: string, newRating: string) {
   var currentTitles: Title[] = JSON.parse(localStorage.getItem(titlesKey));
   currentTitles.find((t) => t.id === titleId).rating = newRating;
   localStorage.setItem(titlesKey, JSON.stringify(currentTitles));

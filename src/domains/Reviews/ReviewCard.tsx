@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Card } from "@mui/material";
-import { Title } from "domains/Reviews/api";
+import { Title, updateRating } from "domains/Reviews/api";
 import { ROW_WIDTH } from "domains/Reviews/ReviewDrawer";
 import * as React from "react";
 import { theme } from "theme";
@@ -41,7 +41,18 @@ export const ReviewCard: React.VFC<ReviewCardProps> = ({
           {titleInfo.rating ? (
             <FieldWrapper>rating: {titleInfo.rating}</FieldWrapper>
           ) : (
-            <FieldWrapper>rating: IMPLEMENT RATING SELECT HERE</FieldWrapper>
+            <FieldWrapper>
+              rating:{" "}
+              <select
+                onChange={(updatedValue) => {
+                  updateRating(titleInfo.id, updatedValue.target.value);
+                }}
+              >
+                {possibleRatings.map((rating) => {
+                  return <option>{rating}</option>;
+                })}
+              </select>
+            </FieldWrapper>
           )}
         </ReviewCardContent>
       </Card>
