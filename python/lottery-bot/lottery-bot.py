@@ -8,11 +8,12 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 from random import randint
 
-times_to_enter = 25
+times_to_enter = 10
 # NOTE: this needs to change every day, and for each lotter you want to enter
-urls = ["https://lottery.broadwaydirect.com/enter-lottery/?lottery=562378&window=popup"]
+urls = ["https://lottery.broadwaydirect.com/enter-lottery/?lottery=562423&window=popup"]
 # aladdin - https://lottery.broadwaydirect.com/enter-lottery/?lottery=562466&window=popup
 # six - https://lottery.broadwaydirect.com/enter-lottery/?lottery=562378&window=popup
+# lion king - https://lottery.broadwaydirect.com/enter-lottery/?lottery=562423&window=popup
 
 # NOTE: Must be a gmail
 main_email="valault1"
