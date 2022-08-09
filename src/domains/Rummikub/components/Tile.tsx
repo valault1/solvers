@@ -26,6 +26,5 @@ type TileProps = {
   tile: TileData;
 };
 export const Tile = ({ tile }: TileProps) => {
-  console.log(tile);
   return <TileContainer color={tile.color}>{tile.number}</TileContainer>;
 };

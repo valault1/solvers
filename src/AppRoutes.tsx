@@ -15,10 +15,10 @@ type NavbarPage = {
 
 export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Wordle Solver", route: "wordle" },
+  { label: "Rummikub", route: "rummikub" },
   { label: "Calculators", route: "calculators" },
   { label: "Food Picker", route: "food" },
   { label: "Reviews", route: "reviews" },
-  { label: "Rummikub", route: "rummikub" },
 ];
 export const AppRoutes: React.FC = () => {
   return (

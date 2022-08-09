@@ -30,45 +30,68 @@ export const TileSelection = styled.div(() => ({
   maxWidth: MAX_SELECTION_WIDTH,
 }));
 
+export const SectionWrapper = styled.div(() => ({
+  borderStyle: "solid",
+  borderColor: "white",
+  padding: 12,
+  borderRadius: 8,
+  gap: 4,
+  width: MAX_SELECTION_WIDTH / 2,
+}));
+
+export const SectionHeading = styled.h4(() => ({
+  display: "flex",
+}));
+
 export const RummikubController = ({}: RummikubControllerProps) => {
-  const [board, setBoard] = React.useState<TileData[][]>([]);
+  const [board, setBoard] = React.useState<TileData[][]>([[]]);
   const [yourTiles, setYourTiles] = React.useState<TileData[]>([]);
+  console.log({ board });
   const addTileSetToBoard = () => {
     setBoard((prev) => [...prev, []]);
   };
-  const addTilesToYourTiles = () => {
-    setYourTiles((prev) => [...prev]);
+
+  const addTileToBoard = (tile: TileData) => {
+    var boardCopy = [...board];
+    boardCopy[boardCopy.length - 1].push(tile);
+    console.log(boardCopy);
+    setBoard(boardCopy);
+  };
+  const addTileToYourTiles = (tile: TileData) => {
+    setYourTiles((prev) => [...prev, tile]);
   };
 
   return (
     <RummikubMainContainer>
-      <TileSelection>{TILES_TO_SELECT}</TileSelection>
-
-      <div>
-        <div>Current board:</div>
-        <div>
-          {board.map((tileSet) => (
-            <TileSet tiles={tileSet} />
-          ))}
-        </div>
-        <div onClick={addTileSetToBoard}>+</div>
-      </div>
-      <div>
-        <div>Your tiles: </div>
-        <div>
-          {yourTiles.map((tile) => (
+      <TileSelection>
+        {TILES_TO_SELECT.map((tile) => (
+          <div onClick={() => addTileToBoard(tile)}>
             <Tile tile={tile} />
-          ))}
+          </div>
+        ))}
+      </TileSelection>
+
+      <SectionWrapper>
+        <SectionHeading>Current board</SectionHeading>
+        {board.map((tiles) => {
+          return <TileSet tiles={tiles} />;
+        })}
+
+        <div onClick={addTileSetToBoard}>+</div>
+      </SectionWrapper>
+      <SectionWrapper>
+        <SectionHeading>Your tiles </SectionHeading>
+        <div>
+          <TileSet tiles={yourTiles} />
         </div>
-        <div onClick={addTilesToYourTiles}>+</div>
-      </div>
-      <TileSet
-        tiles={[
-          { number: 12, color: "red" },
-          { number: 11, color: "red" },
-          { number: 10, color: "red" },
-        ]}
-      />
+      </SectionWrapper>
+      <TileSelection>
+        {TILES_TO_SELECT.map((tile) => (
+          <div onClick={() => addTileToYourTiles(tile)}>
+            <Tile tile={tile} />
+          </div>
+        ))}
+      </TileSelection>
     </RummikubMainContainer>
   );
 };
