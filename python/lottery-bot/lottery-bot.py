@@ -8,49 +8,20 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 from random import randint
 
-times_to_enter = 10
+times_to_enter = 98
 # NOTE: this needs to change every day, and for each lotter you want to enter
-urls = ["https://lottery.broadwaydirect.com/enter-lottery/?lottery=562423&window=popup"]
-# aladdin - https://lottery.broadwaydirect.com/enter-lottery/?lottery=562466&window=popup
-# six - https://lottery.broadwaydirect.com/enter-lottery/?lottery=562378&window=popup
-# lion king - https://lottery.broadwaydirect.com/enter-lottery/?lottery=562423&window=popup
+urls = ["https://lottery.broadwaydirect.com/enter-lottery/?lottery=564050&window=popup"]
+# lottery overview page - https://lottery.broadwaydirect.com/
+# Wicked - https://lottery.broadwaydirect.com/show/wicked/
+# aladdin - https://lottery.broadwaydirect.com/show/aladdin/
+# six - https://lottery.broadwaydirect.com/show/six-ny/
+# lion king - https://lottery.broadwaydirect.com/show/the-lion-king
 
 # NOTE: Must be a gmail
-main_email="valault1"
+main_email="typicalval1"
 # if true, will prompt the user before continuing
 wait_for_input=False
 
-
-
-
-
-first_names=["Autumn", 
-        "Ivy", 
-        "Madi", 
-        "Mitchell", 
-        "Calvin Ault", 
-        "Melissa", 
-        "Myrna", 
-        "Matt", 
-        "Danielle", 
-        "Parker", 
-        "Adrienne", 
-        "Emily", 
-        "Felipe", 
-        "Calveen", 
-        "Tara", 
-        "Becca",
-        "Elizabeth",
-        "Valerie",
-        "Camryn",
-        "Pearl",
-        "Hailey",
-        "Mauri",
-        "Lindsey",
-        "Aimee",
-        "Ethan",
-        ]
-last_names = ["Ault", "Smith", "White", "Johnson", "Richardson", "Harrington", "Ketchum", "Lance","Wang", "Cho", "Li", "Brasher","Bradsher","Swapp"]
 possible_zip_codes = ["38017", "84094", "84606", "60176", "63101", "38101", "84119","91316"]
 
 first_names_file = open('first_names.txt', "r")
@@ -91,7 +62,7 @@ for url in urls:
   for num in range(times_to_enter):
     first_name = first_names[randint(0, len(first_names)-1)]
     last_name = last_names[randint(0, len(last_names)-1)]
-    print("running with %s" % (first_name + " " + last_name))
+    print("running with %s, entry #%s/%s" % (first_name + " " + last_name, num+1, times_to_enter))
     browser.get(url)
     try:
       click_and_wait("dlslot_name_first", first_name)

@@ -2,6 +2,7 @@ import { MainContainer } from "components/MainPage.elements";
 import { CalculatorsView } from "domains/Calculators/CalculatorsView";
 import { FoodPickerController } from "domains/FoodPicker/FoodPickerController";
 import { ReviewsController } from "domains/Reviews/ReviewsController";
+import { RummikubController } from "domains/Rummikub/RummikubController";
 import { WordHuntController } from "domains/WordHunt/WordHuntController";
 import { WordleController } from "domains/Wordle/WordleController";
 import React from "react";
@@ -17,6 +18,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Calculators", route: "calculators" },
   { label: "Food Picker", route: "food" },
   { label: "Reviews", route: "reviews" },
+  { label: "Rummikub", route: "rummikub" },
 ];
 export const AppRoutes: React.FC = () => {
   return (
@@ -34,6 +36,7 @@ export const AppRoutes: React.FC = () => {
           </MainContainer>
         }
       />
+      <Route path="/rummikub" element={<RummikubController />} />
       <Route path="/*" element={<WordleController />}></Route>
     </Routes>
   );
