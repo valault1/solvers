@@ -40,8 +40,8 @@ const config = {
         use: [stylesHandler, "css-loader"],
       },
       {
-        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-        type: "asset",
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        loader: "file-loader?name=/public/icons/[name].[ext]",
       },
 
       // Add your rules for custom modules here

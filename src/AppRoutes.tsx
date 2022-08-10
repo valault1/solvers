@@ -1,4 +1,5 @@
 import { MainContainer } from "components/MainPage.elements";
+import { BlackHoleSimulator } from "domains/BlackHole/BlackHoleSimulator";
 import { CalculatorsView } from "domains/Calculators/CalculatorsView";
 import { ReviewsController } from "domains/Reviews/ReviewsController";
 import { RummikubController } from "domains/Rummikub/RummikubController";
@@ -16,6 +17,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Wordle Solver", route: "wordle" },
   { label: "Rummikub", route: "rummikub" },
   { label: "Calculators", route: "calculators" },
+  { label: "Black Hole Simulator", route: "blackhole" },
   //{ label: "Reviews", route: "reviews" },
 ];
 export const AppRoutes: React.FC = () => {
@@ -25,6 +27,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/wordhunt" element={<WordHuntController />} />
       <Route path="/wordle" element={<WordleController />} />
       <Route path="/calculators" element={<CalculatorsView />} />
+      <Route path="/blackhole" element={<BlackHoleSimulator />} />
       <Route
         path="/reviews"
         element={
