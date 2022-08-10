@@ -8,9 +8,12 @@
     "jsx": "react",
     "moduleResolution": "node",
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "src/*": ["./src/*"]
+      "src/*": ["./src/*"],
+      "domains/*": ["./src/domains/*"],
+      "components/*": ["./src/components/*"],
+      "shared/*": ["./src/shared/*"]
     },
   },
   "include": ["./**/*"],

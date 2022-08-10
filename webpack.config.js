@@ -50,7 +50,10 @@ const config = {
   },
   resolve: {
     alias: {
-      src: path.resolve(__dirname, 'src/') // added this
+      src: path.resolve(__dirname, 'src/'), // added this
+      domains: path.resolve(__dirname, 'src/domains'),
+      components: path.resolve(__dirname, 'src/components'),
+      shared: path.resolve(__dirname, 'src/shared'),
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
   }

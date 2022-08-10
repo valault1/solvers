@@ -1,2 +1,2 @@
 npm run build
-firebase deploy --only hosting:web-wordle-solver
+firebase deploy

@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Button } from "@mui/material";
-import { theme } from "theme";
+import { theme } from "src/theme";
 
 export const MainCard = styled.div(() => ({
   color: theme.colors.textPrimary,

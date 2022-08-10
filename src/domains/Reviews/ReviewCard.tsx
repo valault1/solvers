@@ -3,8 +3,6 @@ import { Card } from "@mui/material";
 import { Title, updateRating } from "domains/Reviews/api";
 import { ROW_WIDTH } from "domains/Reviews/ReviewDrawer";
 import * as React from "react";
-import { theme } from "theme";
-
 const ReviewCardMain = styled.div(() => ({
   display: "flex",
   gap: 4,
