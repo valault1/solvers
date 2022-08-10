@@ -7,13 +7,8 @@ import React from "react";
 type WordleControllerProps = {};
 
 export const WordleController = ({}: WordleControllerProps) => {
-  const text = "hello world";
-  const punctuateString = (s: string) => {
-    return s + "!";
-  };
   return (
     <MainContainer>
-      {punctuateString(text)}
       <h1>Wordle Solver</h1>
       <MainCard>
         <WordleSolver />

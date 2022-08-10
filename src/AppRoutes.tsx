@@ -1,6 +1,5 @@
 import { MainContainer } from "components/MainPage.elements";
 import { CalculatorsView } from "domains/Calculators/CalculatorsView";
-import { FoodPickerController } from "domains/FoodPicker/FoodPickerController";
 import { ReviewsController } from "domains/Reviews/ReviewsController";
 import { RummikubController } from "domains/Rummikub/RummikubController";
 import { WordHuntController } from "domains/WordHunt/WordHuntController";
@@ -17,8 +16,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Wordle Solver", route: "wordle" },
   { label: "Rummikub", route: "rummikub" },
   { label: "Calculators", route: "calculators" },
-  { label: "Food Picker", route: "food" },
-  { label: "Reviews", route: "reviews" },
+  //{ label: "Reviews", route: "reviews" },
 ];
 export const AppRoutes: React.FC = () => {
   return (
@@ -27,7 +25,6 @@ export const AppRoutes: React.FC = () => {
       <Route path="/wordhunt" element={<WordHuntController />} />
       <Route path="/wordle" element={<WordleController />} />
       <Route path="/calculators" element={<CalculatorsView />} />
-      <Route path="/food" element={<FoodPickerController />} />
       <Route
         path="/reviews"
         element={
