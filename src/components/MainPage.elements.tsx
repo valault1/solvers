@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { theme } from "src/theme";
+import { theme } from "theme";
 
 export const MainContainer = styled.div(() => ({
   display: "flex",

@@ -50,15 +50,11 @@ const config = {
   },
   resolve: {
     alias: {
-      src: path.resolve(__dirname, 'src/'), // added this
-      domains: path.resolve(__dirname, 'src/domains'),
-      components: path.resolve(__dirname, 'src/components'),
-      shared: path.resolve(__dirname, 'src/shared'),
+      src: path.resolve(__dirname, "src/"), // added this
     },
-    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
-  }
+    extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
+  },
 };
-
 
 module.exports = () => {
   if (isProduction) {

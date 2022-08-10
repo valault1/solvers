@@ -4,7 +4,7 @@ import { TileSet } from "domains/Rummikub/components/TileSet";
 import { TILES_TO_SELECT } from "domains/Rummikub/constants";
 import { TileData } from "domains/Rummikub/sharedTypes";
 import React from "react";
-import { theme } from "src/theme";
+import { theme } from "theme";
 
 type RummikubControllerProps = {};
 
