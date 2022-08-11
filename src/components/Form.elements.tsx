@@ -49,7 +49,7 @@ export const TextInput = (props: TextFieldProps) => (
 
 const StyledPrimaryButton = styled(Button)<{}>({});
 export const PrimaryButton = (props: ButtonProps) => (
-  <StyledPrimaryButton variant="contained" {...props} />
+  <StyledPrimaryButton variant="contained" disableRipple {...props} />
 );
 
 const StyledSecondaryButton = styled(Button)<{}>({});

@@ -1,13 +1,15 @@
 // items to feed the black hole
 import styled from "@emotion/styled";
-import { Item } from "domains/BlackHole/sharedTypes";
+import { Button } from "@mui/material";
+import { Item, ItemList } from "domains/BlackHole/sharedTypes";
 import { items } from "domains/BlackHole/shop/items";
 import * as React from "react";
 
 type ShopProps = {
   cash: number;
-  inventory: Item[];
+  inventory: ItemList[];
   addItemToInventory: (item: Item) => void;
+  payForItem: (amount: number) => void;
 };
 
 const ShopContainer = styled.div(() => ({
@@ -28,20 +30,32 @@ export const Shop: React.VFC<ShopProps> = ({
   cash,
   inventory,
   addItemToInventory,
+  payForItem,
 }) => {
   return (
     <ShopContainer>
-      <div>current cash: {cash}</div>
+      <div>current cash: ${cash}</div>
       <br></br>
       {items.map((item) => {
         return (
           <RowContainer>
-            <button onClick={() => addItemToInventory(item)}>
+            <Button
+              variant="contained"
+              disabled={item.cost > cash}
+              onClick={() => {
+                addItemToInventory(item);
+                payForItem(item.cost);
+              }}
+            >
               Buy 1 {item.name}
-            </button>
+              <br />${item.cost}
+            </Button>
             <div>
               Owned:
-              {inventory.filter((a) => a.name === item.name).length}
+              {
+                inventory.find((itemList) => itemList.item.id === item.id)
+                  ?.quantity
+              }
             </div>
           </RowContainer>
         );
