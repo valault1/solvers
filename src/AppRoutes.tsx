@@ -4,6 +4,7 @@ import { ReviewsController } from "domains/Reviews/ReviewsController";
 import { RummikubController } from "domains/Rummikub/RummikubController";
 import { WordHuntController } from "domains/WordHunt/WordHuntController";
 import { WordleController } from "domains/Wordle/WordleController";
+import { UntitledGameController} from "domains/UntitledGame/UntitledGameController";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
@@ -16,7 +17,8 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Wordle Solver", route: "wordle" },
   { label: "Rummikub", route: "rummikub" },
   { label: "Calculators", route: "calculators" },
-  //{ label: "Reviews", route: "reviews" },
+ // { label: "Reviews", route: "reviews" },
+  {label: "Untitled Game", route: "untitled_game "}, // BRYCE CODE HERE
 ];
 export const AppRoutes: React.FC = () => {
   return (
@@ -25,15 +27,9 @@ export const AppRoutes: React.FC = () => {
       <Route path="/wordhunt" element={<WordHuntController />} />
       <Route path="/wordle" element={<WordleController />} />
       <Route path="/calculators" element={<CalculatorsView />} />
-      <Route
-        path="/reviews"
-        element={
-          <MainContainer>
-            <ReviewsController />
-          </MainContainer>
-        }
-      />
+      <Route path="/reviews" element={<MainContainer> <ReviewsController /> </MainContainer>}/>
       <Route path="/rummikub" element={<RummikubController />} />
+      <Route path="/untitled_game" element={<UntitledGameController />} /> 
       <Route path="/*" element={<WordleController />}></Route>
     </Routes>
   );
