@@ -14,7 +14,7 @@ export const BlackHoleSimulator = () => {
     parseFloat(localStorage.getItem(MASS_KEY))
   );
   const [cash, setCash] = React.useState(
-    parseInt(localStorage.getItem(CASH_KEY))
+    parseFloat(localStorage.getItem(CASH_KEY))
   );
   const [inventory, setInventory] = React.useState<ItemList[]>(emptyInventory);
   React.useEffect(() => {

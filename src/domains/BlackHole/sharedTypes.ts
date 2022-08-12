@@ -4,6 +4,7 @@ export type Item = {
   description: string;
   name: string;
   cost: number;
+  source?: string;
 };
 
 export type ItemList = {

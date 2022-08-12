@@ -33,14 +33,9 @@ const massObjects = [
 
 export const MassDisplay: React.VFC<MassDisplayProps> = ({ mass }) => {
   const getMassComparisonText = React.useMemo(() => {
-    var objectToCompare = null;
-    for (
-      let i = 0;
-      massObjects[i].threshold >= mass && i < massObjects.length;
-      i++
-    ) {
-      objectToCompare = massObjects[i];
-    }
+    var objectToCompare = massObjects.find(
+      (a, index) => mass <= massObjects[index + 1]?.threshold
+    );
     return objectToCompare
       ? `That's about as massive as a ${objectToCompare.name}`
       : "That's not very massive at all.";
