@@ -8,9 +8,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 from random import randint
 
-times_to_enter = 98
+times_to_enter = 25
 # NOTE: this needs to change every day, and for each lotter you want to enter
-urls = ["https://lottery.broadwaydirect.com/enter-lottery/?lottery=564050&window=popup"]
+urls = ["https://lottery.broadwaydirect.com/enter-lottery/?lottery=564053&window=popup"]
 # lottery overview page - https://lottery.broadwaydirect.com/
 # Wicked - https://lottery.broadwaydirect.com/show/wicked/
 # aladdin - https://lottery.broadwaydirect.com/show/aladdin/
@@ -68,13 +68,15 @@ for url in urls:
       click_and_wait("dlslot_name_first", first_name)
       click_and_wait("dlslot_name_last", last_name)
       click_and_wait("dlslot_ticket_qty", "2")
+      # scroll to bottom
+      browser.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+      
       click_and_wait("dlslot_country", "u")
+      ActionChains(browser).send_keys(Keys.ENTER).perform()
       click_and_wait("dlslot_email", "%s+%s@gmail.com" % (main_email, first_name + "_" + last_name))
       click_and_wait("dlslot_dob_month", random_num_string(1,12))
       click_and_wait("dlslot_dob_day", random_num_string(1,28))
       click_and_wait("dlslot_dob_year", random_num_string(1980,2001))
-      # scroll to bottom
-      browser.execute_script("window.scrollTo(0,document.body.scrollHeight)")
       click_and_wait("dlslot_zip", possible_zip_codes[randint(0,len(possible_zip_codes)-1)])
       ActionChains(browser).send_keys(Keys.TAB * 2, " ").perform()
       try:
