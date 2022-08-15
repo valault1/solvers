@@ -20,6 +20,7 @@ export const TileContainer = styled.div(({ color }) => ({
   height: TILE_HEIGHT,
   width: TILE_WIDTH,
   fontSize: 20,
+  cursor: "pointer",
 }));
 
 type TileProps = {

@@ -1,14 +1,17 @@
 import styled from "@emotion/styled";
+import { PrimaryButton } from "components/Form.elements";
+import { CurrentBoard } from "domains/Rummikub/components/CurrentBoard";
 import { Tile, TILE_HEIGHT } from "domains/Rummikub/components/Tile";
 import { TileSet } from "domains/Rummikub/components/TileSet";
 import { TILES_TO_SELECT } from "domains/Rummikub/constants";
+import { getPossibleMoves } from "domains/Rummikub/getSolutions";
 import { TileData } from "domains/Rummikub/sharedTypes";
 import React from "react";
 import { theme } from "theme";
 
 type RummikubControllerProps = {};
 
-const MAX_SELECTION_WIDTH = (TILE_HEIGHT + 4) * 13 - 4;
+export const MAX_SELECTION_WIDTH = (TILE_HEIGHT + 4) * 13 - 4;
 
 export const RummikubMainContainer = styled.div(() => ({
   display: "flex",
@@ -44,45 +47,26 @@ export const SectionHeading = styled.h4(() => ({
 }));
 
 export const RummikubController = ({}: RummikubControllerProps) => {
-  const [board, setBoard] = React.useState<TileData[][]>([[]]);
   const [yourTiles, setYourTiles] = React.useState<TileData[]>([]);
-  console.log({ board });
-  const addTileSetToBoard = () => {
-    setBoard((prev) => [...prev, []]);
-  };
 
-  const addTileToBoard = (tile: TileData) => {
-    var boardCopy = [...board];
-    boardCopy[boardCopy.length - 1].push(tile);
-    console.log(boardCopy);
-    setBoard(boardCopy);
-  };
   const addTileToYourTiles = (tile: TileData) => {
     setYourTiles((prev) => [...prev, tile]);
   };
 
+  const removeTileFromYourTiles = (index: number) => {
+    var newTiles = [...yourTiles];
+    newTiles.splice(index, 1);
+    setYourTiles(newTiles);
+  };
+
   return (
     <RummikubMainContainer>
-      <TileSelection>
-        {TILES_TO_SELECT.map((tile) => (
-          <div onClick={() => addTileToBoard(tile)}>
-            <Tile tile={tile} />
-          </div>
-        ))}
-      </TileSelection>
+      <CurrentBoard yourTiles={yourTiles} />
 
-      <SectionWrapper>
-        <SectionHeading>Current board</SectionHeading>
-        {board.map((tiles) => {
-          return <TileSet tiles={tiles} />;
-        })}
-
-        <div onClick={addTileSetToBoard}>+</div>
-      </SectionWrapper>
       <SectionWrapper>
         <SectionHeading>Your tiles </SectionHeading>
         <div>
-          <TileSet tiles={yourTiles} />
+          <TileSet tiles={yourTiles} removeTile={removeTileFromYourTiles} />
         </div>
       </SectionWrapper>
       <TileSelection>
