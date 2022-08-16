@@ -63,7 +63,7 @@ export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
     if (indexOfRowToEdit > board.length - 1) {
       setIndexOfRowToEdit(board.length - 1);
     }
-  }, [board]);
+  }, [board, indexOfRowToEdit]);
 
   const addTileToBoard = (tile: TileData) => {
     setBoard((prev) => {
