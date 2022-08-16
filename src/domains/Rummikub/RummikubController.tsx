@@ -1,10 +1,8 @@
 import styled from "@emotion/styled";
-import { PrimaryButton } from "components/Form.elements";
 import { CurrentBoard } from "domains/Rummikub/components/CurrentBoard";
 import { Tile, TILE_HEIGHT } from "domains/Rummikub/components/Tile";
 import { TileSet } from "domains/Rummikub/components/TileSet";
 import { TILES_TO_SELECT } from "domains/Rummikub/constants";
-import { getPossibleMoves } from "domains/Rummikub/getSolutions";
 import { TileData } from "domains/Rummikub/sharedTypes";
 import React from "react";
 import { theme } from "theme";

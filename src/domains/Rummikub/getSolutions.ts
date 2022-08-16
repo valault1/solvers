@@ -54,8 +54,18 @@ const getNextGuessState = (lastGuessState: GuessState): GuessState | null => {
     nextTiles,
     lastGuessState.currentTiles[lastGuessState.indexOfTileGuessingOn]
   );
-  if (nextPossibleMoves.length > 0) {
-  } else {
+  // Case: there are still possible moves
+  if (nextPossibleMoves.length === 0) {
+    var nextGuessTaken = lastGuessState.guessTaken + 1;
+    if (nextGuessTaken === lastGuessState.possibleMoves.length) {
+      var nextTileToGuessOn = lastGuessState.indexOfTileGuessingOn + 1;
+      if (nextTileToGuessOn === lastGuessState.currentTiles.length) {
+        // look up last state and increment guess
+      }
+      return {};
+    }
+  } // Case: there are no possible moves
+  else {
     return {
       possibleMoves: getPossibleMoves(nextBoard, nextTiles, nextTileGuessingOn),
       currentBoard: nextBoard,
