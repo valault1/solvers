@@ -1,81 +1,20 @@
 import { CurrentBoard } from "domains/Rummikub/components/CurrentBoard";
 import { TileData as Tile } from "domains/Rummikub/sharedTypes";
+import { Combination } from "ts-combinatorics";
 
 import nextId from "react-id-generator";
 
+export type BoardState = {
+  board: Tile[][];
+  tiles: Tile[];
+  possibleMoves: Array<Tile[]>;
+};
+
 export type GuessState = {
-  possibleMoves: Tile[][];
-  currentBoard: Tile[][];
-  currentTiles: Tile[];
-  indexOfTileGuessingOn: number;
-  // id of key to access last guessState
-  stateBeforeLastGuess: null | string;
-  guessTaken: number;
-  id: string;
-};
-
-const getPossibleMoves = (
-  currentBoard: Tile[][],
-  yourTiles: Tile[],
-  tileGuessingOn: Tile
-): Tile[][] => {
-  var most_tiles_used = 0;
-  const cleanedBoard = cleanBoard(currentBoard);
-
-  return [];
-};
-
-const countTilesUsed = (currentBoard: Tile[][]) =>
-  currentBoard.reduce((accum, set) => accum + set.length, 0);
-
-const getInitialGuessState = (allTiles: Tile[]): GuessState => {
-  return {
-    possibleMoves: getPossibleMoves([], allTiles, allTiles[0]),
-    currentBoard: [],
-    currentTiles: allTiles,
-    indexOfTileGuessingOn: 0,
-    stateBeforeLastGuess: null,
-    guessTaken: 0,
-    id: nextId(),
-  };
-};
-
-// Assumes there are possible moves
-const getNextGuessState = (lastGuessState: GuessState): GuessState | null => {
-  const lastGuessTaken =
-    lastGuessState.possibleMoves[lastGuessState.guessTaken];
-  const nextBoard = [...lastGuessState.currentBoard, lastGuessTaken];
-  const nextTiles = lastGuessState.currentTiles.filter(
-    (tile) => lastGuessTaken.find((t) => t.id === tile.id) === undefined
-  );
-
-  const nextPossibleMoves = getPossibleMoves(
-    nextBoard,
-    nextTiles,
-    lastGuessState.currentTiles[lastGuessState.indexOfTileGuessingOn]
-  );
-  // Case: there are still possible moves
-  if (nextPossibleMoves.length === 0) {
-    var nextGuessTaken = lastGuessState.guessTaken + 1;
-    if (nextGuessTaken === lastGuessState.possibleMoves.length) {
-      var nextTileToGuessOn = lastGuessState.indexOfTileGuessingOn + 1;
-      if (nextTileToGuessOn === lastGuessState.currentTiles.length) {
-        // look up last state and increment guess
-      }
-      return {};
-    }
-  } // Case: there are no possible moves
-  else {
-    return {
-      possibleMoves: getPossibleMoves(nextBoard, nextTiles, nextTileGuessingOn),
-      currentBoard: nextBoard,
-      currentTiles: nextTiles,
-      indexOfTileGuessingOn: 0,
-      stateBeforeLastGuess: lastGuessState.id,
-      guessTaken: 0,
-      id: nextId(),
-    };
-  }
+  tileIndex: number;
+  moveTaken: number;
+  newBoardState: BoardState | null;
+  lastBoardState: BoardState;
 };
 
 const cleanBoard = (board: Tile[][]) => {
@@ -86,30 +25,115 @@ const cleanBoard = (board: Tile[][]) => {
   return cleanedBoard;
 };
 
-const findValidSolutions = (allTiles: Tile[]): Array<Tile[][]> => {
-  var nextGuess = getInitialGuessState(allTiles);
-  var guessStateRecord: Record<string, GuessState> = {};
-  guessStateRecord[nextGuess.id] = nextGuess;
+// Must return empty if no moves are possible
+const getPossibleMoves = (tiles: Tile[], tileGuessingOn: number): Tile[][] => {
+  const tile = tiles[tileGuessingOn];
+  var useableTiles = tiles.filter((t) => t.id !== tile.id);
+  const sameNumberTiles = [
+    ...useableTiles.filter(
+      (t) => t.number === tile.number && t.number !== tile.number
+    ),
+  ];
+  const sameColorTiles = [
+    ...useableTiles.filter((t) => t.color === tile.color),
+  ];
 
-  var notPossible = false;
-  while (nextGuess.currentTiles.length > 0 && !notPossible) {
-    if (nextGuess.currentTiles.length === 0) return [nextGuess.currentBoard];
-    // If they've guessed all possible moves, move to the next tile.
+  // Find possible groups of same numbers
+  var sameNumberTilesResults = [...Combination.of(sameNumberTiles, 2)].map((com) => [
+    ...com,
+    tile,
+  ]);
+  sameNumberTilesResults = [...sameNumberTilesResults, ...Combination.of(sameNumberTiles, 3)];
+  sameNumberTilesResults.filter((move) => {
     if (
-      nextGuess.indexOfTileGuessingOn ===
-      nextGuess.possibleMoves.length - 1
-    ) {
+      move[0].color === move[1].color ||
+      move[0].color === move[2].color ||
+      move[0].color === move[3]?.color
+    )
+      return false;
+    if (move[1].color === move[2].color || move[1].color === move[3]?.color)
+      return false;
+    if (move[2].color === move[3]?.color) return false;
+    return true;
+  });
+
+  // find possible straights
+  function isValidStraight(set: Tile[], requiredTile: Tile): boolean {
+    const sortedSet = [...set].sort();
+    for (let i=0; i<sortedSet.length-1; i++) {
+      if (sortedSet[0] != )
     }
   }
+
+
+  return [...sameNumberTilesResults, ...sameColorTilesResults;
+};
+
+const getInitialBoardState = (allTiles: Tile[]): BoardState => {
+  return {
+    possibleMoves: getPossibleMoves(allTiles, 0),
+    board: [],
+    tiles: allTiles,
+  };
+};
+
+const performMove = (
+  oldState: BoardState,
+  tileIndex: number,
+  moveTaken: number
+): BoardState => {
+  const tilesInMoveTaken: Tile[] = oldState.possibleMoves[moveTaken];
+  const newBoard = [...oldState.board, tilesInMoveTaken];
+  // newTiles is all tiles, minus any tiles from the move taken
+  const newTiles = oldState.tiles.filter(
+    (tileFromTiles) =>
+      tilesInMoveTaken.find(
+        (tileFromMove) => tileFromTiles.id === tileFromMove.id
+      ) !== undefined
+  );
+
+  const newPossibleMoves = getPossibleMoves(newTiles, tileIndex);
+  return { board: newBoard, tiles: newTiles, possibleMoves: newPossibleMoves };
+};
+
+const solveBoardState = (
+  state: BoardState,
+  currentSolutions: Array<Tile[][]>
+): Array<Tile[][]> => {
+  const { board, tiles, possibleMoves } = state;
+
+  console.log("Attempting to solve board state:");
+  console.log({ currentBoardState: state, currentSolutions });
+  // Base case: if we have no possible moves, it just continues
+  tiles.forEach((tile, tileIndex) => {
+    const newPossibleMoves = getPossibleMoves(tiles, tileIndex);
+    newPossibleMoves.forEach((move, moveIndex) => {
+      const stateAfterMove = performMove(state, tileIndex, moveIndex);
+      if (stateAfterMove.tiles.length === 0)
+        currentSolutions.push(stateAfterMove.board);
+      else {
+        solveBoardState(stateAfterMove, currentSolutions);
+      }
+    });
+  });
+
   return [];
+};
+
+const findValidSolutions = (allTiles: Tile[]): Array<Tile[][]> => {
+  var initialBoard = getInitialBoardState(allTiles);
+  console.log("initial board state: ");
+  console.log({ initialBoard });
+  return solveBoardState(initialBoard, []);
 };
 
 // This is the entry point
 export const getSolutions = (currentBoard: Tile[][], yourTiles: Tile[]) => {
-  var allTiles = [...currentBoard, yourTiles].reduce(
-    (accum, set) => [...set],
-    []
-  );
+  const cleanedBoard = cleanBoard(currentBoard);
+  var allTiles: Tile[] = [];
+  [...cleanedBoard, yourTiles].forEach((set) => {
+    allTiles = [...allTiles, ...set];
+  });
 
   // Find if they can use all tiles
   return findValidSolutions(allTiles);

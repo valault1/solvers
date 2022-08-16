@@ -3,7 +3,7 @@ import { PrimaryButton } from "components/Form.elements";
 import { Tile } from "domains/Rummikub/components/Tile";
 import { TileSet } from "domains/Rummikub/components/TileSet";
 import { TILES_TO_SELECT } from "domains/Rummikub/constants";
-import { getPossibleMoves } from "domains/Rummikub/getSolutions";
+import { getSolutions } from "domains/Rummikub/getSolutions";
 
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import {
@@ -13,6 +13,7 @@ import {
 } from "domains/Rummikub/RummikubController";
 import { TileData } from "domains/Rummikub/sharedTypes";
 import React from "react";
+import { testBoard } from "domains/Rummikub/mocks";
 
 export const BoardWrapper = styled.div(() => ({
   display: "flex",
@@ -50,7 +51,7 @@ export const DeleteButton = styled(DeleteOutlinedIcon)(() => ({
 }));
 
 export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
-  const [board, setBoard] = React.useState<TileData[][]>([[]]);
+  const [board, setBoard] = React.useState<TileData[][]>(testBoard);
   const [indexOfRowToEdit, setIndexOfRowToEdit] = React.useState<number>(0);
 
   const addTileSetToBoard = () => {
@@ -133,7 +134,7 @@ export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
           + Add new tile group
         </PrimaryButton>
       </BoardWrapper>
-      <PrimaryButton onClick={() => getPossibleMoves(board, yourTiles)}>
+      <PrimaryButton onClick={() => getSolutions(board, yourTiles)}>
         get solutions
       </PrimaryButton>
     </>
