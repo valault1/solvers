@@ -69,7 +69,6 @@ export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
 
   const addTileToBoard = (tile: TileData) => {
     setBoard((prev) => {
-      console.log("adding tile");
       var boardCopy = JSON.parse(JSON.stringify(prev));
       boardCopy[indexOfRowToEdit].push(tile);
       return boardCopy;
