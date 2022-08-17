@@ -46,7 +46,7 @@ export const SectionHeading = styled.h4(() => ({
 }));
 
 export const RummikubController = ({}: RummikubControllerProps) => {
-  const [yourTiles, setYourTiles] = React.useState<TileData[]>();
+  const [yourTiles, setYourTiles] = React.useState<TileData[]>([]);
 
   const addTileToYourTiles = (tile: TileData) => {
     setYourTiles((prev) => [...prev, tile]);
