@@ -9,8 +9,8 @@ const colors: { [index: string]: string } = {
   red: "#930005",
   blue: "#268db1",
 };
-export const TILE_HEIGHT = 30;
-export const TILE_WIDTH = 30;
+export const TILE_HEIGHT = 25;
+export const TILE_WIDTH = 25;
 export const TileContainer = styled.div(({ color }) => ({
   display: "flex",
   alignItems: "center",

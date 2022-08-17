@@ -51,7 +51,7 @@ export const DeleteButton = styled(DeleteOutlinedIcon)(() => ({
 }));
 
 export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
-  const [board, setBoard] = React.useState<TileData[][]>([]);
+  const [board, setBoard] = React.useState<TileData[][]>([[]]);
   const [indexOfRowToEdit, setIndexOfRowToEdit] = React.useState<number>(0);
   const [solution, setSolution] = React.useState<TileData[][]>([]);
 
@@ -69,6 +69,7 @@ export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
 
   const addTileToBoard = (tile: TileData) => {
     setBoard((prev) => {
+      console.log("adding tile");
       var boardCopy = JSON.parse(JSON.stringify(prev));
       boardCopy[indexOfRowToEdit].push(tile);
       return boardCopy;
