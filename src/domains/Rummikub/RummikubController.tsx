@@ -3,7 +3,6 @@ import { CurrentBoard } from "domains/Rummikub/components/CurrentBoard";
 import { Tile, TILE_HEIGHT } from "domains/Rummikub/components/Tile";
 import { TileSet } from "domains/Rummikub/components/TileSet";
 import { TILES_TO_SELECT } from "domains/Rummikub/constants";
-import { testYourTiles3 } from "domains/Rummikub/mocks";
 import { TileData } from "domains/Rummikub/sharedTypes";
 import React from "react";
 import nextId from "react-id-generator";
