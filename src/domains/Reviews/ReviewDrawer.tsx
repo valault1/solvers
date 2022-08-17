@@ -3,7 +3,7 @@ import { Card, Collapse, lighten, TableRow } from "@mui/material";
 import { Title } from "domains/Reviews/api";
 import { ReviewCard } from "domains/Reviews/ReviewCard";
 import * as React from "react";
-import { theme } from "theme";
+import { theme } from "../../components/theme/theme";
 
 export const ROW_WIDTH = 300;
 

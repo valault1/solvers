@@ -3,11 +3,11 @@ import { CurrentBoard } from "domains/Rummikub/components/CurrentBoard";
 import { Tile, TILE_HEIGHT } from "domains/Rummikub/components/Tile";
 import { TileSet } from "domains/Rummikub/components/TileSet";
 import { TILES_TO_SELECT } from "domains/Rummikub/constants";
-import { testYourTiles1, testYourTiles3 } from "domains/Rummikub/mocks";
+import { testYourTiles3 } from "domains/Rummikub/mocks";
 import { TileData } from "domains/Rummikub/sharedTypes";
 import React from "react";
 import nextId from "react-id-generator";
-import { theme } from "theme";
+import { theme } from "../../components/theme/theme";
 
 type RummikubControllerProps = {};
 
@@ -47,7 +47,7 @@ export const SectionHeading = styled.h4(() => ({
 }));
 
 export const RummikubController = ({}: RummikubControllerProps) => {
-  const [yourTiles, setYourTiles] = React.useState<TileData[]>(testYourTiles3);
+  const [yourTiles, setYourTiles] = React.useState<TileData[]>();
 
   const addTileToYourTiles = (tile: TileData) => {
     setYourTiles((prev) => [...prev, tile]);

@@ -13,7 +13,6 @@ import {
 } from "domains/Rummikub/RummikubController";
 import { TileData } from "domains/Rummikub/sharedTypes";
 import React from "react";
-import { testBoard3 } from "domains/Rummikub/mocks";
 import nextId from "react-id-generator";
 
 export const BoardWrapper = styled.div(() => ({
@@ -52,7 +51,7 @@ export const DeleteButton = styled(DeleteOutlinedIcon)(() => ({
 }));
 
 export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
-  const [board, setBoard] = React.useState<TileData[][]>(testBoard3);
+  const [board, setBoard] = React.useState<TileData[][]>([]);
   const [indexOfRowToEdit, setIndexOfRowToEdit] = React.useState<number>(0);
   const [solution, setSolution] = React.useState<TileData[][]>([]);
 
