@@ -114,7 +114,11 @@ const ResponsiveAppBar = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {NAVBAR_PAGES.map((page) => (
-              <Link to={"/" + page.route} style={{ textDecoration: "none" }}>
+              <Link
+                key={page.route}
+                to={"/" + page.route}
+                style={{ textDecoration: "none" }}
+              >
                 <Button
                   key={page.route}
                   onClick={handleCloseNavMenu}

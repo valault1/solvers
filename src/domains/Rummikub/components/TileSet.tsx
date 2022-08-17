@@ -27,7 +27,7 @@ export const TileSet = ({ tiles, removeTile }: TileSetProps) => {
   return (
     <TileSetContainer>
       {tiles.map((tile, idx) => (
-        <div onClick={() => removeTile(idx)}>
+        <div key={idx} onClick={() => removeTile(idx)}>
           <Tile tile={tile} />
         </div>
       ))}

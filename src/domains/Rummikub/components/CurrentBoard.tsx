@@ -13,7 +13,8 @@ import {
 } from "domains/Rummikub/RummikubController";
 import { TileData } from "domains/Rummikub/sharedTypes";
 import React from "react";
-import { testBoard } from "domains/Rummikub/mocks";
+import { testBoard1, testBoard2 } from "domains/Rummikub/mocks";
+import nextId from "react-id-generator";
 
 export const BoardWrapper = styled.div(() => ({
   display: "flex",
@@ -51,8 +52,9 @@ export const DeleteButton = styled(DeleteOutlinedIcon)(() => ({
 }));
 
 export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
-  const [board, setBoard] = React.useState<TileData[][]>(testBoard);
+  const [board, setBoard] = React.useState<TileData[][]>(testBoard2);
   const [indexOfRowToEdit, setIndexOfRowToEdit] = React.useState<number>(0);
+  const [solution, setSolution] = React.useState<TileData[][]>([]);
 
   const addTileSetToBoard = () => {
     const newFinalIndex = board.length;
@@ -94,7 +96,7 @@ export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
     <>
       <TileSelection>
         {TILES_TO_SELECT.map((tile) => (
-          <div onClick={() => addTileToBoard(tile)}>
+          <div key={nextId()} onClick={() => addTileToBoard(tile)}>
             <Tile tile={tile} />
           </div>
         ))}
@@ -103,7 +105,7 @@ export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
         <SectionHeading>Current board</SectionHeading>
         {board.map((tiles, tileRowIndex) => {
           return (
-            <TileSetRow>
+            <TileSetRow key={tileRowIndex}>
               <TileRowDiv1>
                 <TileSet
                   tiles={tiles}
@@ -134,9 +136,19 @@ export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
           + Add new tile group
         </PrimaryButton>
       </BoardWrapper>
-      <PrimaryButton onClick={() => getSolutions(board, yourTiles)}>
-        get solutions
+      <PrimaryButton
+        onClick={() => setSolution(getSolutions(board, yourTiles))}
+      >
+        get solutions now
       </PrimaryButton>
+      {solution.length > 0 && (
+        <BoardWrapper>
+          Solution:{" "}
+          {solution.map((set, index) => (
+            <TileSet key={index} tiles={set} removeTile={() => {}} />
+          ))}
+        </BoardWrapper>
+      )}
     </>
   );
 };

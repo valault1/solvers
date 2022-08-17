@@ -3,9 +3,10 @@ import { CurrentBoard } from "domains/Rummikub/components/CurrentBoard";
 import { Tile, TILE_HEIGHT } from "domains/Rummikub/components/Tile";
 import { TileSet } from "domains/Rummikub/components/TileSet";
 import { TILES_TO_SELECT } from "domains/Rummikub/constants";
-import { testYourTiles } from "domains/Rummikub/mocks";
+import { testYourTiles1 } from "domains/Rummikub/mocks";
 import { TileData } from "domains/Rummikub/sharedTypes";
 import React from "react";
+import nextId from "react-id-generator";
 import { theme } from "theme";
 
 type RummikubControllerProps = {};
@@ -46,7 +47,7 @@ export const SectionHeading = styled.h4(() => ({
 }));
 
 export const RummikubController = ({}: RummikubControllerProps) => {
-  const [yourTiles, setYourTiles] = React.useState<TileData[]>(testYourTiles);
+  const [yourTiles, setYourTiles] = React.useState<TileData[]>(testYourTiles1);
 
   const addTileToYourTiles = (tile: TileData) => {
     setYourTiles((prev) => [...prev, tile]);
@@ -63,14 +64,14 @@ export const RummikubController = ({}: RummikubControllerProps) => {
       <CurrentBoard yourTiles={yourTiles} />
 
       <SectionWrapper>
-        <SectionHeading>Your tiles </SectionHeading>
+        <SectionHeading>Your tiles</SectionHeading>
         <div>
           <TileSet tiles={yourTiles} removeTile={removeTileFromYourTiles} />
         </div>
       </SectionWrapper>
       <TileSelection>
         {TILES_TO_SELECT.map((tile) => (
-          <div onClick={() => addTileToYourTiles(tile)}>
+          <div key={nextId()} onClick={() => addTileToYourTiles(tile)}>
             <Tile tile={tile} />
           </div>
         ))}
