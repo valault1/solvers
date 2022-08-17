@@ -3,7 +3,7 @@ import { PrimaryButton } from "components/Form.elements";
 import { Tile } from "domains/Rummikub/components/Tile";
 import { TileSet } from "domains/Rummikub/components/TileSet";
 import { TILES_TO_SELECT } from "domains/Rummikub/constants";
-import { getSolutions } from "domains/Rummikub/getSolutions";
+import { getBestSolution } from "domains/Rummikub/getSolutions";
 
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import {
@@ -13,7 +13,7 @@ import {
 } from "domains/Rummikub/RummikubController";
 import { TileData } from "domains/Rummikub/sharedTypes";
 import React from "react";
-import { testBoard1, testBoard2 } from "domains/Rummikub/mocks";
+import { testBoard3 } from "domains/Rummikub/mocks";
 import nextId from "react-id-generator";
 
 export const BoardWrapper = styled.div(() => ({
@@ -52,7 +52,7 @@ export const DeleteButton = styled(DeleteOutlinedIcon)(() => ({
 }));
 
 export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
-  const [board, setBoard] = React.useState<TileData[][]>(testBoard2);
+  const [board, setBoard] = React.useState<TileData[][]>(testBoard3);
   const [indexOfRowToEdit, setIndexOfRowToEdit] = React.useState<number>(0);
   const [solution, setSolution] = React.useState<TileData[][]>([]);
 
@@ -137,9 +137,9 @@ export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
         </PrimaryButton>
       </BoardWrapper>
       <PrimaryButton
-        onClick={() => setSolution(getSolutions(board, yourTiles))}
+        onClick={() => setSolution(getBestSolution(board, yourTiles))}
       >
-        get solutions now
+        get solutions
       </PrimaryButton>
       {solution.length > 0 && (
         <BoardWrapper>

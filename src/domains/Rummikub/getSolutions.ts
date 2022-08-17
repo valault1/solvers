@@ -76,6 +76,7 @@ const getPossibleStraights = (useableTiles: Tile[], tile: Tile) => {
       sameColorTiles[firstIndex - 1].number
   ) {
     firstIndex--;
+  }
   var runResults: Tile[][] = [];
   const largestRun = sameColorTiles.slice(firstIndex, lastIndex + 1);
   for (let i = 3; i <= largestRun.length; i++) {
@@ -166,7 +167,6 @@ const getMoveAndBoardHash = (move: Tile[], board: Tile[][]) => {
 };
 
 const solveBoardState = (state: BoardState): Array<Tile[][]> => {
-
   const { board, tiles } = state;
   if (tiles.length < 3) return [];
 
@@ -174,9 +174,8 @@ const solveBoardState = (state: BoardState): Array<Tile[][]> => {
   var currentSolutions: Tile[][][] = [];
   tiles.forEach((tile, tileIndex) => {
     const newPossibleMoves = getPossibleMoves(tiles, tileIndex);
-    console.log("15");
     newPossibleMoves.forEach((move) => {
-      console.log("4");
+      if (currentSolutions.length > 0) return currentSolutions;
       const hash = getMoveAndBoardHash(move, state.board);
       if (movesTried[hash] === true) return [];
       const stateAfterMove = performMove(state, move);
@@ -200,13 +199,21 @@ const findValidSolutions = (allTiles: Tile[]): Array<Tile[][]> => {
 };
 
 // This is the entry point
-export const getSolutions = (currentBoard: Tile[][], yourTiles: Tile[]) => {
+export const getBestSolution = (
+  currentBoard: Tile[][],
+  yourTiles: Tile[]
+): Tile[][] => {
+  const beginTime = new Date();
   const cleanedBoard = cleanBoard(currentBoard);
   var allTiles: Tile[] = [];
   [...cleanedBoard, yourTiles].forEach((set) => {
     allTiles = [...allTiles, ...set];
   });
 
+  const solutions = findValidSolutions(allTiles);
+  const timeElapsed = new Date().getTime() - beginTime.getTime();
+  console.log(`finished in ${timeElapsed / 1000} s`);
+
   // Find if they can use all tiles
-  return findValidSolutions(allTiles)[0];
+  return solutions.length ? solutions[0] : [];
 };

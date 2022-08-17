@@ -1,5 +1,5 @@
 import {
-  getSolutions,
+  getBestSolution,
   getPossibleMoves,
   tileToString,
   boardToString,
@@ -20,7 +20,7 @@ describe("getSolutions", () => {
     const board: TileData[][] = testBoard1;
 
     const yourTiles: TileData[] = testYourTiles1;
-    const output = getSolutions(board, yourTiles);
+    const output = getBestSolution(board, yourTiles);
     //console.log(output.map((board) => boardToString(board)));
     expect(output.length).toBeGreaterThan(0);
   });
@@ -29,7 +29,7 @@ describe("getSolutions", () => {
     const board: TileData[][] = testBoard2;
 
     const yourTiles: TileData[] = testYourTiles1;
-    const output = getSolutions(board, yourTiles);
+    const output = getBestSolution(board, yourTiles);
     console.log(boardToString(output));
     expect(output.length).toBeGreaterThan(0);
   });
