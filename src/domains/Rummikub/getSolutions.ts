@@ -176,10 +176,10 @@ const solveBoardState = (state: BoardState): Array<Tile[][]> => {
     const newPossibleMoves = getPossibleMoves(tiles, tileIndex);
     newPossibleMoves.forEach((move) => {
       if (currentSolutions.length > 0) return currentSolutions;
-      const hash = getMoveAndBoardHash(move, state.board);
-      if (movesTried[hash] === true) return [];
+      //const hash = getMoveAndBoardHash(move, state.board);
+      //if (movesTried[hash] === true) return [];
       const stateAfterMove = performMove(state, move);
-      movesTried[hash] = true;
+      //movesTried[hash] = true;
       if (stateAfterMove.tiles.length === 0) {
         currentSolutions.push(stateAfterMove.board);
       } else {
@@ -213,7 +213,9 @@ export const getBestSolution = (
   const solutions = findValidSolutions(allTiles);
   const timeElapsed = new Date().getTime() - beginTime.getTime();
   console.log(`finished in ${timeElapsed / 1000} s`);
+  const bestSolution = solutions.length ? solutions[0] : [];
+  console.log(bestSolution);
 
   // Find if they can use all tiles
-  return solutions.length ? solutions[0] : [];
+  return bestSolution;
 };

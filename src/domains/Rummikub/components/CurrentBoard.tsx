@@ -96,7 +96,10 @@ export const CurrentBoard = ({ yourTiles }: { yourTiles: TileData[] }) => {
     <>
       <TileSelection>
         {TILES_TO_SELECT.map((tile) => (
-          <div key={nextId()} onClick={() => addTileToBoard(tile)}>
+          <div
+            key={nextId()}
+            onClick={() => addTileToBoard({ ...tile, id: nextId() })}
+          >
             <Tile tile={tile} />
           </div>
         ))}

@@ -70,7 +70,10 @@ export const RummikubController = ({}: RummikubControllerProps) => {
       </SectionWrapper>
       <TileSelection>
         {TILES_TO_SELECT.map((tile) => (
-          <div key={nextId()} onClick={() => addTileToYourTiles(tile)}>
+          <div
+            key={nextId()}
+            onClick={() => addTileToYourTiles({ ...tile, id: nextId() })}
+          >
             <Tile tile={tile} />
           </div>
         ))}
