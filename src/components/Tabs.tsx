@@ -58,6 +58,8 @@ export const TabsComponent = ({ tabs, ariaLabel }: TabsProps) => {
   return (
     <Box sx={{ width: "100%", color: theme.colors.textPrimary }}>
       <Tabs
+        variant="scrollable"
+        scrollButtons
         value={value}
         onChange={(e, newValue) => setValue(newValue)}
         aria-label={ariaLabel}

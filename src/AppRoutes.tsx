@@ -1,5 +1,6 @@
 import { MainContainer } from "components/MainPage.elements";
 import { CalculatorsView } from "domains/Calculators/CalculatorsView";
+import { ThirdWorldFarmerController } from "domains/FarmGame/ThirdWorldFarmerController";
 import { ReviewsController } from "domains/Reviews/ReviewsController";
 import { RummikubController } from "domains/Rummikub/RummikubController";
 import { WordHuntController } from "domains/WordHunt/WordHuntController";
@@ -14,7 +15,8 @@ type NavbarPage = {
 
 export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Wordle Solver", route: "wordle" },
-  { label: "Rummikub", route: "rummikub" },
+  { label: "Rummikub Solver", route: "rummikub" },
+  { label: "3rd World Farmer", route: "farmer" },
   { label: "Calculators", route: "calculators" },
   //{ label: "Reviews", route: "reviews" },
 ];
@@ -25,6 +27,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/wordhunt" element={<WordHuntController />} />
       <Route path="/wordle" element={<WordleController />} />
       <Route path="/calculators" element={<CalculatorsView />} />
+      <Route path="/farmer" element={<ThirdWorldFarmerController />} />
       <Route
         path="/reviews"
         element={
