@@ -8,9 +8,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 from random import randint
 
-times_to_enter = 98
+times_to_enter = 50
 # NOTE: this needs to change every day, and for each lotter you want to enter
-urls = ["https://lottery.broadwaydirect.com/enter-lottery/?lottery=564050&window=popup"]
+urls = ["https://lottery.broadwaydirect.com/enter-lottery/?lottery=562442&window=popup"]
 # lottery overview page - https://lottery.broadwaydirect.com/
 # Wicked - https://lottery.broadwaydirect.com/show/wicked/
 # aladdin - https://lottery.broadwaydirect.com/show/aladdin/
@@ -22,8 +22,8 @@ main_email="typicalval1"
 # if true, will prompt the user before continuing
 wait_for_input=False
 
-possible_zip_codes = ["38017", "84094", "84606", "60176", "63101", "38101", "84119","91316"]
 
+possible_zip_codes = ["38017", "84094", "84606", "60176", "63101", "38101", "84119","91316"]
 first_names_file = open('first_names.txt', "r")
 last_names_file = open('last_names.txt', "r")
 first_names = [line for line in first_names_file.readlines()]
@@ -107,5 +107,5 @@ for url in urls:
 # dlslot_zip
 # dlslot_country
 # dlslot_agree
-
+input()
 browser.quit()
