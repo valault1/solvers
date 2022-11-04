@@ -63,7 +63,6 @@ export const TabsComponent = ({ tabs, ariaLabel }: TabsProps) => {
         value={value}
         onChange={(e, newValue) => setValue(newValue)}
         aria-label={ariaLabel}
-        centered
       >
         {tabs.map((tab, index) => (
           <Tab label={tab.label} {...a11yProps(index)} />
