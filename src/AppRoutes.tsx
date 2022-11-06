@@ -4,6 +4,7 @@ import { ThirdWorldFarmerController } from "domains/FarmGame/ThirdWorldFarmerCon
 import { PhysicsCalculatorController } from "domains/Physics/PhysicsCalculatorsController";
 import { ReviewsController } from "domains/Reviews/ReviewsController";
 import { RummikubController } from "domains/Rummikub/RummikubController";
+import { TicTacToeController } from "domains/TicTacToe/TicTacToeController";
 import { WordHuntController } from "domains/WordHunt/WordHuntController";
 import { WordleController } from "domains/Wordle/WordleController";
 import React from "react";
@@ -19,7 +20,8 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Rummikub Solver", route: "rummikub" },
   //{ label: "3rd World Farmer", route: "farmer" },
   { label: "Retirement Calculators", route: "calculators" },
-  { label: "Physics Calculators", route: "physics" },
+  { label: "Tic Tac Toe", route: "tictactoe" },
+  //{ label: "Physics Calculators", route: "physics" },
   //{ label: "Reviews", route: "reviews" },
 ];
 export const AppRoutes: React.FC = () => {
@@ -38,6 +40,7 @@ export const AppRoutes: React.FC = () => {
           </MainContainer>
         }
       />
+      <Route path="/tictactoe" element={<TicTacToeController />} />
       <Route path="/rummikub" element={<RummikubController />} />
       <Route path="/physics" element={<PhysicsCalculatorController />} />
       <Route path="/*" element={<WordleController />}></Route>
