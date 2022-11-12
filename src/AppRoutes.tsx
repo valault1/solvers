@@ -23,7 +23,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Retirement Calculators", route: "calculators" },
   { label: "Tic Tac Toe", route: "tictactoe" },
 
-  { label: "Mancala", route: "mancala" },
+  { label: "Mancala (WIP)", route: "mancala" },
   //{ label: "Physics Calculators", route: "physics" },
   //{ label: "Reviews", route: "reviews" },
 ];
