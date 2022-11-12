@@ -56,6 +56,7 @@ export const TicTacToeController: React.VFC = () => {
   const [ties, setTies] = React.useState(0);
   const [winner, setWinner] = React.useState(WINNER.NONE);
   const [isMultiplayer, setIsMultiplayer] = React.useState(false);
+  const [user1GoesFirst, setUser1GoesFirst] = React.useState(true);
   const [currentUserSymbol, setCurrentUserSymbol] =
     React.useState<Symbol>(userSymbol);
   const clickSquare = (i: number, j: number) => {
@@ -92,13 +93,24 @@ export const TicTacToeController: React.VFC = () => {
   };
   const resetGame = () => {
     setWinner(WINNER.NONE);
-    setBoard(startingBoard);
-    const alternateStartingMoves = false;
+
+    const alternateStartingMoves = true;
+
     if (isMultiplayer && alternateStartingMoves) {
       const gamesPlayed = user2Wins + userWins + ties;
       setCurrentUserSymbol(gamesPlayed % 2 === 0 ? userSymbol : user2Symbol);
     } else {
       setCurrentUserSymbol(userSymbol);
+    }
+    if (!isMultiplayer && alternateStartingMoves) {
+      const gamesPlayed = computerWins + userWins + ties;
+      let newBoard = JSON.parse(JSON.stringify(startingBoard));
+      if (gamesPlayed % 2 === 1) {
+        makeComputerMove({ board: newBoard, userSymbol, computerSymbol });
+      }
+      setBoard(newBoard);
+    } else {
+      setBoard(startingBoard);
     }
   };
   const resetWins = () => {

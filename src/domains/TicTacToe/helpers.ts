@@ -172,7 +172,7 @@ export const makeComputerMove = (gameState: GameState) => {
   // If there's a move that lets you checkmate, take it
   const computerCheckmateMove = getCheckmateMove(board, computerSymbol);
   if (computerCheckmateMove) {
-    makeMove(board, userWinningMove, computerSymbol);
+    makeMove(board, computerCheckmateMove, computerSymbol);
     return;
   }
 

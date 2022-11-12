@@ -222,9 +222,8 @@ export const getPerfectMoveV1 = ({
         opponentSymbol: userSymbol,
       })
     );
-    console.log({ results: boardResults[i] });
   }
-  console.log({ boardResults, possibleMoves });
+
   let result = findMoveWithBestBoardResult(boardResults, possibleMoves);
   console.log(
     `Time to run getPerfectmoveV1: ${
