@@ -6,7 +6,12 @@ import {
   MancalaPlayerRocksSquare,
   MancalaSquare,
 } from "domains/Mancala/MancalaSquare";
-import { makeComputerMove, performMove } from "domains/Mancala/moveHelpers";
+import {
+  copyBoard,
+  makeComputerMove,
+  performMove,
+} from "domains/Mancala/moveHelpers";
+import { MoveCoords, MoveIndicator } from "domains/Mancala/MoveIndicator";
 import { MancalaBoard, PlayerTurn } from "domains/Mancala/sharedTypes";
 import * as React from "react";
 
@@ -52,9 +57,21 @@ const startingBoard: MancalaBoard = {
   player2Rocks: 0,
   playerTurn: PlayerTurn.Player1Turn,
 };
+export type MoveToShow = {
+  rowNumber: number;
+  squareNumber: number;
+  setToZero?: boolean;
+};
 
 export const MancalaController: React.VFC = () => {
   const [mancalaBoard, setMancalaBoard] = React.useState(startingBoard);
+  const [newBoard, setNewBoard] = React.useState(startingBoard);
+  const [movesToShow, setMovesToShow] = React.useState<MoveToShow[]>([
+    { rowNumber: 0, squareNumber: 1 },
+    { rowNumber: 0, squareNumber: 2 },
+    { rowNumber: 0, squareNumber: 3 },
+  ]);
+  console.log({ movesToShow });
   const { board, player1Rocks, player2Rocks, playerTurn } = mancalaBoard;
 
   const [isPlayingAgainstComputer, setIsPlayingAgainstComputer] =
@@ -66,18 +83,37 @@ export const MancalaController: React.VFC = () => {
 
   function makeMove(rowNumber: number, squareNumber: number) {
     if (rowNumber === playerTurn) {
-      let newBoard = performMove(mancalaBoard, squareNumber);
+      // performMove should create the new board, and set it to newBoard; this is in case the playback goes wrong.
+      // It then returns a list of MovesToShow, that we set to moveToShow and
+      let { newBoard, movesToShow } = performMove(mancalaBoard, squareNumber);
 
       while (
         newBoard.playerTurn === PlayerTurn.Player2Turn &&
         isPlayingAgainstComputer
       ) {
-        newBoard = makeComputerMove(newBoard);
+        //newBoard = makeComputerMove(newBoard);
         console.log({ newBoard });
       }
       setMancalaBoard(newBoard);
     }
   }
+
+  function showDot({ rowNumber, squareNumber }: MoveToShow) {
+    return (
+      rowNumber === movesToShow[0]?.rowNumber &&
+      squareNumber === movesToShow[0]?.squareNumber
+    );
+  }
+  const moveTransitionTime = 750;
+  React.useEffect(() => {
+    let newMovesToShow = [...movesToShow];
+    if (movesToShow.length > 0) {
+      setTimeout(
+        () => setMovesToShow(newMovesToShow.slice(1)),
+        moveTransitionTime
+      );
+    }
+  }, [movesToShow, setMovesToShow]);
 
   return (
     <MainContainer>
@@ -86,24 +122,63 @@ export const MancalaController: React.VFC = () => {
           {playerTurn === PlayerTurn.Player1Turn && "Player 1's turn"}
         </PlayerTurnText>
         <StyledColumn>
+          <MoveIndicator
+            showDot={showDot({
+              rowNumber: MoveCoords.Player2RocksRowNum,
+              squareNumber: MoveCoords.Player2RocksSquareNum,
+            })}
+          />
           <MancalaPlayerRocksSquare value={player2Rocks.toString()} />
           <StyledRow>
             {board.map((row, rowNumber) => {
               return (
-                <StyledColumn>
-                  {row.map((value, squareNumber) => {
-                    return (
-                      <div onClick={() => makeMove(rowNumber, squareNumber)}>
-                        <MancalaSquare value={value.toString()} />
-                      </div>
-                    );
-                  })}
-                </StyledColumn>
+                <>
+                  {rowNumber === 0 && (
+                    <StyledColumn>
+                      {row.map((value, squareNumber) => {
+                        return (
+                          <MoveIndicator
+                            showDot={showDot({ rowNumber, squareNumber })}
+                          />
+                        );
+                      })}
+                    </StyledColumn>
+                  )}
+                  <StyledColumn>
+                    {row.map((value, squareNumber) => {
+                      return (
+                        <div onClick={() => makeMove(rowNumber, squareNumber)}>
+                          <MancalaSquare value={value.toString()} />
+                        </div>
+                      );
+                    })}
+                  </StyledColumn>
+                  {rowNumber === 1 && (
+                    <StyledColumn>
+                      {row.map((value, squareNumber) => {
+                        return (
+                          <MoveIndicator
+                            showDot={showDot({
+                              rowNumber,
+                              squareNumber,
+                            })}
+                          />
+                        );
+                      })}
+                    </StyledColumn>
+                  )}
+                </>
               );
             })}
           </StyledRow>
 
           <MancalaPlayerRocksSquare value={player1Rocks.toString()} />
+          <MoveIndicator
+            showDot={showDot({
+              rowNumber: MoveCoords.Player1RocksRowNum,
+              squareNumber: MoveCoords.Player1RocksSquareNum,
+            })}
+          />
         </StyledColumn>
         <PlayerTurnText>
           {playerTurn === PlayerTurn.Player2Turn && "Player 2's turn"}

@@ -1,3 +1,4 @@
+import { MoveToShow } from "domains/Mancala/MancalaController";
 import {
   Direction,
   MancalaBoard,
@@ -15,7 +16,7 @@ export function copyBoard(board: MancalaBoard) {
 export const performMove = (
   mancalaBoard: MancalaBoard,
   squareNumber: number
-) => {
+): { newBoard: MancalaBoard; movesToShow: MoveToShow[] } => {
   let newBoard = copyBoard(mancalaBoard);
   let { board, player1Rocks, player2Rocks, playerTurn } = newBoard;
 
@@ -29,6 +30,7 @@ export const performMove = (
   let direction =
     playerTurn === PlayerTurn.Player1Turn ? Direction.DOWN : Direction.UP;
   let currentSquare = squareNumber;
+  let movesToShow: MoveToShow[];
 
   while (numRocks > 0) {
     numRocks -= 1;
@@ -56,10 +58,18 @@ export const performMove = (
     }
   }
 
-  return { board, player1Rocks, player2Rocks, playerTurn: nextTurn };
+  return {
+    newBoard: { board, player1Rocks, player2Rocks, playerTurn: nextTurn },
+    movesToShow,
+  };
 };
 
 export const makeComputerMove = (mancalaBoard: MancalaBoard) => {
-  const squareNumber = Math.floor(Math.random() * mancalaBoard.board[0].length);
+  let possibleMoves: number[] = [];
+  mancalaBoard.board[1].forEach((numRocks, i) => {
+    if (numRocks !== 0) possibleMoves.push(i);
+  });
+  let moveIndex = Math.floor(Math.random() * possibleMoves.length);
+  const squareNumber = possibleMoves[moveIndex];
   return performMove(mancalaBoard, squareNumber);
 };
