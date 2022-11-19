@@ -91,11 +91,15 @@ export const HexBoardDisplay: React.FC<HexBoardProps> = ({
   return (
     <BoardWrapper>
       {board.map((row, rowIndex) => (
-        <RowWrapper style={{ marginLeft: rowIndex % 2 ? 0 : -halfWidth }}>
+        <RowWrapper
+          key={rowIndex}
+          style={{ marginLeft: rowIndex % 2 ? 0 : -halfWidth }}
+        >
           {row.map((hexValue, colIndex) => {
             let isClickable = hexValue === EMPTY_SYMBOL && !gameIsOver;
             return (
               <Hexagon
+                key={colIndex}
                 onClick={() => {
                   if (isClickable) selectHex(rowIndex, colIndex);
                 }}

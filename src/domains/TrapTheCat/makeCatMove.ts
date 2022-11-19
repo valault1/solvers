@@ -126,6 +126,7 @@ export const makeCatMove = ({ board }: { board: HexBoard }) => {
   let catCoords = getCatCoords({ board });
   let possibleMoves = getPossibleCatMoves({ board, catCoords });
   if (possibleMoves.length === 0) return board;
+  let startTime = new Date();
   let moveIndex = Math.floor(Math.random() * possibleMoves.length);
   let newBoard = JSON.parse(JSON.stringify(board));
 
@@ -136,5 +137,8 @@ export const makeCatMove = ({ board }: { board: HexBoard }) => {
 
   newBoard[catCoords[0]][catCoords[1]] = EMPTY_SYMBOL;
   newBoard[moveToTake[0]][moveToTake[1]] = CAT_SYMBOL;
+
+  let timeElapsed = new Date().getTime() - startTime.getTime();
+  console.log(`time to calculate cat move: ${timeElapsed} ms`);
   return newBoard;
 };

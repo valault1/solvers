@@ -37,12 +37,14 @@ export const WinnerCounts = ({
         )
           return null;
         return (
-          <div>
+          <div key={winnerType}>
             {`${getWinnerCountText(winnerType)} ${winnerCounts[winnerType]}`}
           </div>
         );
       })}
-      {winPercentageString && <div>Win percentage: {winPercentageString}</div>}
+      {winPercentageString && (
+        <div key="WinPercent">Win percentage: {winPercentageString}</div>
+      )}
     </>
   );
 };
