@@ -22,11 +22,14 @@ import { useWinnerCounts } from "shared/hooks/useWinnerCounts";
 type CssProps = {
   gap?: number;
 };
+
+export const HEX_BOARD_MIN_WIDTH = "800px";
 export const StyledRow = styled.div<CssProps>(({ gap }) => ({
   display: "flex",
   flexDirection: "row",
   justifyContent: "center",
   alignItems: "center",
+  minWidth: HEX_BOARD_MIN_WIDTH,
   gap,
 }));
 
@@ -93,15 +96,17 @@ export const TrapTheCat: React.VFC = () => {
     setBoard(getStartingBoard());
   };
   return (
-    <MainContainer>
-      <WinnerText>{winnerText}</WinnerText>
-      <HexBoardDisplay
-        board={board}
-        selectHex={selectHex}
-        gameIsOver={currentWinner !== "NONE"}
-      />
-      <PrimaryButton onClick={resetGame}> New Game </PrimaryButton>
-      <WinnerCounts winnerCounts={winnerCounts} hideTies />
-    </MainContainer>
+    <StyledRow>
+      <MainContainer>
+        <WinnerText>{winnerText}</WinnerText>
+        <HexBoardDisplay
+          board={board}
+          selectHex={selectHex}
+          gameIsOver={currentWinner !== "NONE"}
+        />
+        <PrimaryButton onClick={resetGame}> New Game </PrimaryButton>
+        <WinnerCounts winnerCounts={winnerCounts} hideTies />
+      </MainContainer>
+    </StyledRow>
   );
 };

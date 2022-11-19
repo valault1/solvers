@@ -11,10 +11,11 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Calculate } from "@mui/icons-material";
 import { theme } from "./components/theme/theme";
 import { NAVBAR_PAGES } from "./AppRoutes";
+import { HEX_BOARD_MIN_WIDTH } from "domains/TrapTheCat/TrapTheCat";
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const ResponsiveAppBar = () => {
@@ -40,6 +41,11 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
+  // Makes hex board width the same as the app bar, in case they're on trap the cat
+  const location = useLocation();
+  const isPlayingTrapTheCat = location.pathname === "/trapthecat";
+  console.log({ location });
+
   return (
     <AppBar
       position="static"
@@ -47,6 +53,7 @@ const ResponsiveAppBar = () => {
       sx={{
         backgroundColor: theme.colors.primary,
         color: theme.colors.background,
+        minWidth: isPlayingTrapTheCat ? HEX_BOARD_MIN_WIDTH : undefined,
       }}
     >
       <Container maxWidth="xl">

@@ -42,9 +42,7 @@ export const WinnerCounts = ({
           </div>
         );
       })}
-      {winPercentageString && (
-        <div key="WinPercent">Win percentage: {winPercentageString}</div>
-      )}
+      <div key="WinPercent">Win percentage: {winPercentageString || "--"}</div>
     </>
   );
 };
