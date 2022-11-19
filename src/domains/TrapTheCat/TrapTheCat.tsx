@@ -58,7 +58,7 @@ export const getStartingBoard = (): HexBoard => {
   board.forEach((row: any, i: number) =>
     row.forEach((hexValue: any, j: number) => {
       if (hexValue === EMPTY_SYMBOL) {
-        if (Math.floor(Math.random() * 9) === 4) board[i][j] = USER_SYMBOL;
+        if (Math.floor(Math.random() * 10) === 4) board[i][j] = USER_SYMBOL;
       }
     })
   );

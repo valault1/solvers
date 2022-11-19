@@ -1,3 +1,4 @@
+import { isCheckmateMove } from "domains/TicTacToe/helpers";
 import { EMPTY_SYMBOL } from "domains/TicTacToe/TicTacToeController";
 import { trapTheCatCheckForWinner } from "domains/TrapTheCat/checkForWinner";
 import {
@@ -5,6 +6,7 @@ import {
   CAT_BOARD_WIDTH,
   CAT_SYMBOL,
   HexBoard,
+  USER_SYMBOL,
 } from "domains/TrapTheCat/sharedTypes";
 
 const selectRandomElementFromArray = (arr: any[]) => {
@@ -43,7 +45,7 @@ export const getPossibleCatMoves = ({
     [cat_i, cat_j - 1],
     [cat_i, cat_j + 1],
   ];
-  return allMoves.filter((move) => board[move[0]]?.[move[1]] === EMPTY_SYMBOL);
+  return allMoves.filter((move) => board[move[0]]?.[move[1]] !== USER_SYMBOL);
 };
 
 export const getDistanceToExit = ({
@@ -122,6 +124,36 @@ export const getShortestPathToExit = ({
 
   return { moveToTake, tilesTried: paths[JSON.stringify(moveToTake)] };
 };
+
+const isWinningMove = ({ move }: { move: number[] }) => {
+  return (
+    move[0] === 0 ||
+    move[0] === CAT_BOARD_HEIGHT - 1 ||
+    move[1] === 0 ||
+    move[1] === CAT_BOARD_WIDTH - 1
+  );
+};
+
+const getCheckmateMove = ({
+  board,
+  catCoords,
+  possibleMoves,
+}: {
+  board: HexBoard;
+  catCoords: number[];
+  possibleMoves: number[][];
+}) => {
+  let winningMoves = possibleMoves.filter((move) => isWinningMove({ move }));
+  if (winningMoves.length > 0)
+    return selectRandomElementFromArray(winningMoves);
+  for (let move of possibleMoves) {
+    let newMoves = getPossibleCatMoves({ board, catCoords: move });
+    if (newMoves.filter((move) => isWinningMove({ move })).length > 1)
+      return move;
+  }
+  return [];
+};
+
 export const makeCatMove = ({ board }: { board: HexBoard }) => {
   let catCoords = getCatCoords({ board });
   let possibleMoves = getPossibleCatMoves({ board, catCoords });
@@ -130,13 +162,17 @@ export const makeCatMove = ({ board }: { board: HexBoard }) => {
   let moveIndex = Math.floor(Math.random() * possibleMoves.length);
   let newBoard = JSON.parse(JSON.stringify(board));
 
-  let { moveToTake, tilesTried } = getShortestPathToExit({
+  let checkMateMove = getCheckmateMove({ board, catCoords, possibleMoves });
+  let { moveToTake: shortestPathMove, tilesTried } = getShortestPathToExit({
     board,
     coords: catCoords,
   });
 
   newBoard[catCoords[0]][catCoords[1]] = EMPTY_SYMBOL;
-  newBoard[moveToTake[0]][moveToTake[1]] = CAT_SYMBOL;
+  if (checkMateMove.length > 0) {
+    //console.log("found a checkmate move at " + JSON.stringify(checkMateMove));
+    newBoard[checkMateMove[0]][checkMateMove[1]] = CAT_SYMBOL;
+  } else newBoard[shortestPathMove[0]][shortestPathMove[1]] = CAT_SYMBOL;
 
   let timeElapsed = new Date().getTime() - startTime.getTime();
   console.log(`time to calculate cat move: ${timeElapsed} ms`);
