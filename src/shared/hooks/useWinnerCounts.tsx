@@ -91,7 +91,6 @@ export function useWinnerCounts({
   // When currentWinner changes, add to the counts
   React.useEffect(() => {
     if (currentWinner === Winners.NONE) return;
-    console.log("Incrementing winner count");
     incrementCount(currentWinner);
   }, [currentWinner]);
 

@@ -134,8 +134,6 @@ export const makeCatMove = ({ board }: { board: HexBoard }) => {
     coords: catCoords,
   });
 
-  console.log({ moveToTake, tilesTried });
-
   newBoard[catCoords[0]][catCoords[1]] = EMPTY_SYMBOL;
   newBoard[moveToTake[0]][moveToTake[1]] = CAT_SYMBOL;
   return newBoard;
