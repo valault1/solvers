@@ -23,7 +23,7 @@ type CssProps = {
   gap?: number;
 };
 
-export const HEX_BOARD_MIN_WIDTH = "800px";
+export const HEX_BOARD_MIN_WIDTH = "500px";
 export const StyledRow = styled.div<CssProps>(({ gap }) => ({
   display: "flex",
   flexDirection: "row",

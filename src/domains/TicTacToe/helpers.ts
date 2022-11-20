@@ -169,6 +169,12 @@ export const makeComputerMove = (gameState: GameState) => {
     makeMove(board, userWinningMove, computerSymbol);
     return;
   }
+  // If there's a move that lets the opponent checkmate, block it
+  const userCheckmateMove = getCheckmateMove(board, userSymbol);
+  if (userCheckmateMove) {
+    makeMove(board, userCheckmateMove, computerSymbol);
+    return;
+  }
   // If there's a move that lets you checkmate, take it
   const computerCheckmateMove = getCheckmateMove(board, computerSymbol);
   if (computerCheckmateMove) {
