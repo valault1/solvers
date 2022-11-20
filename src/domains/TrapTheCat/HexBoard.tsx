@@ -18,7 +18,7 @@ export type HexBoardProps = {
 const HEXAGON_SIZE = 50;
 const baseWidth = Math.floor((HEXAGON_SIZE * 3) / 5);
 const leftRightWidth = Math.floor(HEXAGON_SIZE / 4);
-const halfWidth = 20;
+const halfWidth = 17;
 const rowGap = -2;
 
 type HexagonProps = {
@@ -97,15 +97,15 @@ const BoardWrapper = styled.div(() => ({
   display: "flex",
   gap: -20,
   flexDirection: "column",
-  marginBottom: 12,
+  marginBottom: 20,
 }));
 
 const RowWrapper = styled.div(() => ({
   display: "flex",
   maxHeight: HEXAGON_SIZE * 0.9,
-  gap: 10,
+  gap: 5,
   flexDirection: "row",
-  marginBottom: -10,
+  marginBottom: -18,
 }));
 
 export const HexBoardDisplay: React.FC<HexBoardProps> = ({
@@ -147,16 +147,18 @@ export const HexBoardDisplay: React.FC<HexBoardProps> = ({
                   src={require("domains/TrapTheCat/hexagon.svg").default}
                   alt={"cat"}
                 /> */}
-                <HexagonSVGComponent></HexagonSVGComponent>
+                {hexValue !== CAT_SYMBOL && (
+                  <HexagonSVGComponent></HexagonSVGComponent>
+                )}
 
                 {hexValue === CAT_SYMBOL && (
                   <img
                     style={{
-                      width: HEXAGON_SIZE,
-                      height: HEXAGON_SIZE,
+                      width: 35,
+                      height: 35,
                       zIndex: 2,
-                      marginLeft: -8,
-                      marginTop: -3,
+                      marginLeft: 0,
+                      marginTop: 6,
                     }}
                     src={require("domains/TrapTheCat/cat4.gif")}
                     alt={"cat"}
