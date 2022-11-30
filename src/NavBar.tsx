@@ -44,7 +44,6 @@ const ResponsiveAppBar = () => {
   // Makes hex board width the same as the app bar, in case they're on trap the cat
   const location = useLocation();
   const isPlayingTrapTheCat = location.pathname === "/trapthecat";
-  console.log({ location });
 
   return (
     <AppBar
