@@ -101,7 +101,7 @@ const ResponsiveAppBar = () => {
                     to={"/" + page.route}
                     style={{
                       textDecoration: "none",
-                      color: "#000000",
+                      color: theme.colors.textPrimary,
                     }}
                   >
                     <Typography textAlign="center">{page.label}</Typography>
