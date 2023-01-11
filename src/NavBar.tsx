@@ -14,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link, useLocation } from "react-router-dom";
 import { Calculate } from "@mui/icons-material";
 import { theme } from "./components/theme/theme";
-import { NAVBAR_PAGES } from "./AppRoutes";
+import { getRoute, NAVBAR_PAGES } from "./AppRoutes";
 import { HEX_BOARD_MIN_WIDTH } from "domains/TrapTheCat/TrapTheCat";
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -95,19 +95,23 @@ const ResponsiveAppBar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {NAVBAR_PAGES.map((page) => (
-                <MenuItem key={page.route} onClick={handleCloseNavMenu}>
-                  <Link
-                    to={"/" + page.route}
-                    style={{
-                      textDecoration: "none",
-                      color: theme.colors.textPrimary,
-                    }}
-                  >
-                    <Typography textAlign="center">{page.label}</Typography>
-                  </Link>
-                </MenuItem>
-              ))}
+              {NAVBAR_PAGES.map((page) => {
+                if (page.isHidden) return null;
+                const route = page.route || getRoute(page.label);
+                return (
+                  <MenuItem key={route} onClick={handleCloseNavMenu}>
+                    <Link
+                      to={"/" + route}
+                      style={{
+                        textDecoration: "none",
+                        color: theme.colors.textPrimary,
+                      }}
+                    >
+                      <Typography textAlign="center">{page.label}</Typography>
+                    </Link>
+                  </MenuItem>
+                );
+              })}
             </Menu>
           </Box>
           <Typography
@@ -119,25 +123,29 @@ const ResponsiveAppBar = () => {
             <Calculate />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {NAVBAR_PAGES.map((page) => (
-              <Link
-                key={page.route}
-                to={"/" + page.route}
-                style={{ textDecoration: "none" }}
-              >
-                <Button
-                  key={page.route}
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 2,
-                    color: theme.colors.background,
-                    display: "block",
-                  }}
+            {NAVBAR_PAGES.map((page) => {
+              if (page.isHidden) return null;
+              const route = page.route || getRoute(page.label);
+              return (
+                <Link
+                  key={route}
+                  to={"/" + route}
+                  style={{ textDecoration: "none" }}
                 >
-                  {page.label}
-                </Button>
-              </Link>
-            ))}
+                  <Button
+                    key={route}
+                    onClick={handleCloseNavMenu}
+                    sx={{
+                      my: 2,
+                      color: theme.colors.background,
+                      display: "block",
+                    }}
+                  >
+                    {page.label}
+                  </Button>
+                </Link>
+              );
+            })}
           </Box>
           {/* not showing settings for now */}
           {false && (

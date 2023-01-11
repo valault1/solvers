@@ -8,33 +8,71 @@ import { ReviewsController } from "domains/Reviews/ReviewsController";
 import { RummikubController } from "domains/Rummikub/RummikubController";
 import { TicTacToeController } from "domains/TicTacToe/TicTacToeController";
 import { TrapTheCat } from "domains/TrapTheCat/TrapTheCat";
+import { Wordcounter } from "domains/Wordcounter/Wordcounter";
 import { WordHuntController } from "domains/WordHunt/WordHuntController";
 import { WordleController } from "domains/Wordle/WordleController";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 type NavbarPage = {
-  label: React.ReactNode;
-  route: string;
+  label: string;
+  route?: string;
+  isHidden?: boolean;
+  element: React.ReactElement;
 };
 
-export const NAVBAR_PAGES: NavbarPage[] = [
-  { label: "Wordle Solver", route: "wordle" },
-  { label: "Rummikub Solver", route: "rummikub" },
-  //{ label: "3rd World Farmer", route: "farmer" },
-  { label: "Retirement Calculators", route: "calculators" },
-  { label: "Tic Tac Toe", route: "tictactoe" },
-  { label: "Trap The Cat", route: "trapthecat" },
+export function getRoute(label: string) {
+  return label.toLowerCase().replace(/\s/g, "");
+}
 
-  //{ label: "Battleship", route: "battleship" },
-  //{ label: "Mancala (WIP)", route: "mancala" },
-  //{ label: "Physics Calculators", route: "physics" },
-  //{ label: "Reviews", route: "reviews" },
+export const NAVBAR_PAGES: NavbarPage[] = [
+  { label: "Wordle Solver", element: <WordleController /> },
+  {
+    label: "Rummikub Solver",
+    route: "rummikub",
+    element: <RummikubController />,
+  },
+
+  { label: "Calculators", element: <CalculatorsView /> },
+  { label: "Tic Tac Toe", element: <TicTacToeController /> },
+  { label: "Trap The Cat", element: <TrapTheCat /> },
+  {
+    label: "Wordcounter",
+    element: <Wordcounter />,
+    isHidden: true,
+  },
+  {
+    label: "3rd World Farmer",
+    route: "farmer",
+    isHidden: true,
+    element: <ThirdWorldFarmerController />,
+  },
+  { label: "Battleship", element: <Battleship />, isHidden: true },
+  {
+    label: "Mancala (WIP)",
+    route: "mancala",
+    element: <MancalaController />,
+    isHidden: true,
+  },
+  {
+    label: "Physics Calculators",
+    route: "physics",
+    element: <PhysicsCalculatorController />,
+    isHidden: true,
+  },
+  { label: "Reviews", element: <ReviewsController />, isHidden: true },
 ];
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<WordleController />} />
+      {NAVBAR_PAGES.map((page) => (
+        <Route
+          path={page.route || getRoute(page.label)}
+          element={page.element}
+        />
+      ))}
+      <Route path={"/"} element={<WordleController />} />
+      {/* <Route path="/" element={<WordleController />} />
       <Route path="/wordhunt" element={<WordHuntController />} />
       <Route path="/wordle" element={<WordleController />} />
       <Route path="/calculators" element={<CalculatorsView />} />
@@ -54,7 +92,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/physics" element={<PhysicsCalculatorController />} />
 
       <Route path="/battleship" element={<Battleship />} />
-      <Route path="/*" element={<WordleController />}></Route>
+      <Route path="/*" element={<WordleController />}></Route> */}
     </Routes>
   );
 };
