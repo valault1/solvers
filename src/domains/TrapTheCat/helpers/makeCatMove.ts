@@ -1,6 +1,4 @@
-import { isCheckmateMove } from "domains/TicTacToe/helpers";
 import { EMPTY_SYMBOL } from "domains/TicTacToe/TicTacToeController";
-import { trapTheCatCheckForWinner } from "domains/TrapTheCat/checkForWinner";
 import {
   CAT_BOARD_HEIGHT,
   CAT_BOARD_WIDTH,
@@ -159,20 +157,20 @@ export const makeCatMove = ({ board }: { board: HexBoard }) => {
   let possibleMoves = getPossibleCatMoves({ board, catCoords });
   if (possibleMoves.length === 0) return board;
   let startTime = new Date();
-  let moveIndex = Math.floor(Math.random() * possibleMoves.length);
   let newBoard = JSON.parse(JSON.stringify(board));
 
   let checkMateMove = getCheckmateMove({ board, catCoords, possibleMoves });
-  let { moveToTake: shortestPathMove, tilesTried } = getShortestPathToExit({
-    board,
-    coords: catCoords,
-  });
 
   newBoard[catCoords[0]][catCoords[1]] = EMPTY_SYMBOL;
   if (checkMateMove.length > 0) {
-    //console.log("found a checkmate move at " + JSON.stringify(checkMateMove));
     newBoard[checkMateMove[0]][checkMateMove[1]] = CAT_SYMBOL;
-  } else newBoard[shortestPathMove[0]][shortestPathMove[1]] = CAT_SYMBOL;
+  } else {
+    let { moveToTake: shortestPathMove } = getShortestPathToExit({
+      board,
+      coords: catCoords,
+    });
+    newBoard[shortestPathMove[0]][shortestPathMove[1]] = CAT_SYMBOL;
+  }
 
   let timeElapsed = new Date().getTime() - startTime.getTime();
   console.log(`time to calculate cat move: ${timeElapsed} ms`);

@@ -1,19 +1,13 @@
 import {
   getCatCoords,
   getPossibleCatMoves,
-} from "domains/TrapTheCat/makeCatMove";
+} from "domains/TrapTheCat/helpers/makeCatMove";
 import {
-  CAT_SYMBOL,
   HexBoard,
   CAT_BOARD_HEIGHT,
   CAT_BOARD_WIDTH,
-  EMPTY_SYMBOL,
-  USER_SYMBOL,
 } from "domains/TrapTheCat/sharedTypes";
-import {
-  EvaluateWinnerFunction,
-  GenericWinner,
-} from "shared/hooks/useWinnerCounts";
+import { GenericWinner } from "shared/hooks/useWinnerCounts";
 
 export const trapTheCatCheckForWinner = ({ board }: { board: HexBoard }) => {
   let catCoords = getCatCoords({ board });

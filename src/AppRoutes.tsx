@@ -1,4 +1,3 @@
-import { MainContainer } from "components/MainPage.elements";
 import { Battleship } from "domains/Battleship/Battleship";
 import { CalculatorsView } from "domains/Calculators/CalculatorsView";
 import { ThirdWorldFarmerController } from "domains/FarmGame/ThirdWorldFarmerController";
@@ -9,7 +8,6 @@ import { RummikubController } from "domains/Rummikub/RummikubController";
 import { TicTacToeController } from "domains/TicTacToe/TicTacToeController";
 import { TrapTheCat } from "domains/TrapTheCat/TrapTheCat";
 import { Wordcounter } from "domains/Wordcounter/Wordcounter";
-import { WordHuntController } from "domains/WordHunt/WordHuntController";
 import { WordleController } from "domains/Wordle/WordleController";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
@@ -65,12 +63,10 @@ export const NAVBAR_PAGES: NavbarPage[] = [
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {NAVBAR_PAGES.map((page) => (
-        <Route
-          path={page.route || getRoute(page.label)}
-          element={page.element}
-        />
-      ))}
+      {NAVBAR_PAGES.map((page) => {
+        const path = page.route || getRoute(page.label);
+        return <Route path={path} element={page.element} key={path} />;
+      })}
       <Route path={"/"} element={<WordleController />} />
       {/* <Route path="/" element={<WordleController />} />
       <Route path="/wordhunt" element={<WordHuntController />} />

@@ -1,14 +1,12 @@
 import styled from "@emotion/styled";
-import { Switch } from "@mui/material";
 import { PrimaryButton } from "components/Form.elements";
 import { MainContainer } from "components/MainPage.elements";
 import { WinnerCounts } from "components/WinnerCounts";
 
-import { MoveCoords, MoveIndicator } from "domains/Mancala/MoveIndicator";
 import { EMPTY_SYMBOL } from "domains/TicTacToe/TicTacToeController";
-import { trapTheCatCheckForWinner } from "domains/TrapTheCat/checkForWinner";
-import { HexBoardDisplay } from "domains/TrapTheCat/HexBoard";
-import { makeCatMove } from "domains/TrapTheCat/makeCatMove";
+import { trapTheCatCheckForWinner } from "domains/TrapTheCat/helpers/checkForWinner";
+import { HexBoardDisplay } from "domains/TrapTheCat/components/HexBoard";
+import { makeCatMove } from "domains/TrapTheCat/helpers/makeCatMove";
 import {
   CAT_BOARD_HEIGHT,
   CAT_BOARD_WIDTH,
@@ -105,6 +103,7 @@ export const TrapTheCat: React.VFC = () => {
           gameIsOver={currentWinner !== "NONE"}
         />
         <PrimaryButton onClick={resetGame}> New Game </PrimaryButton>
+        <br />
         <WinnerCounts winnerCounts={winnerCounts} hideTies />
       </MainContainer>
     </StyledRow>

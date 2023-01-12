@@ -2,9 +2,8 @@ import {
   getCatCoords,
   getDistanceToExit,
   getShortestPathToExit,
-} from "domains/TrapTheCat/makeCatMove";
+} from "domains/TrapTheCat/helpers/makeCatMove";
 import { HexBoard } from "domains/TrapTheCat/sharedTypes";
-import { getStartingBoard } from "domains/TrapTheCat/TrapTheCat";
 const mockBoard: HexBoard = [
   ["", "X", "", "", "", "", "", "", "", "", ""],
   ["", "", "", "", "", "", "", "", "", "X", ""],
