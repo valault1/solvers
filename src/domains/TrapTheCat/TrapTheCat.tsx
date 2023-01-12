@@ -16,6 +16,7 @@ import {
 } from "domains/TrapTheCat/sharedTypes";
 import * as React from "react";
 import { useWinnerCounts } from "shared/hooks/useWinnerCounts";
+import { useScores } from "shared/hooks/useScores";
 
 type CssProps = {
   gap?: number;
@@ -68,13 +69,29 @@ export const getStartingBoard = (): HexBoard => {
 
 export const TrapTheCat: React.VFC = () => {
   const [board, setBoard] = React.useState(getStartingBoard());
-  const { winnerCounts, currentWinner, checkForWinner, winnerText } =
-    useWinnerCounts({
-      board,
-      player1Symbol: USER_SYMBOL,
-      player2Symbol: CAT_SYMBOL,
-      evaluateWinner: trapTheCatCheckForWinner,
-    });
+  const {
+    winnerCounts,
+    currentWinner,
+    checkForWinner,
+    winnerText,
+    player1HasWon,
+  } = useWinnerCounts({
+    board,
+    player1Symbol: USER_SYMBOL,
+    player2Symbol: CAT_SYMBOL,
+    evaluateWinner: trapTheCatCheckForWinner,
+  });
+
+  const {
+    currentScore: currentNumMoves,
+    highScore: bestNumMoves,
+    incrementScore: makeMove,
+    resetMoveCount,
+  } = useScores({
+    hasWon: player1HasWon,
+    initialHighScore: 15,
+    higherIsBetter: false,
+  });
 
   const selectHex = (i: number, j: number) => {
     setBoard((prev) => {
@@ -84,6 +101,7 @@ export const TrapTheCat: React.VFC = () => {
       const boardAfterCatMove = makeCatMove({ board: newBoard });
       return boardAfterCatMove;
     });
+    makeMove();
   };
 
   React.useEffect(() => {
@@ -92,7 +110,9 @@ export const TrapTheCat: React.VFC = () => {
 
   const resetGame = () => {
     setBoard(getStartingBoard());
+    resetMoveCount();
   };
+
   return (
     <StyledRow>
       <MainContainer>
@@ -103,6 +123,11 @@ export const TrapTheCat: React.VFC = () => {
           gameIsOver={currentWinner !== "NONE"}
         />
         <PrimaryButton onClick={resetGame}> New Game </PrimaryButton>
+        <br />
+        <div>Moves made: {currentNumMoves}</div>
+        <div>Current record: {bestNumMoves}</div>
+        <br />
+        <hr style={{ width: "250px" }} />
         <br />
         <WinnerCounts winnerCounts={winnerCounts} hideTies />
       </MainContainer>

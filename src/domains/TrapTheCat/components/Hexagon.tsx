@@ -10,7 +10,7 @@ export const Hexagon = ({
   allowHover?: boolean;
   onClickHex: () => void;
 }) => {
-  const hoverColor = lighten(color, 0.5);
+  const hoverColor = lighten(color, 0.4);
   const normalStyle = { color, fill: color };
   const hoverStyle = allowHover
     ? {

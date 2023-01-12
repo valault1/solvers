@@ -78,7 +78,6 @@ export function useWinnerCounts({
   isMultiplayer?: boolean;
 }) {
   const [currentWinner, setCurrentWinner] = React.useState<Winner>("NONE");
-  const gameIsOver = currentWinner !== Winners.NONE;
   const [winnerCounts, setWinnerCounts] = React.useState(initialCounts);
 
   const incrementCount = (s: Winner) => {
@@ -134,5 +133,6 @@ export function useWinnerCounts({
     currentWinner,
     checkForWinner,
     winnerText: getWinnerText(currentWinner),
+    player1HasWon: currentWinner === "PLAYER1_AGAINST_COMP",
   };
 }
