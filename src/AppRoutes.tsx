@@ -37,7 +37,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   {
     label: "Wordcounter",
     element: <Wordcounter />,
-    isHidden: true,
+    isHidden: false,
   },
   {
     label: "3rd World Farmer",

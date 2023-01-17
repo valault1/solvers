@@ -16,6 +16,8 @@ import {
   BarChartContainer,
   CountContainer,
 } from "domains/Wordcounter/styledComponents";
+import { useWordcountData } from "domains/Wordcounter/hooks/useWordcountData";
+import { PrimaryButton } from "components/Form.elements";
 
 type WordcounterProps = {};
 
@@ -46,29 +48,37 @@ export const Wordcounter = ({}: WordcounterProps) => {
     useFilteredDataPoints(allDataPoints);
   console.log({ dataFile, allDataPoints, totalWordCount, totalKeystrokes });
 
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
+  const {
+    labels,
+    wordcountData,
+    keystrokesData,
+    showKeyStrokes,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+    setFiltersToToday,
+    setFiltersToThisMonth,
+    setFiltersToThisWeek,
+  } = useWordcountData({ allDataPoints });
 
   const data = {
     labels,
     datasets: [
       {
-        label: "Dataset 1",
-        data: labels.map(() => Math.floor(Math.random() * 1000)),
+        label: "Word count",
+        data: wordcountData,
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
-      {
-        label: "Dataset 2",
-        data: labels.map(() => Math.floor(Math.random() * 1000)),
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-      },
+      ...(showKeyStrokes
+        ? [
+            {
+              label: "Keystrokes",
+              data: keystrokesData,
+              backgroundColor: "rgba(53, 162, 235, 0.5)",
+            },
+          ]
+        : []),
     ],
   };
   return (
@@ -84,6 +94,15 @@ export const Wordcounter = ({}: WordcounterProps) => {
         {!!totalKeystrokes && (
           <CountContainer>Total keystrokes: {totalKeystrokes}</CountContainer>
         )}
+        <div>
+          <PrimaryButton onClick={setFiltersToToday}> Today</PrimaryButton>
+          <PrimaryButton onClick={setFiltersToThisWeek}>
+            This week
+          </PrimaryButton>
+          <PrimaryButton onClick={setFiltersToThisMonth}>
+            This month
+          </PrimaryButton>
+        </div>
         <BarChartContainer style={{ width: "50%" }}>
           <Bar options={options} data={data} />
         </BarChartContainer>
