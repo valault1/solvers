@@ -1,9 +1,10 @@
-import { Dialog } from "@mui/material";
+import { Button, Checkbox, Dialog, TextField } from "@mui/material";
 import React from "react";
 import {
   BEST_INITIAL_GUESS,
   getBestGuess,
   getPossibleWords,
+  getResult,
 } from "domains/Wordle/WordleSolver/nextGuessCalculator";
 
 import {
@@ -77,6 +78,7 @@ const GuessInput = ({
           onChange={(event) =>
             onChange({ guess: event.target.value, result: guess.result })
           }
+          inputProps={{ maxLength: 5 }}
           disabled={!showSubmit}
           onKeyUp={handleKeyPress}
           error={!!guessErrorText}
@@ -89,6 +91,7 @@ const GuessInput = ({
           label={"Result"}
           id={"result" + guessNumber}
           value={guess.result}
+          inputProps={{ maxLength: 5 }}
           onChange={(event) =>
             onChange({ guess: guess.guess, result: event.target.value })
           }
@@ -127,6 +130,8 @@ export const WordleSolver = ({}: WordleSolverProps) => {
   var [showDialog, setShowDialog] = React.useState(false);
   var [resultErrorText, setResultErrorText] = React.useState("");
   var [guessErrorText, setGuessErrorText] = React.useState("");
+  var [secretWord, setSecretWord] = React.useState("");
+  var [showSecretWordChecker, setShowSecretWordChecker] = React.useState(false);
   const guessInputRef: React.RefObject<HTMLDivElement> = React.useRef(null);
   const checkErrors = () => {
     var newGuessErrorText = "";
@@ -174,7 +179,49 @@ export const WordleSolver = ({}: WordleSolverProps) => {
       addGuess();
       e.preventDefault();
       //setTimeout(() => guessInputRef.current.focus(), 100);
-      guessInputRef.current.focus();
+      guessInputRef?.current?.focus();
+    }
+  };
+
+  console.log({ pastGuesses, currentGuess });
+
+  const doGuesses = () => {
+    console.log("Got here");
+
+    let currentGuess = "";
+    let counter = 0;
+    let currentPastGuesses: PastGuess[] = [];
+    let currentPossibleWords = possibleWords;
+
+    while (currentGuess != secretWord && counter <= 10) {
+      currentGuess = getBestGuess(currentPossibleWords);
+
+      let currentPastGuess: PastGuess = {
+        bestGuess: currentGuess,
+        possibleWords: [...currentPossibleWords],
+        guess: currentGuess,
+        result: getResult(currentGuess, secretWord),
+      };
+      currentPossibleWords = getPossibleWords(currentPossibleWords, {
+        guess: currentGuess,
+        result: getResult(currentGuess, secretWord),
+      });
+
+      console.log(currentPastGuess);
+      currentPastGuesses.push(currentPastGuess);
+      counter++;
+    }
+    setPastGuesses(currentPastGuesses);
+    console.log(counter);
+  };
+
+  const handleSecretKeyPress = (e: React.KeyboardEvent) => {
+    console.log("handleSecretKeyPress");
+    console.log({ secretWord });
+    if (e.key === "Enter" && secretWord.length === 5) {
+      doGuesses();
+      e.preventDefault();
+      //setTimeout(() => guessInputRef.current.focus(), 100);
     }
   };
 
@@ -190,6 +237,28 @@ export const WordleSolver = ({}: WordleSolverProps) => {
   return (
     <>
       <>
+        <div>
+          <Checkbox
+            value={showSecretWordChecker}
+            onChange={(event, checked) => setShowSecretWordChecker(checked)}
+          />
+          Already know the word?
+        </div>
+
+        {showSecretWordChecker && (
+          <InputRow>
+            <TextInput
+              label={"Secret Word"}
+              id={"secretWord"}
+              inputProps={{ maxLength: 5 }}
+              onChange={(event) => setSecretWord(event.target.value)}
+              onKeyUp={handleSecretKeyPress} // TOFIX
+            />
+            <Button variant="contained" onClick={doGuesses}>
+              Test Word
+            </Button>
+          </InputRow>
+        )}
         {pastGuesses.map((guess, index) => {
           return (
             <GuessInput
@@ -219,6 +288,7 @@ export const WordleSolver = ({}: WordleSolverProps) => {
         )}
         <PrimaryButton onClick={clear}>Start Over</PrimaryButton>
       </>
+
       <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
         <DialogContent>
           <DialogHeader>
