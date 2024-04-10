@@ -5,6 +5,7 @@ import { MancalaController } from "domains/Mancala/MancalaController";
 import { PhysicsCalculatorController } from "domains/Physics/PhysicsCalculatorsController";
 import { ReviewsController } from "domains/Reviews/ReviewsController";
 import { RummikubController } from "domains/Rummikub/RummikubController";
+import { SubgroupsController } from "domains/Subgroups/SubgroupsController";
 import { TicTacToeController } from "domains/TicTacToe/TicTacToeController";
 import { TrapTheCat } from "domains/TrapTheCat/TrapTheCat";
 import { Wordcounter } from "domains/Wordcounter/Wordcounter";
@@ -59,6 +60,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
     isHidden: true,
   },
   { label: "Reviews", element: <ReviewsController />, isHidden: true },
+  { label: "Subgroups", element: <SubgroupsController />, isHidden: false },
 ];
 export const AppRoutes: React.FC = () => {
   return (
