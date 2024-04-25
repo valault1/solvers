@@ -1,0 +1,15 @@
+export type RemoteCommand =
+  | "power_on"
+  | "power_off"
+  | "volume_up"
+  | "volume_down"
+  | "volume_set"
+  | "options"
+  | "exit_options"
+  | "up"
+  | "down"
+  | "left"
+  | "right"
+  | "enter"
+  | "mute"
+  | "unmute";

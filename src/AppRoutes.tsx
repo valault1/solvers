@@ -1,8 +1,10 @@
 import { Battleship } from "domains/Battleship/Battleship";
+import { GameController } from "domains/BuildALot/features/GameController/GameController";
 import { CalculatorsView } from "domains/Calculators/CalculatorsView";
 import { ThirdWorldFarmerController } from "domains/FarmGame/ThirdWorldFarmerController";
 import { MancalaController } from "domains/Mancala/MancalaController";
 import { PhysicsCalculatorController } from "domains/Physics/PhysicsCalculatorsController";
+import { RemoteController } from "domains/Remote/RemoteController";
 import { ReviewsController } from "domains/Reviews/ReviewsController";
 import { RummikubController } from "domains/Rummikub/RummikubController";
 import { TicTacToeController } from "domains/TicTacToe/TicTacToeController";
@@ -59,6 +61,8 @@ export const NAVBAR_PAGES: NavbarPage[] = [
     isHidden: true,
   },
   { label: "Reviews", element: <ReviewsController />, isHidden: true },
+  { label: "Remote", element: <RemoteController /> },
+  { label: "BuildALot", element: <GameController /> },
 ];
 export const AppRoutes: React.FC = () => {
   return (

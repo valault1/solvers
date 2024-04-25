@@ -60,6 +60,7 @@ export const Wordcounter = ({}: WordcounterProps) => {
     setFiltersToToday,
     setFiltersToThisMonth,
     setFiltersToThisWeek,
+    setFiltersToThisYear,
   } = useWordcountData({ allDataPoints });
 
   const data = {
@@ -101,6 +102,9 @@ export const Wordcounter = ({}: WordcounterProps) => {
           </PrimaryButton>
           <PrimaryButton onClick={setFiltersToThisMonth}>
             This month
+          </PrimaryButton>
+          <PrimaryButton onClick={setFiltersToThisYear}>
+            This year
           </PrimaryButton>
         </div>
         <BarChartContainer style={{ width: "50%" }}>

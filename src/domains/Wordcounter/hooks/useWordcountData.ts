@@ -1,4 +1,11 @@
-import { add, format, startOfMonth, startOfWeek } from "date-fns";
+import {
+  add,
+  endOfYear,
+  format,
+  startOfMonth,
+  startOfWeek,
+  startOfYear,
+} from "date-fns";
 import { WordcountDataPoint } from "domains/Wordcounter/sharedTypes";
 import * as React from "react";
 
@@ -121,6 +128,14 @@ export const useWordcountData = ({
     setEndDate(endOfInterval);
     setCurrentInterval("DAYS");
   };
+  const setFiltersToThisYear = () => {
+    const now = new Date();
+    const startOfInterval = startOfYear(now);
+    const endOfInterval = endOfYear(now);
+    setStartDate(startOfInterval);
+    setEndDate(endOfInterval);
+    setCurrentInterval("MONTHS");
+  };
 
   return {
     startDate,
@@ -136,5 +151,6 @@ export const useWordcountData = ({
     setFiltersToToday,
     setFiltersToThisWeek,
     setFiltersToThisMonth,
+    setFiltersToThisYear,
   };
 };
