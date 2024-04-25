@@ -136,3 +136,17 @@ export const findWordsWithLetters: (letters: string) => string[] = (
     .slice(0, scoresList.length >= 4 ? 4 : scoresList.length)
     .map((score) => score.word);
 };
+
+export const getResult = (guessWord: string, secretWord: string) => {
+  let result = "";
+  for (let i = 0; i < guessWord.length; i++) {
+    if (guessWord[i] === secretWord[i]) {
+      result += "g";
+    } else if (secretWord.includes(guessWord[i])) {
+      result += "y";
+    } else {
+      result += "b";
+    }
+  }
+  return result;
+};

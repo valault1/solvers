@@ -15,6 +15,7 @@ export const LabelWrapper = styled.div(() => ({
 export const InputRow = styled.div(() => ({
   display: "flex",
   gap: 8,
+  width: "100%",
 }));
 
 const StyledTextInput = styled(TextField)<{}>({
