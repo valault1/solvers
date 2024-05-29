@@ -4,6 +4,7 @@ import { CalculatorsView } from "domains/Calculators/CalculatorsView";
 import { ThirdWorldFarmerController } from "domains/FarmGame/ThirdWorldFarmerController";
 import { MancalaController } from "domains/Mancala/MancalaController";
 import { PhysicsCalculatorController } from "domains/Physics/PhysicsCalculatorsController";
+import { QueensSolver } from "domains/Queens/QueensSolver";
 import { RemoteController } from "domains/Remote/RemoteController";
 import { ReviewsController } from "domains/Reviews/ReviewsController";
 import { RummikubController } from "domains/Rummikub/RummikubController";
@@ -65,6 +66,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Remote", element: <RemoteController />, isHidden: true },
   { label: "BuildALot", element: <GameController />, isHidden: true },
   { label: "Subgroups", element: <SubgroupsController />, isHidden: false },
+  { label: "Queens", element: <QueensSolver />, isHidden: false },
 ];
 export const AppRoutes: React.FC = () => {
   return (
@@ -74,27 +76,6 @@ export const AppRoutes: React.FC = () => {
         return <Route path={path} element={page.element} key={path} />;
       })}
       <Route path={"/"} element={<WordleController />} />
-      {/* <Route path="/" element={<WordleController />} />
-      <Route path="/wordhunt" element={<WordHuntController />} />
-      <Route path="/wordle" element={<WordleController />} />
-      <Route path="/calculators" element={<CalculatorsView />} />
-      <Route path="/farmer" element={<ThirdWorldFarmerController />} />
-      <Route
-        path="/reviews"
-        element={
-          <MainContainer>
-            <ReviewsController />
-          </MainContainer>
-        }
-      />
-      <Route path="/tictactoe" element={<TicTacToeController />} />
-      <Route path="/trapthecat" element={<TrapTheCat />} />
-      <Route path="/mancala" element={<MancalaController />} />
-      <Route path="/rummikub" element={<RummikubController />} />
-      <Route path="/physics" element={<PhysicsCalculatorController />} />
-
-      <Route path="/battleship" element={<Battleship />} />
-      <Route path="/*" element={<WordleController />}></Route> */}
     </Routes>
   );
 };

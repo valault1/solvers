@@ -41,19 +41,22 @@ const config = {
       },
       {
         test: /\.svg$/,
-        use: ['@svgr/webpack']
+        use: ["@svgr/webpack"],
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
         type: "asset",
       },
 
-
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],
   },
   resolve: {
+    fallback: {
+      path: false,
+      stream: false,
+    },
     alias: {
       src: path.resolve(__dirname, "src/"), // added this
       domains: path.resolve(__dirname, "src/domains/"),
