@@ -21,7 +21,7 @@ export const ListsContainer = styled.div(() => ({
 export const SelectContainer = styled.div(() => ({
   display: "flex",
   flexDirection: "column",
-  width: "200px",
+  minWidth: "200px",
   color: theme.colors.textPrimary,
 }));
 
@@ -66,8 +66,6 @@ export const SubgroupsController = ({}: SubgroupsControllerProps) => {
             // @ts-ignore
             setSelectedNames(val);
           }}
-          placeholder="Select a name"
-          label="Select a name"
           fullWidth
         >
           {NAMES.map((name) => (

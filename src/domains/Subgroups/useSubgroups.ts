@@ -26,7 +26,7 @@ export const useSubgroups = ({
 }: {
   selectedNames: string[];
 }) => {
-  let minNumber = 3;
+  let minNumber = 2;
   let maxNumber = NAMES.length;
 
   const subgroups = React.useMemo(() => {
