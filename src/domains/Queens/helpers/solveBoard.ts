@@ -5,6 +5,7 @@ const placeQueen = (board: Board, row: number, col: number) => {
 };
 
 export const solveBoard = (blankBoard: BlankBoard): Board => {
+  if (!blankBoard.length) return [];
   const board: Board = blankBoard.map((row) =>
     row.map((color) => ({ token: "", color }))
   );

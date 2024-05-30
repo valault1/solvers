@@ -1,4 +1,5 @@
 import { cropPixelArrayToBoard } from "domains/Queens/helpers/cropBoard";
+import { cropPixelArrayToBoardV2 } from "domains/Queens/helpers/cropBoardV2";
 import { getBlankBoard } from "domains/Queens/helpers/parseBoard";
 import { BlankBoard, Board, PixelArray } from "domains/Queens/sharedTypes";
 import { BOARD_COLORS } from "domains/Queens/useImageParsing";
@@ -22,9 +23,10 @@ export const useParseBoard = ({
 
   // whenever the pixelArray changes, crop the image to the board
   React.useEffect(() => {
-    const croppedPixelArray = cropPixelArrayToBoard(pixelArray);
+    const croppedPixelArray: PixelArray = cropPixelArrayToBoardV2(pixelArray); //cropPixelArrayToBoard(pixelArray);
     const { board: newBoard, croppedImageSquares: newCroppedImageSquares } =
       getBlankBoard(croppedPixelArray);
+
     setBoard(newBoard);
     setCroppedImageSquares(newCroppedImageSquares);
     updateImage(croppedPixelArray);

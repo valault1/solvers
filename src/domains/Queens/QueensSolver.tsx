@@ -13,7 +13,7 @@ import {
 import { useParseBoard } from "domains/Queens/useParseBoard";
 import * as React from "react";
 
-const showRawImage = false;
+const showRawImage = true;
 const showCroppedSquares = false;
 
 const BOARD_SIZE = 30;
@@ -28,10 +28,14 @@ export const QueensSolver = () => {
     updateImage,
   } = useImageParsing();
 
+  console.log({ pixelArray });
+
   const { board: blankBoard, croppedImageSquares } = useParseBoard({
     pixelArray,
     updateImage,
   });
+
+  console.log({ blankBoard });
 
   const board = React.useMemo(() => {
     return solveBoard(blankBoard);
