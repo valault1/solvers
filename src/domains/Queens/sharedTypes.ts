@@ -18,3 +18,4 @@ export type BoardTile = { token: Token; color: BoardColor };
 export type Board = BoardTile[][];
 export type BlankBoardRow = BoardColor[];
 export type BlankBoard = BlankBoardRow[];
+export type Coords = { row: number; col: number };

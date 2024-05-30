@@ -10,6 +10,12 @@ import {
   PixelArray,
 } from "domains/Queens/sharedTypes";
 
+export const rotateBoard = (board: BlankBoard): BlankBoard => {
+  return board.map((row, i) => {
+    return row.map((color, j) => board[j][i]);
+  });
+};
+
 const cropOffTopBorder = (pixelArray: PixelArray): PixelArray => {
   return cropOffNextBlockOfColor(pixelArray, "black").remainingPiece;
 };
@@ -64,9 +70,7 @@ export const getBlankBoard = (pixelArray: PixelArray) => {
   }
 
   // for some reason, the board is rotated. So unrotate it.
-  const rotatedBoard = board.map((row, i) => {
-    return row.map((color, j) => board[j][i]);
-  });
+  const rotatedBoard = rotateBoard(board);
 
   // croppedImageSquares is just used for debugging.
   return { board: rotatedBoard, croppedImageSquares };

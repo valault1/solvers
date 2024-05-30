@@ -1,9 +1,9 @@
-import styled from "@emotion/styled";
 import { Grid, Stack } from "@mui/material";
 import ImageDataDisplay from "components/ImageDataDisplay";
 import ImageUpload from "components/ImageUpload";
 import { MainContainer } from "components/MainPage.elements";
 import { solveBoard } from "domains/Queens/helpers/solveBoard";
+import { MOCK_BLANK_BOARD } from "domains/Queens/mocks/mocks";
 import {
   COLORS_LIST,
   colorArrToString,
@@ -13,8 +13,9 @@ import {
 import { useParseBoard } from "domains/Queens/useParseBoard";
 import * as React from "react";
 
-const showRawImage = true;
+const showRawImage = false;
 const showCroppedSquares = false;
+const showCroppedBoard = false;
 
 const BOARD_SIZE = 30;
 
@@ -28,18 +29,15 @@ export const QueensSolver = () => {
     updateImage,
   } = useImageParsing();
 
-  console.log({ pixelArray });
-
   const { board: blankBoard, croppedImageSquares } = useParseBoard({
     pixelArray,
     updateImage,
   });
 
-  console.log({ blankBoard });
-
   const board = React.useMemo(() => {
-    return solveBoard(blankBoard);
-  }, [blankBoard]);
+    return solveBoard(MOCK_BLANK_BOARD);
+  }, []);
+
   return (
     <MainContainer>
       {showRawImage && (
@@ -48,7 +46,9 @@ export const QueensSolver = () => {
         </Grid>
       )}
       <ImageUpload handleUploadClick={handleUploadClick} />
-      <ImageDataDisplay imageData={modifiedImageData} />
+      {showCroppedBoard && <ImageDataDisplay imageData={modifiedImageData} />}
+      <br />
+      <br />
       <Stack direction="row">
         {board.map((row, i) => (
           <Stack key={i} direction="column">
