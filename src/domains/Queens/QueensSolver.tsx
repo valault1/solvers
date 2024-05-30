@@ -35,8 +35,8 @@ export const QueensSolver = () => {
   });
 
   const board = React.useMemo(() => {
-    return solveBoard(MOCK_BLANK_BOARD);
-  }, []);
+    return solveBoard(blankBoard);
+  }, [blankBoard]);
 
   return (
     <MainContainer>
