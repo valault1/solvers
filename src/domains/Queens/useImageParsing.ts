@@ -1,50 +1,76 @@
+import { Color, PixelArray, RgbaColor } from "domains/Queens/sharedTypes";
 import * as React from "react";
 var pixels = require("image-pixels");
 const ndarray = require("ndarray");
 
-export type RgbaColor = {
-  r: number;
-  g: number;
-  b: number;
-  a: number;
+export const colorToString = (color: RgbaColor) => {
+  return colorArrToString([color.r, color.g, color.b]);
 };
 
-export type PixelArray = RgbaColor[][];
+export const colorArrToString = (arr: number[]) => {
+  return arr.join(",");
+};
 
-type Color = { red: number; green: number; blue: number };
+export const colorsAreEqual = (color1: RgbaColor, color2: number[]) => {
+  if (
+    color1.r === color2[0] &&
+    color1.g === color2[1] &&
+    color1.b === color2[2]
+  ) {
+    return true;
+  }
+  return false;
+};
 
-const UNFORMATTED_COLORS_LIST = [
-  //pink
-  [214, 163, 188],
+export const BOARD_COLORS = {
+  pink: [214, 163, 188],
   //brown/gray
-  [183, 179, 161],
+  brownGray: [183, 179, 161],
   //red
-  [237, 131, 103],
+  red: [237, 131, 103],
   //light orange
-  [246, 204, 153],
+  lightOrange: [246, 204, 153],
   //yellow
-  [232, 243, 150],
+  yellow: [232, 243, 150],
   //purple
-  [183, 164, 221],
+  purple: [183, 164, 221],
   //teal
-  [173, 209, 215],
-  //teal
-  [139, 181, 254],
+  teal: [173, 209, 215],
+  //light blue
+  lightBlue: [139, 181, 254],
   //light green
-  [188, 222, 166],
+  lightGreen: [188, 222, 166],
   //gray section
-  [223, 223, 223],
-  //border black
-  [1, 1, 1],
-  //outside white
-  [249, 250, 252],
-];
+  gray: [223, 223, 223],
+};
 
-const COLORS_LIST: Color[] = UNFORMATTED_COLORS_LIST.map((colorArr) => ({
-  red: colorArr[0],
-  green: colorArr[1],
-  blue: colorArr[2],
-}));
+export const COLORS_LIST = {
+  //border black
+  black: [1, 1, 1],
+  //outside white
+  white: [249, 250, 252],
+  ...BOARD_COLORS,
+};
+
+type PosterizedColor = keyof typeof COLORS_LIST;
+
+export const COLORS_LIST_BY_COLOR = Object.keys(COLORS_LIST).reduce(
+  (acc: Record<string, string>, colorName: PosterizedColor) => {
+    acc[colorArrToString(COLORS_LIST[colorName])] = colorName;
+    return acc;
+  },
+  {}
+);
+
+const formattedColorsList: Color[] = Object.values(COLORS_LIST).map(
+  (colorArr) => {
+    return {
+      red: colorArr[0],
+      green: colorArr[1],
+      blue: colorArr[2],
+    };
+  }
+);
 
 const customPosterize = (ndArray: any, colorsList: Color[]) => {
   const result = ndarray(new Uint8Array(ndArray.size), ndArray.shape);
@@ -79,7 +105,7 @@ const customPosterize = (ndArray: any, colorsList: Color[]) => {
 };
 
 const posterize = (ndArray: any) => {
-  return customPosterize(ndArray, COLORS_LIST);
+  return customPosterize(ndArray, formattedColorsList);
 };
 
 const pixelArrayToUint8Array = (pixelArray: PixelArray) => {
@@ -117,10 +143,22 @@ const getPixelNDArray = (imageData: ImageData) => {
   return ndarray(imageData.data, [imageData.height, imageData.width, 4]);
 };
 
+export const getImageDataFromPixelArray = (pixelArray: PixelArray) => {
+  if (!pixelArray.length) return undefined;
+  const newImageData = new ImageData(
+    pixelArrayToUint8Array(pixelArray),
+    pixelArray[0].length,
+    pixelArray.length,
+    { colorSpace: "srgb" }
+  );
+  return newImageData;
+};
+
 export const useImageParsing = () => {
   const [rawImageData, setRawImageData] = React.useState<ImageData>();
-  const [file, setFile] = React.useState(null);
+  const [modifiedImageData, setModifiedImageData] = React.useState<ImageData>();
   const [pixelArray, setPixelArray] = React.useState<PixelArray>([]);
+  const [rawImageFile, setRawImageFile] = React.useState<string>();
 
   const handleUploadClick = (event: any) => {
     console.log();
@@ -129,41 +167,36 @@ export const useImageParsing = () => {
     reader.readAsDataURL(newlySelectedFile);
 
     reader.onloadend = function (e) {
-      setFile(reader.result);
+      const file = reader.result;
+      setRawImageFile(file as string);
+      if (!file) return;
+      // set the pixel array to the posterized version of the image
+      pixels(file).then((newImageData: ImageData) => {
+        setRawImageData(newImageData);
+        //setPixelArray(getPixelArray(newImageData));
+        const ndArray = getPixelNDArray(newImageData);
+        const poster = posterize(ndArray);
+        const posterizedPixelArray = getPixelArrayFromNdArray(poster);
+        setPixelArray(posterizedPixelArray);
+        setModifiedImageData(getImageDataFromPixelArray(posterizedPixelArray));
+      });
     };
   };
 
-  // on file change, update pixelArray
-  React.useEffect(() => {
-    if (!file) return;
-    pixels(file).then((newImageData: ImageData) => {
-      setRawImageData(newImageData);
-      //setPixelArray(getPixelArray(newImageData));
-      const ndArray = getPixelNDArray(newImageData);
-      const poster = posterize(ndArray);
-      const posterizedPixelArray = getPixelArrayFromNdArray(poster);
-      setPixelArray(posterizedPixelArray);
-    });
-  }, [file]);
-
-  // if pixelArray updates, updatePosterizedImageData
-  const posterizedImageData = React.useMemo(() => {
-    if (!rawImageData) return undefined;
-    const newImageData = new ImageData(
-      pixelArrayToUint8Array(pixelArray),
-      rawImageData?.width,
-      rawImageData?.height,
-      { colorSpace: "srgb" }
-    );
-    return newImageData;
-  }, [pixelArray]);
+  const updateImage = React.useCallback(
+    (newPixelArray: PixelArray) => {
+      setModifiedImageData(getImageDataFromPixelArray(newPixelArray));
+    },
+    [setModifiedImageData]
+  );
 
   return {
-    posterizedImageData,
+    modifiedImageData,
     rawImageData,
-    rawImage: file,
+    rawImage: rawImageFile,
     pixelArray,
     handleUploadClick,
+    updateImage,
   };
 };
 
