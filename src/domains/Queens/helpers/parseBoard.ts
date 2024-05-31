@@ -67,7 +67,8 @@ export const getBlankBoard = (pixelArray: PixelArray) => {
 
     croppedArray = remainingPiece;
     const { row, croppedSquaresRow } = parseRow(croppedPiece);
-    board.push(row);
+    if (row.length) board.push(row);
+
     croppedImageSquares.push(croppedSquaresRow);
   }
 

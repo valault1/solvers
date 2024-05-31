@@ -280,14 +280,28 @@ export const cropPixelArrayToBoard = (pixelArray: PixelArray) => {
     direction: "row",
   });
 
-  // bottom
+  // bottom (this is weird... but it works for both pre-cropped and normal screenshots!)
   try {
-    croppedArray = cropMultipleTimes({
+    const bottomCroppedArray = cropMultipleTimes({
       pixelArray: croppedArray,
       targetColors: ["gray", "gray", "white"],
       direction: "row",
       reversed: true,
     });
+
+    console.log({ bottomCroppedArray });
+    if (bottomCroppedArray.length < bottomCroppedArray[0].length) {
+      // ended up with a board that's not tall enough; crop it using just white
+
+      croppedArray = cropMultipleTimes({
+        pixelArray: croppedArray,
+        targetColors: ["white"],
+        direction: "row",
+        reversed: true,
+      });
+    } else {
+      croppedArray = bottomCroppedArray;
+    }
   } catch (e) {
     console.log("failed to crop bottom using grays; trying just white");
     // if that errors, try cropping just white; it may be a small board.
