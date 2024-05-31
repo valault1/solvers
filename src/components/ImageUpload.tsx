@@ -1,11 +1,7 @@
 // imports the React Javascript Library
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@mui/material";
 import { Grid } from "@mui/material";
-import { Avatar } from "@mui/material";
-import { withStyles } from "@mui/material";
-import { Card } from "@mui/material";
-import ImageDataDisplay from "components/ImageDataDisplay";
 
 export const ImageUpload = ({
   handleUploadClick,

@@ -146,23 +146,6 @@ const getGuessesLeft = (board: Board) => {
   return result;
 };
 
-const getGuessesLeftV2 = (board: Board, guessesTried: Coords[]) => {
-  let result: Coords[] = [];
-  const colorCounts = getColorCounts(board);
-
-  board.forEach((row, i) => {
-    row.forEach((tile, j) => {
-      const hasGuessedThisTile = guessesTried.some(
-        (guess) => guess.row === i && guess.col === j
-      );
-      if (tile.token === "" && !hasGuessedThisTile) {
-        result.push({ row: i, col: j });
-      }
-    });
-  });
-  return result;
-};
-
 const boardHasWon = (board: Board) => {
   let queenJCoords: number[] = [];
   let queenICoords: number[] = [];
@@ -185,16 +168,6 @@ const boardHasWon = (board: Board) => {
     console.log({ hasRightNumberOfQueens, queenJCoords, queenICoords, board });
   }
   return hasRightNumberOfQueens;
-};
-
-const getColorCounts = (blankBoard: Board) => {
-  const colorCounts: Record<string, number> = {};
-  blankBoard.forEach((row) => {
-    row.forEach(({ color }) => {
-      colorCounts[color] = (colorCounts[color] || 0) + 1;
-    });
-  });
-  return colorCounts;
 };
 
 const placeX = (board: Board, r: number, c: number) => {

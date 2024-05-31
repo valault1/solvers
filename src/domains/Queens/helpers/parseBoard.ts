@@ -1,5 +1,4 @@
 import {
-  cropOffNextBlockOfColor,
   cropOffNextBlockOfColorCol,
   cropOffNextBlockOfColorLegacy,
   getMajorityColor,

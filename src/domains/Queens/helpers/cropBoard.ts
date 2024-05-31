@@ -1,9 +1,4 @@
-import {
-  BoardColor,
-  ImageColor,
-  PixelArray,
-  RgbaColor,
-} from "domains/Queens/sharedTypes";
+import { ImageColor, PixelArray, RgbaColor } from "domains/Queens/sharedTypes";
 import {
   COLORS_LIST_BY_COLOR,
   colorToString,
