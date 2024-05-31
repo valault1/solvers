@@ -1,5 +1,5 @@
+import { BOARD_COLORS } from "domains/Queens/constants/constants";
 import { BlankBoard, Board, Coords } from "domains/Queens/sharedTypes";
-import { BOARD_COLORS } from "domains/Queens/useImageParsing";
 
 const copyBoard = (board: Board) => {
   return board.map((row) => row.map((tile) => ({ ...tile })));

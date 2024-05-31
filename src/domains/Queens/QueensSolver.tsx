@@ -2,15 +2,18 @@ import { Card, Grid, Stack } from "@mui/material";
 import ImageDataDisplay from "components/ImageDataDisplay";
 import ImageUpload from "components/ImageUpload";
 import { MainContainer } from "components/MainPage.elements";
+import {
+  COLORS_LIST,
+  colorArrToString,
+} from "domains/Queens/constants/constants";
 import { cropPixelArrayToBoard } from "domains/Queens/helpers/cropBoard";
 import { getBlankBoard } from "domains/Queens/helpers/parseBoard";
 import { solveBoard } from "domains/Queens/helpers/solveBoard";
 import {
-  COLORS_LIST,
-  colorArrToString,
   getImageDataFromPixelArray,
   useImageParsing,
-} from "domains/Queens/useImageParsing";
+} from "domains/Queens/hooks/useImageParsing";
+
 import * as React from "react";
 
 const showRawImage = false;
@@ -53,7 +56,8 @@ export const QueensSolver = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Stack direction="row">
+        {/** This bottom padding stops mobile from cutting off right below the text  */}
+        <Stack direction="row" paddingBottom={40}>
           {solvedBoard.map((row, i) => (
             <Stack key={i} direction="column">
               {row.map(({ token, color: colorName }, j) => (

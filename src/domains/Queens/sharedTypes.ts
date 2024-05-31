@@ -1,4 +1,4 @@
-import { BOARD_COLORS, COLORS_LIST } from "domains/Queens/useImageParsing";
+import { BOARD_COLORS, COLORS_LIST } from "domains/Queens/constants/constants";
 
 export type RgbaColor = {
   r: number;

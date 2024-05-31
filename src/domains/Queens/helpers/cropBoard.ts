@@ -1,8 +1,12 @@
-import { ImageColor, PixelArray, RgbaColor } from "domains/Queens/sharedTypes";
 import {
   COLORS_LIST_BY_COLOR,
-  colorToString,
-} from "domains/Queens/useImageParsing";
+  colorArrToString,
+} from "domains/Queens/constants/constants";
+import { ImageColor, PixelArray, RgbaColor } from "domains/Queens/sharedTypes";
+
+export const colorToString = (color: RgbaColor) => {
+  return colorArrToString([color.r, color.g, color.b]);
+};
 
 type CropOptions = {
   pixelArray: PixelArray;
