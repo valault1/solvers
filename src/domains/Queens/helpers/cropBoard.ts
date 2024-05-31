@@ -277,14 +277,27 @@ export const cropPixelArrayToBoard = (pixelArray: PixelArray) => {
   let croppedArray = cropMultipleTimes({
     pixelArray,
     targetColors: ["white"],
+    direction: "row",
   });
 
   // bottom
-  croppedArray = cropMultipleTimes({
-    pixelArray: croppedArray,
-    targetColors: ["gray", "gray", "white"],
-    reversed: true,
-  });
+  try {
+    croppedArray = cropMultipleTimes({
+      pixelArray: croppedArray,
+      targetColors: ["gray", "gray", "white"],
+      direction: "row",
+      reversed: true,
+    });
+  } catch (e) {
+    console.log("failed to crop bottom using grays; trying just white");
+    // if that errors, try cropping just white; it may be a small board.
+    croppedArray = cropMultipleTimes({
+      pixelArray: croppedArray,
+      targetColors: ["white"],
+      direction: "row",
+      reversed: true,
+    });
+  }
 
   // left
   croppedArray = cropMultipleTimes({

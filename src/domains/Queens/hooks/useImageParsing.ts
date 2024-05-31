@@ -107,12 +107,14 @@ export const getImageDataFromPixelArray = (pixelArray: PixelArray) => {
   return newImageData;
 };
 
-export const useImageParsing = () => {
+export const useImageParsing = ({ clearError }: { clearError: () => void }) => {
   const [rawImageData, setRawImageData] = React.useState<ImageData>();
   const [rawImageFile, setRawImageFile] = React.useState<string>();
   const [imageUploadTime, setImageUploadTime] = React.useState<number>(0);
 
   const handleUploadClick = (event: any) => {
+    if (!event?.target?.files?.[0]) return;
+    clearError();
     var newlySelectedFile = event.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(newlySelectedFile);
