@@ -1,9 +1,77 @@
 import { BlankBoard, Board, Coords } from "domains/Queens/sharedTypes";
 
+const markRows = (board: Board) => {
+  board.forEach((row, i) => {
+    let xCount = 0;
+    let blankCount = 0;
+    let blankIndex = 0;
+    row.forEach((tile, j) => {
+      if (tile.token === "X") {
+        xCount++;
+      } else if (tile.token === "") {
+        blankCount++;
+        blankIndex = j;
+      }
+    });
+
+    if (xCount === row.length - 1 && blankCount === 1) {
+      placeQueen(board, i, blankIndex);
+    }
+  });
+};
+
+const markColumns = (board: Board) => {
+  for (let i = 0; i < board[0].length; i++) {
+    let column = board.map((row) => row[i]);
+    let xCount = 0;
+    let blankCount = 0;
+    let blankIndex = 0;
+    column.forEach((tile, j) => {
+      if (tile.token === "X") {
+        xCount++;
+      } else if (tile.token === "") {
+        blankCount++;
+        blankIndex = j;
+      }
+    });
+
+    if (xCount === column.length - 1 && blankCount === 1) {
+      placeQueen(board, blankIndex, i);
+    }
+  }
+};
+
+const markColors = (board: Board) => {};
+
+const markGuaranteedPlacements = (board: Board): Coords | undefined => {
+  markRows(board);
+  markColumns(board);
+  markColors(board);
+  return undefined;
+};
+
 // returns the possible guesses left in the preferred order
 // excludes any spaces marked X
 const getGuessesLeft = (board: Board, guessesTried: Coords[]) => {
   let result: Coords[] = [];
+
+  board.forEach((row, i) => {
+    row.forEach((tile, j) => {
+      const hasGuessedThisTile = guessesTried.some(
+        (guess) => guess.row === i && guess.col === j
+      );
+      if (tile.token === "" && !hasGuessedThisTile) {
+        result.push({ row: i, col: j });
+      }
+    });
+  });
+  return result;
+};
+
+const getGuessesLeftV2 = (board: Board, guessesTried: Coords[]) => {
+  let result: Coords[] = [];
+  const colorCounts = getColorCounts(board);
+
   board.forEach((row, i) => {
     row.forEach((tile, j) => {
       const hasGuessedThisTile = guessesTried.some(
@@ -29,10 +97,10 @@ const boardHasWon = (board: Board) => {
   return queenCount === board.length;
 };
 
-const getColorCounts = (blankBoard: BlankBoard) => {
+const getColorCounts = (blankBoard: Board) => {
   const colorCounts: Record<string, number> = {};
   blankBoard.forEach((row) => {
-    row.forEach((color) => {
+    row.forEach(({ color }) => {
       colorCounts[color] = (colorCounts[color] || 0) + 1;
     });
   });
@@ -77,14 +145,11 @@ const placeQueen = (board: Board, row: number, col: number) => {
   markXsAfterQueen(board, row, col);
 };
 
-const getGuaranteedPlacement = (board: Board): Coords | undefined => {
-  // const rowsPlacement = getRowsPlacement(board);
-  // const columnsPlacement = getColumnsPlacement(board);
-  // const colorsPlacement = getColorsPlacement(board);
-  return undefined;
-};
-
-const solveBoardRecursive = (board: Board): Board | undefined => {
+const solveBoardRecursive = (
+  board: Board,
+  recursionCount: number = 0
+): Board | undefined => {
+  //console.log({ recursionCount, board });
   const guessesLeft = getGuessesLeft(board, []);
   if (guessesLeft.length === 0) {
     const hasWon = boardHasWon(board);
@@ -97,7 +162,12 @@ const solveBoardRecursive = (board: Board): Board | undefined => {
   for (let guess of guessesLeft) {
     const guessedBoard = JSON.parse(JSON.stringify(board));
     placeQueen(guessedBoard, guess.row, guess.col);
-    const solvedBoard = solveBoardRecursive(guessedBoard);
+    markGuaranteedPlacements(guessedBoard);
+    const solvedBoard = solveBoardRecursive(guessedBoard, recursionCount + 1);
+    if (recursionCount === 0 || recursionCount === 1) {
+      console.log("knocked out a guess");
+      console.log({ guess, guessesLeft, recursionCount });
+    }
     if (solvedBoard) {
       return solvedBoard;
     }
@@ -112,7 +182,9 @@ export const solveBoard = (blankBoard: BlankBoard): Board => {
 
   //placeQueen(board, 3, 0);
   const startTime = new Date().getTime();
-  const solvedBoard = solveBoardRecursive(board);
+
+  const isDebug = false;
+  const solvedBoard: Board = isDebug ? board : solveBoardRecursive(board);
 
   console.log({ solvedBoard, solveTime: new Date().getTime() - startTime });
   return solvedBoard;

@@ -15,7 +15,7 @@ import * as React from "react";
 
 const showRawImage = false;
 const showCroppedSquares = false;
-const showCroppedBoard = false;
+const showCroppedBoard = true;
 
 const BOARD_SIZE = 30;
 

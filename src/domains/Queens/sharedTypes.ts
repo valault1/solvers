@@ -19,3 +19,9 @@ export type Board = BoardTile[][];
 export type BlankBoardRow = BoardColor[];
 export type BlankBoard = BlankBoardRow[];
 export type Coords = { row: number; col: number };
+
+export type Guess = {
+  boardState: Board;
+  guessesTried: Coords[];
+  lastGuess: Coords;
+};
