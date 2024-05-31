@@ -1,11 +1,10 @@
-import { Grid, Stack } from "@mui/material";
+import { Card, CircularProgress, Grid, Stack } from "@mui/material";
 import ImageDataDisplay from "components/ImageDataDisplay";
 import ImageUpload from "components/ImageUpload";
 import { MainContainer } from "components/MainPage.elements";
 import { cropPixelArrayToBoard } from "domains/Queens/helpers/cropBoard";
 import { getBlankBoard } from "domains/Queens/helpers/parseBoard";
 import { solveBoard } from "domains/Queens/helpers/solveBoard";
-import { Board } from "domains/Queens/sharedTypes";
 import {
   COLORS_LIST,
   colorArrToString,
@@ -21,70 +20,102 @@ const showCroppedBoard = false;
 const BOARD_SIZE = 30;
 
 export const QueensSolver = () => {
-  const { handleUploadClick, rawImage, pixelArray } = useImageParsing();
+  const { handleUploadClick, rawImage, pixelArray, imageUploadTime } =
+    useImageParsing();
 
   const croppedBoardPixelArray = React.useMemo(() => {
-    const result = cropPixelArrayToBoard(pixelArray);
-    console.log({ croppedBoardPixelArray: result });
-    return result;
+    return cropPixelArrayToBoard(pixelArray);
   }, [pixelArray]);
 
+  // the cropped board image data, to display the cropped board (if showCroppedBoard is true)
   const croppedBoardImageData = React.useMemo(() => {
-    if (!croppedBoardPixelArray?.length) return undefined;
-    return getImageDataFromPixelArray(croppedBoardPixelArray);
+    return showCroppedBoard
+      ? getImageDataFromPixelArray(croppedBoardPixelArray)
+      : undefined;
   }, [croppedBoardPixelArray]);
 
   const { croppedImageSquares, board: blankBoard } = React.useMemo(() => {
     return getBlankBoard(croppedBoardPixelArray);
   }, [croppedBoardPixelArray]);
 
-  const board: Board = React.useMemo(() => {
+  const solvedBoard = React.useMemo(() => {
     return solveBoard(blankBoard);
   }, [blankBoard]);
 
   const BoardComponent = React.useMemo(() => {
+    const timeSinceImageUpload = new Date().getTime() - imageUploadTime;
+
+    const showTime = solvedBoard.length > 0;
     return (
-      <Stack direction="row">
-        {board.map((row, i) => (
-          <Stack key={i} direction="column">
-            {row.map(({ token, color: colorName }, j) => (
-              <div
-                key={j}
-                style={{
-                  width: BOARD_SIZE,
-                  height: BOARD_SIZE,
-                  backgroundColor: `rgba(${colorArrToString(
-                    COLORS_LIST[colorName]
-                  )})`,
-                  color: "black",
-                  border: "1px solid black",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {token}
-              </div>
-            ))}
-          </Stack>
-        ))}
+      <Stack
+        direction="column"
+        gap={4}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Stack direction="row">
+          {solvedBoard.map((row, i) => (
+            <Stack key={i} direction="column">
+              {row.map(({ token, color: colorName }, j) => (
+                <div
+                  key={j}
+                  style={{
+                    width: BOARD_SIZE,
+                    height: BOARD_SIZE,
+                    backgroundColor: `rgba(${colorArrToString(
+                      COLORS_LIST[colorName]
+                    )})`,
+                    color: "black",
+                    border: "1px solid black",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {token}
+                </div>
+              ))}
+            </Stack>
+          ))}
+        </Stack>
+        {showTime && <>Solved in {timeSinceImageUpload / 1000} s</>}
       </Stack>
     );
-  }, [board]);
+  }, [solvedBoard, imageUploadTime]);
 
   return (
-    <MainContainer>
+    <MainContainer gap="24px">
+      <h1>Queens Solver</h1>
       {showRawImage && (
         <Grid item>
           <img width="100%" src={rawImage} alt="" />
         </Grid>
       )}
+      <Card style={{ padding: "20px", maxWidth: "350px" }}>
+        <Stack justifyContent={"center"} alignItems={"center"} gap="12px">
+          <b>
+            <u>Instructions</u>
+          </b>
+          <div>
+            1. Take a screenshot of today's Queens board. (Don't worry about
+            cropping it - just upload the whole screenshot!)
+          </div>
+          <div>
+            2. Upload the screenshot, and our solver will process the image and
+            display a solved board.
+          </div>
+          <div>
+            3. Put in the solution, and look like a genius with your lightning
+            fast time!
+          </div>
+        </Stack>
+      </Card>
+
       <ImageUpload handleUploadClick={handleUploadClick} />
       {showCroppedBoard && (
         <ImageDataDisplay imageData={croppedBoardImageData} />
       )}
-      <br />
-      <br />
+
       {BoardComponent}
       {/** raw sliced tiles, for debugging */}
       {showCroppedSquares && (

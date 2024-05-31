@@ -23,6 +23,7 @@ export const ImageUpload = ({
             multiple
             type="file"
             onChange={handleUploadClick}
+            hidden={true}
           />
         </Button>
       </label>

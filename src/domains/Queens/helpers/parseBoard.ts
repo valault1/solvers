@@ -51,6 +51,7 @@ const parseRow = (
 // Look at cropped board. take off top border.
 // then, go row by row. crop each row off the board, process it, and go again.
 export const getBlankBoard = (pixelArray: PixelArray) => {
+  if (!pixelArray?.length) return { board: [], croppedImageSquares: [] };
   const startTime = new Date().getTime();
   let board: BlankBoard = [];
   let croppedImageSquares: PixelArray[][] = [];

@@ -1,4 +1,9 @@
 import { BlankBoard, Board, Coords } from "domains/Queens/sharedTypes";
+import { BOARD_COLORS } from "domains/Queens/useImageParsing";
+
+const copyBoard = (board: Board) => {
+  return board.map((row) => row.map((tile) => ({ ...tile })));
+};
 
 const markRows = (board: Board) => {
   board.forEach((row, i) => {
@@ -41,7 +46,53 @@ const markColumns = (board: Board) => {
   }
 };
 
-const markColors = (board: Board) => {};
+const markColors = (board: Board) => {
+  let colorCounts: Record<
+    string,
+    {
+      xCount: number;
+      blankCount: number;
+      totalCount: number;
+      lastBlankCoord: Coords | undefined;
+    }
+  > = {};
+  Object.keys(BOARD_COLORS).forEach((colorName) => {
+    colorCounts[colorName] = {
+      xCount: 0,
+      blankCount: 0,
+      totalCount: 0,
+      lastBlankCoord: undefined,
+    };
+  });
+
+  for (let i = 0; i < board.length; i++) {
+    const row = board[i];
+    for (let j = 0; j < row.length; j++) {
+      const tile = row[j];
+      let countsObj = colorCounts[tile.color];
+      countsObj.totalCount++;
+      if (tile.token === "X") {
+        countsObj.xCount++;
+      } else if (tile.token === "") {
+        countsObj.blankCount++;
+        countsObj.lastBlankCoord = { row: i, col: j };
+      }
+    }
+  }
+  Object.keys(colorCounts).forEach((colorName) => {
+    const countsObj = colorCounts[colorName];
+    if (
+      countsObj.xCount === countsObj.totalCount - 1 &&
+      countsObj.blankCount === 1
+    ) {
+      placeQueen(
+        board,
+        countsObj.lastBlankCoord!.row,
+        countsObj.lastBlankCoord!.col
+      );
+    }
+  });
+};
 
 const markGuaranteedPlacements = (board: Board): Coords | undefined => {
   markRows(board);
@@ -52,15 +103,12 @@ const markGuaranteedPlacements = (board: Board): Coords | undefined => {
 
 // returns the possible guesses left in the preferred order
 // excludes any spaces marked X
-const getGuessesLeft = (board: Board, guessesTried: Coords[]) => {
+const getGuessesLeft = (board: Board) => {
   let result: Coords[] = [];
 
   board.forEach((row, i) => {
     row.forEach((tile, j) => {
-      const hasGuessedThisTile = guessesTried.some(
-        (guess) => guess.row === i && guess.col === j
-      );
-      if (tile.token === "" && !hasGuessedThisTile) {
+      if (tile.token === "") {
         result.push({ row: i, col: j });
       }
     });
@@ -149,8 +197,7 @@ const solveBoardRecursive = (
   board: Board,
   recursionCount: number = 0
 ): Board | undefined => {
-  //console.log({ recursionCount, board });
-  const guessesLeft = getGuessesLeft(board, []);
+  const guessesLeft = getGuessesLeft(board);
   if (guessesLeft.length === 0) {
     const hasWon = boardHasWon(board);
     if (hasWon) {
@@ -160,7 +207,7 @@ const solveBoardRecursive = (
     }
   }
   for (let guess of guessesLeft) {
-    const guessedBoard = JSON.parse(JSON.stringify(board));
+    const guessedBoard = copyBoard(board);
     placeQueen(guessedBoard, guess.row, guess.col);
     markGuaranteedPlacements(guessedBoard);
     const solvedBoard = solveBoardRecursive(guessedBoard, recursionCount + 1);

@@ -157,17 +157,17 @@ export const getImageDataFromPixelArray = (pixelArray: PixelArray) => {
 export const useImageParsing = () => {
   const [rawImageData, setRawImageData] = React.useState<ImageData>();
   const [rawImageFile, setRawImageFile] = React.useState<string>();
+  const [imageUploadTime, setImageUploadTime] = React.useState<number>(0);
 
   const handleUploadClick = (event: any) => {
-    console.log();
     var newlySelectedFile = event.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(newlySelectedFile);
-
     reader.onloadend = function (e) {
       const file = reader.result;
 
       setRawImageFile(file as string);
+      setImageUploadTime(new Date().getTime());
       if (!file) return;
       // set the pixel array to the posterized version of the image
       pixels(file).then((newImageData: ImageData) => {
@@ -178,9 +178,15 @@ export const useImageParsing = () => {
 
   const pixelArray = React.useMemo(() => {
     if (!rawImageData) return [];
+
+    const startTime = new Date().getTime();
     const ndArray = getPixelNDArray(rawImageData);
+
     const poster = posterize(ndArray);
+
     const posterizedPixelArray = getPixelArrayFromNdArray(poster);
+    console.log({ timeToProcessImage: new Date().getTime() - startTime });
+
     return posterizedPixelArray;
   }, [rawImageData]);
 
@@ -189,6 +195,7 @@ export const useImageParsing = () => {
     rawImage: rawImageFile,
     pixelArray,
     handleUploadClick,
+    imageUploadTime,
   };
 };
 
