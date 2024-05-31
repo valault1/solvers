@@ -1,4 +1,4 @@
-import { Card, CircularProgress, Grid, Stack } from "@mui/material";
+import { Card, Grid, Stack } from "@mui/material";
 import ImageDataDisplay from "components/ImageDataDisplay";
 import ImageUpload from "components/ImageUpload";
 import { MainContainer } from "components/MainPage.elements";

@@ -46,6 +46,31 @@ const markColumns = (board: Board) => {
   }
 };
 
+const safeCheckBoard = (board: Board, row: number, col: number) => {
+  if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
+    return undefined;
+  }
+  return board[row][col];
+};
+
+const squareHasNoQueenConflict = (
+  board: Board,
+  row: number,
+  col: number
+): boolean => {
+  const hasQueenInRow = board[row].some((tile) => tile.token === "Q");
+  if (hasQueenInRow) return false;
+  const hasQueenInCol = board.some((row) => row[col].token === "Q");
+  if (hasQueenInCol) return false;
+
+  const hasQueenInAdjacentDiagonals =
+    safeCheckBoard(board, row + 1, col + 1)?.token === "Q" ||
+    safeCheckBoard(board, row + 1, col - 1)?.token === "Q" ||
+    safeCheckBoard(board, row - 1, col + 1)?.token === "Q" ||
+    safeCheckBoard(board, row - 1, col - 1)?.token === "Q";
+  if (hasQueenInAdjacentDiagonals) return false;
+  return true;
+};
 const markColors = (board: Board) => {
   let colorCounts: Record<
     string,
@@ -81,24 +106,29 @@ const markColors = (board: Board) => {
   }
   Object.keys(colorCounts).forEach((colorName) => {
     const countsObj = colorCounts[colorName];
-    if (
+    const isOnlyOpenSquareOfThisColor =
       countsObj.xCount === countsObj.totalCount - 1 &&
-      countsObj.blankCount === 1
-    ) {
-      placeQueen(
-        board,
-        countsObj.lastBlankCoord!.row,
-        countsObj.lastBlankCoord!.col
-      );
+      countsObj.blankCount === 1;
+
+    const r = countsObj.lastBlankCoord?.row;
+    const c = countsObj.lastBlankCoord?.col;
+
+    if (isOnlyOpenSquareOfThisColor) {
+      const squareCanBeQueen = squareHasNoQueenConflict(board, r, c);
+      if (squareCanBeQueen)
+        placeQueen(
+          board,
+          countsObj.lastBlankCoord!.row,
+          countsObj.lastBlankCoord!.col
+        );
     }
   });
 };
 
-const markGuaranteedPlacements = (board: Board): Coords | undefined => {
+const markGuaranteedPlacements = (board: Board) => {
   markRows(board);
   markColumns(board);
   markColors(board);
-  return undefined;
 };
 
 // returns the possible guesses left in the preferred order
@@ -134,15 +164,27 @@ const getGuessesLeftV2 = (board: Board, guessesTried: Coords[]) => {
 };
 
 const boardHasWon = (board: Board) => {
-  let queenCount = 0;
-  board.forEach((row) => {
-    row.forEach((tile) => {
+  let queenJCoords: number[] = [];
+  let queenICoords: number[] = [];
+  board.forEach((row, i) => {
+    row.forEach((tile, j) => {
       if (tile.token === "Q") {
-        queenCount++;
+        queenJCoords.push(j);
+        queenICoords.push(i);
       }
     });
   });
-  return queenCount === board.length;
+
+  // check columns
+  // queenJCoords.sort();
+  // queenICoords.sort();
+  // if (!queenJCoords.some((coord, index) => coord !== index)) return false;
+  // if (!queenICoords.every((coord, index) => coord !== index)) return false;
+  const hasRightNumberOfQueens = queenJCoords.length === board.length;
+  if (hasRightNumberOfQueens) {
+    console.log({ hasRightNumberOfQueens, queenJCoords, queenICoords, board });
+  }
+  return hasRightNumberOfQueens;
 };
 
 const getColorCounts = (blankBoard: Board) => {
