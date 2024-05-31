@@ -1,6 +1,7 @@
 import {
   cropOffNextBlockOfColor,
   cropOffNextBlockOfColorCol,
+  cropOffNextBlockOfColorLegacy,
   getMajorityColor,
 } from "domains/Queens/helpers/cropBoard";
 import {
@@ -17,7 +18,7 @@ export const rotateBoard = (board: BlankBoard): BlankBoard => {
 };
 
 const cropOffTopBorder = (pixelArray: PixelArray): PixelArray => {
-  return cropOffNextBlockOfColor(pixelArray, "black").remainingPiece;
+  return cropOffNextBlockOfColorLegacy(pixelArray, "black").remainingPiece;
 };
 
 const parseRow = (
@@ -50,6 +51,7 @@ const parseRow = (
 // Look at cropped board. take off top border.
 // then, go row by row. crop each row off the board, process it, and go again.
 export const getBlankBoard = (pixelArray: PixelArray) => {
+  const startTime = new Date().getTime();
   let board: BlankBoard = [];
   let croppedImageSquares: PixelArray[][] = [];
   let croppedArray = cropOffTopBorder(pixelArray);
@@ -58,7 +60,7 @@ export const getBlankBoard = (pixelArray: PixelArray) => {
   while (croppedArray.length > 0 && infiniteLoopGuard < 100) {
     infiniteLoopGuard++;
     // get one row, and remove it from the main array
-    const { croppedPiece, remainingPiece } = cropOffNextBlockOfColor(
+    const { croppedPiece, remainingPiece } = cropOffNextBlockOfColorLegacy(
       croppedArray,
       "black"
     );
@@ -71,7 +73,10 @@ export const getBlankBoard = (pixelArray: PixelArray) => {
 
   // for some reason, the board is rotated. So unrotate it.
   const rotatedBoard = rotateBoard(board);
-
+  console.log({
+    parseTime: new Date().getTime() - startTime,
+    blankBoard: rotatedBoard,
+  });
   // croppedImageSquares is just used for debugging.
   return { board: rotatedBoard, croppedImageSquares };
 };

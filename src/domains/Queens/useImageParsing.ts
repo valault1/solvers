@@ -156,8 +156,6 @@ export const getImageDataFromPixelArray = (pixelArray: PixelArray) => {
 
 export const useImageParsing = () => {
   const [rawImageData, setRawImageData] = React.useState<ImageData>();
-  const [modifiedImageData, setModifiedImageData] = React.useState<ImageData>();
-  const [pixelArray, setPixelArray] = React.useState<PixelArray>([]);
   const [rawImageFile, setRawImageFile] = React.useState<string>();
 
   const handleUploadClick = (event: any) => {
@@ -168,35 +166,29 @@ export const useImageParsing = () => {
 
     reader.onloadend = function (e) {
       const file = reader.result;
+
       setRawImageFile(file as string);
       if (!file) return;
       // set the pixel array to the posterized version of the image
       pixels(file).then((newImageData: ImageData) => {
         setRawImageData(newImageData);
-        //setPixelArray(getPixelArray(newImageData));
-        const ndArray = getPixelNDArray(newImageData);
-        const poster = posterize(ndArray);
-        const posterizedPixelArray = getPixelArrayFromNdArray(poster);
-        setPixelArray(posterizedPixelArray);
-        setModifiedImageData(getImageDataFromPixelArray(posterizedPixelArray));
       });
     };
   };
 
-  const updateImage = React.useCallback(
-    (newPixelArray: PixelArray) => {
-      setModifiedImageData(getImageDataFromPixelArray(newPixelArray));
-    },
-    [setModifiedImageData]
-  );
+  const pixelArray = React.useMemo(() => {
+    if (!rawImageData) return [];
+    const ndArray = getPixelNDArray(rawImageData);
+    const poster = posterize(ndArray);
+    const posterizedPixelArray = getPixelArrayFromNdArray(poster);
+    return posterizedPixelArray;
+  }, [rawImageData]);
 
   return {
-    modifiedImageData,
     rawImageData,
     rawImage: rawImageFile,
     pixelArray,
     handleUploadClick,
-    updateImage,
   };
 };
 

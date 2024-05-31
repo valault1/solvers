@@ -2,53 +2,48 @@ import { Grid, Stack } from "@mui/material";
 import ImageDataDisplay from "components/ImageDataDisplay";
 import ImageUpload from "components/ImageUpload";
 import { MainContainer } from "components/MainPage.elements";
+import { cropPixelArrayToBoard } from "domains/Queens/helpers/cropBoard";
+import { getBlankBoard } from "domains/Queens/helpers/parseBoard";
 import { solveBoard } from "domains/Queens/helpers/solveBoard";
-import { MOCK_BLANK_BOARD } from "domains/Queens/mocks/mocks";
+import { Board } from "domains/Queens/sharedTypes";
 import {
   COLORS_LIST,
   colorArrToString,
   getImageDataFromPixelArray,
   useImageParsing,
 } from "domains/Queens/useImageParsing";
-import { useParseBoard } from "domains/Queens/useParseBoard";
 import * as React from "react";
 
 const showRawImage = false;
 const showCroppedSquares = false;
-const showCroppedBoard = true;
+const showCroppedBoard = false;
 
 const BOARD_SIZE = 30;
 
 export const QueensSolver = () => {
-  const {
-    handleUploadClick,
-    rawImage,
-    modifiedImageData,
-    pixelArray,
+  const { handleUploadClick, rawImage, pixelArray } = useImageParsing();
 
-    updateImage,
-  } = useImageParsing();
+  const croppedBoardPixelArray = React.useMemo(() => {
+    const result = cropPixelArrayToBoard(pixelArray);
+    console.log({ croppedBoardPixelArray: result });
+    return result;
+  }, [pixelArray]);
 
-  const { board: blankBoard, croppedImageSquares } = useParseBoard({
-    pixelArray,
-    updateImage,
-  });
+  const croppedBoardImageData = React.useMemo(() => {
+    if (!croppedBoardPixelArray?.length) return undefined;
+    return getImageDataFromPixelArray(croppedBoardPixelArray);
+  }, [croppedBoardPixelArray]);
 
-  const board = React.useMemo(() => {
+  const { croppedImageSquares, board: blankBoard } = React.useMemo(() => {
+    return getBlankBoard(croppedBoardPixelArray);
+  }, [croppedBoardPixelArray]);
+
+  const board: Board = React.useMemo(() => {
     return solveBoard(blankBoard);
   }, [blankBoard]);
 
-  return (
-    <MainContainer>
-      {showRawImage && (
-        <Grid item>
-          <img width="100%" src={rawImage} alt="" />
-        </Grid>
-      )}
-      <ImageUpload handleUploadClick={handleUploadClick} />
-      {showCroppedBoard && <ImageDataDisplay imageData={modifiedImageData} />}
-      <br />
-      <br />
+  const BoardComponent = React.useMemo(() => {
+    return (
       <Stack direction="row">
         {board.map((row, i) => (
           <Stack key={i} direction="column">
@@ -74,6 +69,23 @@ export const QueensSolver = () => {
           </Stack>
         ))}
       </Stack>
+    );
+  }, [board]);
+
+  return (
+    <MainContainer>
+      {showRawImage && (
+        <Grid item>
+          <img width="100%" src={rawImage} alt="" />
+        </Grid>
+      )}
+      <ImageUpload handleUploadClick={handleUploadClick} />
+      {showCroppedBoard && (
+        <ImageDataDisplay imageData={croppedBoardImageData} />
+      )}
+      <br />
+      <br />
+      {BoardComponent}
       {/** raw sliced tiles, for debugging */}
       {showCroppedSquares && (
         <Stack direction="row" gap={4}>

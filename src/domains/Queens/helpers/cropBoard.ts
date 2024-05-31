@@ -9,9 +9,13 @@ import {
   colorToString,
 } from "domains/Queens/useImageParsing";
 
-export const getMajorityColor = (pixelArray: PixelArray) => {
-  const counts = getPixelCounts(pixelArray);
-  return getMajorityColorFromCounts(counts);
+type CropOptions = {
+  pixelArray: PixelArray;
+  targetColor: ImageColor;
+  // if true, it will crop to the color; otherwise, it will crop the color off
+  cropToColor?: boolean;
+  reversed?: boolean;
+  direction?: "column" | "row";
 };
 
 const getMajorityColorFromCounts = (counts: Record<string, number>) => {
@@ -26,59 +30,71 @@ const getMajorityColorFromCounts = (counts: Record<string, number>) => {
   return maxColor;
 };
 
+export const getMajorityColor = (pixelArray: PixelArray) => {
+  const counts = getPixelCounts(pixelArray);
+  return getMajorityColorFromCounts(counts);
+};
+
 export const getMajorityColorOfRow = (row: RgbaColor[]) => {
   const counts = getRowPixelCounts(row);
   return getMajorityColorFromCounts(counts);
 };
 
-// goes from the top, and finds the first row with that majority color
-export const findRowIndexWithMajorityColor = (
-  pixelArray: PixelArray,
-  targetColor: ImageColor
-) => {
-  for (let rowIndex = 0; rowIndex < pixelArray.length; rowIndex++) {
-    const row = pixelArray[rowIndex];
-    const majorityColor = getMajorityColorOfRow(row);
-
-    if (majorityColor === targetColor) {
-      return rowIndex;
-    }
-  }
-};
-
-// finds the next block of target color, and crops it off
-export const cropOffNextBlockOfColor = (
-  pixelArray: PixelArray,
-  targetColor: ImageColor
-): { croppedPiece: PixelArray; remainingPiece: PixelArray } => {
-  const defaultReturnValue = {
-    croppedPiece: [] as PixelArray,
-    remainingPiece: pixelArray,
-  };
-  if (pixelArray.length === 0) return defaultReturnValue;
+const getIndexToCropTo = ({
+  pixelArray,
+  targetColor,
+  cropToColor,
+  reversed,
+  direction,
+}: CropOptions) => {
   let hasFoundColor = false;
-  for (let rowIndex = 0; rowIndex < pixelArray.length; rowIndex++) {
-    const row = pixelArray[rowIndex];
+  // rows is set based on the settings; it will be in the right order for whatever we want to do
+  let rows: PixelArray = [];
+  if (direction === "row" && !reversed) {
+    rows = pixelArray;
+  } else if (direction === "row" && reversed) {
+    rows = [...pixelArray].reverse();
+  } else if (direction === "column" && !reversed) {
+    rows = pixelArray[0].map((row, i) => {
+      return pixelArray.map((r, j) => pixelArray[j][i]);
+    });
+  } else {
+    // direction === "column" && reversed
+    // this needs to be a list of rows that is the nth column -> 1st column
+    rows = pixelArray[0]
+      .map((row, i) => {
+        return pixelArray.map((r, j) => pixelArray[j][i]);
+      })
+      .reverse();
+  }
+  // console.log({
+  //   rows,
+  //   direction,
+  //   reversed,
+  //   pixelArray,
+  //   targetColor,
+  //   cropToColor,
+  // });
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
     const majorityColor = getMajorityColorOfRow(row);
-
-    if (hasFoundColor && majorityColor !== targetColor) {
-      return {
-        croppedPiece: cropPixelArray(pixelArray, 0, 0, rowIndex, row.length),
-        remainingPiece: cropPixelArray(
-          pixelArray,
-          rowIndex,
-          0,
-          pixelArray.length,
-          row.length
-        ),
-      };
+    const shouldCropNow =
+      (cropToColor && hasFoundColor) ||
+      (hasFoundColor && majorityColor !== targetColor);
+    if (shouldCropNow) {
+      const indexToReturn = reversed ? rows.length - i - 1 : i;
+      return indexToReturn;
     }
-
     if (majorityColor === targetColor) {
       hasFoundColor = true;
     }
   }
-  return { croppedPiece: pixelArray, remainingPiece: [] as PixelArray };
+  //console.log("finished looking - hasFoundColor: " + hasFoundColor);
+  if (hasFoundColor && !cropToColor) {
+    return reversed ? 0 : rows.length;
+  }
+  return -1;
 };
 
 // finds the next block of target color columnwise, and crops it off
@@ -122,6 +138,103 @@ export const cropOffNextBlockOfColorCol = (
   return { croppedPiece: pixelArray, remainingPiece: [] as PixelArray };
 };
 
+// finds the next block of target color, and crops it off
+export const cropOffNextBlockOfColorLegacy = (
+  pixelArray: PixelArray,
+  targetColor: ImageColor
+): { croppedPiece: PixelArray; remainingPiece: PixelArray } => {
+  const defaultReturnValue = {
+    croppedPiece: [] as PixelArray,
+    remainingPiece: pixelArray,
+  };
+  if (pixelArray.length === 0) return defaultReturnValue;
+  let hasFoundColor = false;
+  for (let rowIndex = 0; rowIndex < pixelArray.length; rowIndex++) {
+    const row = pixelArray[rowIndex];
+    const majorityColor = getMajorityColorOfRow(row);
+
+    if (hasFoundColor && majorityColor !== targetColor) {
+      return {
+        croppedPiece: cropPixelArray(pixelArray, 0, 0, rowIndex, row.length),
+        remainingPiece: cropPixelArray(
+          pixelArray,
+          rowIndex,
+          0,
+          pixelArray.length,
+          row.length
+        ),
+      };
+    }
+
+    if (majorityColor === targetColor) {
+      hasFoundColor = true;
+    }
+  }
+  return { croppedPiece: pixelArray, remainingPiece: [] as PixelArray };
+};
+
+// finds the next block of target color, and crops it off
+export const cropOffNextBlockOfColor = ({
+  pixelArray,
+  targetColor,
+  cropToColor,
+  reversed,
+  direction = "row",
+}: CropOptions): { croppedPiece: PixelArray; remainingPiece: PixelArray } => {
+  const cropNothing = {
+    croppedPiece: [] as PixelArray,
+    remainingPiece: pixelArray,
+  };
+  if (pixelArray.length === 0) return cropNothing;
+
+  const index = getIndexToCropTo({
+    pixelArray,
+    targetColor,
+    cropToColor,
+    reversed,
+    direction,
+  });
+  //console.log("Crop to " + index);
+
+  if (index === -1) return cropNothing;
+  // crop the piece off;
+  let croppedPiece: PixelArray;
+  let remainingPiece: PixelArray;
+  if (direction === "row") {
+    croppedPiece = cropPixelArray(
+      pixelArray,
+      0,
+      0,
+      index,
+      pixelArray[0].length
+    );
+    remainingPiece = cropPixelArray(
+      pixelArray,
+      index,
+      0,
+      pixelArray.length,
+      pixelArray[0].length
+    );
+  } else {
+    croppedPiece = cropPixelArray(pixelArray, 0, 0, pixelArray.length, index);
+    remainingPiece = cropPixelArray(
+      pixelArray,
+      0,
+      index,
+      pixelArray.length,
+      pixelArray[0].length
+    );
+  }
+
+  const result = {
+    croppedPiece: reversed ? remainingPiece : croppedPiece,
+    remainingPiece: reversed ? croppedPiece : remainingPiece,
+  };
+  //console.log(result);
+
+  return result;
+};
+
 // only counts the pixels that fall within the list of colors defined
 const getRowPixelCounts = (row: RgbaColor[]) => {
   const counts: Record<string, number> = {};
@@ -143,105 +256,57 @@ const getPixelCounts = (pixelArray: PixelArray) => {
   return counts;
 };
 
-const findTopBorderIndex = (pixelArray: PixelArray) => {
-  if (!pixelArray.length) return -1;
-  // find the first row from the top that is mostly white.
-  // Then, return the next row that is mostly black.
-  let foundWhite = false;
-  for (let rowIndex = 0; rowIndex < pixelArray.length; rowIndex++) {
-    const row = pixelArray[rowIndex];
-    const majorityColor = getMajorityColorOfRow(row);
-    if (majorityColor === "white") {
-      foundWhite = true;
-    }
-    if (majorityColor === "black" && foundWhite) {
-      return rowIndex;
-    }
-  }
-  return -1;
-};
-
-const findBottomBorderIndex = (pixelArray: PixelArray) => {
-  if (!pixelArray.length) return -1;
-  // look for black majority row, then white, then black
-  let foundBlack = false;
-  let foundWhite = false;
-  let foundBlack2 = false;
-  let foundWhite2 = false;
-  for (let rowIndex = pixelArray.length - 1; rowIndex >= 0; rowIndex--) {
-    const row = pixelArray[rowIndex];
-    const majorityColor = getMajorityColorOfRow(row);
-    if (majorityColor === "black") {
-      if (foundBlack2 && foundWhite2) {
-        return rowIndex;
-      }
-      if (foundBlack && foundWhite) foundBlack2 = true;
-      foundBlack = true;
-    }
-
-    if (majorityColor === "white") {
-      if (foundWhite && foundBlack2) foundWhite2 = true;
-      foundWhite = true;
-    }
-  }
-  return -1;
-};
-
-const findLeftBorderIndex = (pixelArray: PixelArray) => {
-  let foundWhite = false;
-  for (let colIndex = 0; colIndex < pixelArray[0].length; colIndex++) {
-    const column = pixelArray.map((row) => row[colIndex]);
-    const majorityColor = getMajorityColorOfRow(column);
-    if (majorityColor === "black" && foundWhite) {
-      return colIndex;
-    }
-    if (majorityColor === "white") {
-      foundWhite = true;
-    }
-  }
-};
-
-const findRightBorderIndex = (pixelArray: PixelArray) => {
-  let foundWhite = false;
-  for (let colIndex = pixelArray[0].length - 1; colIndex >= 0; colIndex--) {
-    const column = pixelArray.map((row) => row[colIndex]);
-    const majorityColor = getMajorityColorOfRow(column);
-    if (majorityColor === "black" && foundWhite) {
-      return colIndex;
-    }
-    if (majorityColor === "white") {
-      foundWhite = true;
-    }
-  }
+const cropMultipleTimes = (
+  options: Omit<CropOptions, "targetColor"> & { targetColors: ImageColor[] }
+) => {
+  let croppedArray = options.pixelArray;
+  options.targetColors.forEach((targetColor) => {
+    croppedArray = cropOffNextBlockOfColor({
+      ...options,
+      pixelArray: croppedArray,
+      targetColor,
+    }).remainingPiece;
+  });
+  return croppedArray;
 };
 
 export const cropPixelArrayToBoard = (pixelArray: PixelArray) => {
   if (pixelArray.length === 0) return pixelArray;
-  const topBorderIndex = findTopBorderIndex(pixelArray);
-  const bottomBorderIndex = findBottomBorderIndex(pixelArray);
-  let updatedPixelArray = pixelArray;
-  if (topBorderIndex >= 0 && bottomBorderIndex >= 0) {
-    updatedPixelArray = cropPixelArray(
-      updatedPixelArray,
-      topBorderIndex,
-      0,
-      bottomBorderIndex,
-      pixelArray[0].length
-    );
-  }
-  const leftBorderIndex = findLeftBorderIndex(updatedPixelArray);
-  const rightBorderIndex = findRightBorderIndex(updatedPixelArray);
 
-  if (leftBorderIndex >= 0 && rightBorderIndex >= 0) {
-    updatedPixelArray = cropPixelArray(
-      updatedPixelArray,
-      0,
-      leftBorderIndex,
-      pixelArray.length,
-      rightBorderIndex
-    );
-  }
-  return updatedPixelArray;
+  const startTime = new Date().getTime();
+  // top
+  let croppedArray = cropMultipleTimes({
+    pixelArray,
+    targetColors: ["white"],
+  });
+
+  // bottom
+  croppedArray = cropMultipleTimes({
+    pixelArray: croppedArray,
+    targetColors: ["gray", "gray", "white"],
+    reversed: true,
+  });
+
+  // left
+  croppedArray = cropMultipleTimes({
+    pixelArray: croppedArray,
+    targetColors: ["white"],
+    direction: "column",
+  });
+
+  // right
+  croppedArray = cropMultipleTimes({
+    pixelArray: croppedArray,
+    targetColors: ["white"],
+    direction: "column",
+    reversed: true,
+  });
+  console.log({
+    cropTime: new Date().getTime() - startTime,
+    croppedArray,
+    pixelArray,
+  });
+  return croppedArray;
 };
 
 export const cropPixelArray = (

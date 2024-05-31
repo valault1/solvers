@@ -164,10 +164,6 @@ const solveBoardRecursive = (
     placeQueen(guessedBoard, guess.row, guess.col);
     markGuaranteedPlacements(guessedBoard);
     const solvedBoard = solveBoardRecursive(guessedBoard, recursionCount + 1);
-    if (recursionCount === 0 || recursionCount === 1) {
-      console.log("knocked out a guess");
-      console.log({ guess, guessesLeft, recursionCount });
-    }
     if (solvedBoard) {
       return solvedBoard;
     }
@@ -180,12 +176,10 @@ export const solveBoard = (blankBoard: BlankBoard): Board => {
     row.map((color) => ({ token: "", color }))
   );
 
-  //placeQueen(board, 3, 0);
   const startTime = new Date().getTime();
 
-  const isDebug = false;
-  const solvedBoard: Board = isDebug ? board : solveBoardRecursive(board);
+  const solvedBoard: Board = solveBoardRecursive(board);
 
-  console.log({ solvedBoard, solveTime: new Date().getTime() - startTime });
+  console.log({ solveTime: new Date().getTime() - startTime, solvedBoard });
   return solvedBoard;
 };
