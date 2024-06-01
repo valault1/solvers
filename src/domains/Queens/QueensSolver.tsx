@@ -139,7 +139,7 @@ export const QueensSolver = () => {
 
       {BoardComponent}
       {/** raw sliced tiles, for debugging */}
-      {(!!error || showCroppedSquares) && croppedImageSquares.length && (
+      {(!!error || showCroppedSquares) && !!croppedImageSquares.length && (
         <>
           <Alert variant="outlined" color="warning">
             For debugging purposes, here are the squares we broke the board into
@@ -157,7 +157,7 @@ export const QueensSolver = () => {
           </Stack>
         </>
       )}
-      {!!error && blankBoardToDisplay.length && (
+      {!!error && !!blankBoardToDisplay.length && (
         <>
           <Alert variant="outlined" color="warning">
             For debugging purposes, here is the board that we parsed
