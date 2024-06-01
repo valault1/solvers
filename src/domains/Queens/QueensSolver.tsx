@@ -27,7 +27,7 @@ const ERRORS = {
 };
 
 export const QueensSolver = () => {
-  const [error, setError] = React.useState<string | undefined>("TEST");
+  const [error, setError] = React.useState<string | undefined>(undefined);
   const { handleUploadClick, rawImage, pixelArray, imageUploadTime } =
     useImageParsing({ clearError: () => setError(undefined) });
 
