@@ -61,7 +61,7 @@ const customPosterize = (ndArray: any, colorsList: Color[]) => {
   return result;
 };
 
-const posterize = (ndArray: any) => {
+export const posterize = (ndArray: any) => {
   return customPosterize(ndArray, formattedColorsList);
 };
 
@@ -78,7 +78,7 @@ const pixelArrayToUint8Array = (pixelArray: PixelArray) => {
   return new Uint8ClampedArray(result);
 };
 
-const getPixelArrayFromNdArray = (arr: any): PixelArray => {
+export const getPixelArrayFromNdArray = (arr: any): PixelArray => {
   let result: PixelArray = [];
   for (let i = 0; i < arr.shape[0]; i++) {
     let row = [];
@@ -96,7 +96,7 @@ const getPixelArrayFromNdArray = (arr: any): PixelArray => {
   return result;
 };
 
-const getPixelNDArray = (imageData: ImageData) => {
+export const getPixelNDArray = (imageData: ImageData) => {
   return ndarray(imageData.data, [imageData.height, imageData.width, 4]);
 };
 
@@ -111,6 +111,13 @@ export const getImageDataFromPixelArray = (pixelArray: PixelArray) => {
   return newImageData;
 };
 
+export const processRawImage = (rawImageData: ImageData) => {
+  const ndArray = getPixelNDArray(rawImageData);
+  const poster = posterize(ndArray);
+  const posterizedPixelArray = getPixelArrayFromNdArray(poster);
+  return posterizedPixelArray;
+};
+
 export const useImageParsing = () => {
   const [rawImageData, setRawImageData] = React.useState<ImageData>();
   const [rawImageFile, setRawImageFile] = React.useState<string>();
@@ -120,6 +127,7 @@ export const useImageParsing = () => {
     if (!event?.target?.files?.[0]) return;
 
     var newlySelectedFile = event.target.files[0];
+    console.log({ newlySelectedFile });
     const reader = new FileReader();
     reader.readAsDataURL(newlySelectedFile);
     reader.onloadend = function (e) {
@@ -130,6 +138,12 @@ export const useImageParsing = () => {
       if (!file) return;
       // set the pixel array to the posterized version of the image
       pixels(file).then((newImageData: ImageData) => {
+        let dataArray: number[] = [];
+        for (let i = 0; i < newImageData.data.length; i++) {
+          dataArray.push(newImageData.data[i]);
+        }
+
+        console.log({ rawImageData: JSON.stringify(dataArray) });
         setRawImageData(newImageData);
       });
     };
@@ -139,11 +153,7 @@ export const useImageParsing = () => {
     if (!rawImageData) return CONSTANT_BLANK_ARRAY;
 
     const startTime = new Date().getTime();
-    const ndArray = getPixelNDArray(rawImageData);
-
-    const poster = posterize(ndArray);
-
-    const posterizedPixelArray = getPixelArrayFromNdArray(poster);
+    const posterizedPixelArray = processRawImage(rawImageData);
     console.log({ timeToProcessImage: new Date().getTime() - startTime });
 
     return posterizedPixelArray;

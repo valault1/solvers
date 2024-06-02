@@ -20,6 +20,7 @@
     "combinatorics": "^0.1.0",
     "date-fns": "^2.29.3",
     "firebase": "^10.10.0",
+    "fs": "^0.0.1-security",
     "get-pixels": "^3.3.3",
     "image-parser": "^1.2.8",
     "image-pixels": "^2.2.2",

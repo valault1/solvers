@@ -296,10 +296,9 @@ export const cropPixelArrayToBoard = async (pixelArray: PixelArray) => {
       reversed: true,
     });
 
-    console.log({ bottomCroppedArray });
     if (bottomCroppedArray.length < bottomCroppedArray[0].length) {
       // ended up with a board that's not tall enough; crop it using just white
-
+      console.log("Board not wide enough; just crop white");
       croppedArray = await cropMultipleTimes({
         pixelArray: croppedArray,
         targetColors: ["white"],

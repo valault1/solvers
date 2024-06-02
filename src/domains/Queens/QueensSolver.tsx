@@ -24,12 +24,15 @@ import {
   useImageParsing,
 } from "domains/Queens/hooks/useImageParsing";
 import { useMemoNonBlocking } from "domains/Queens/hooks/useMemoNonBlocking";
+import { MOCK_SCREENSHOTS } from "domains/Queens/mocks/mockScreenshots";
+
 import { Board } from "domains/Queens/sharedTypes";
+import { testScreenshotFromUrl } from "domains/Queens/tests/testScreenshots";
 
 import * as React from "react";
 
 const showRawImage = false;
-const startOnPlayground = false;
+const startOnPlayground = true;
 
 export const QueensSolver = () => {
   const [showBoardPlayground, setShowBoardPlayground] =

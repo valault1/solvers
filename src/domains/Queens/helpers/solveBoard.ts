@@ -38,10 +38,7 @@ export const populateColorCounts = (board: BlankBoard) => {
   colorsInIncreasingFrequency = Object.keys(colorCounts).sort(
     (a, b) => colorCounts[a as BoardColor] - colorCounts[b as BoardColor]
   ) as BoardColor[];
-  console.log({ colorsInIncreasingFrequency, colorCounts });
 };
-
-console.log("colorsInIncreasingFrequency", colorsInIncreasingFrequency);
 
 export const copyBoard = (board: Board) => {
   return board.map((row) => row.map((tile) => ({ ...tile })));
@@ -190,17 +187,23 @@ const getGuessesLeft = (board: Board) => {
     });
   });
 
-  //return result;
   //note: You only need to consider one row. So, look for the smallest row, and only look for queens in that.
-  return result.filter((coord) => coord.row === result[0].row);
-  const minCount = Math.min(...Object.values(rowCounts));
-  const rowWithMinCount = Object.keys(rowCounts).find(
-    (row) => rowCounts[Number(row)] === minCount
-  );
 
-  return rowWithMinCount !== undefined
-    ? result.filter((coord) => coord.row === Number(rowWithMinCount))
-    : result;
+  const rowMinCount = Math.min(...Object.values(rowCounts));
+  const rowWithMinCount =
+    Number(
+      Object.keys(rowCounts).find(
+        (row) => rowCounts[Number(row)] === rowMinCount
+      )
+    ) || undefined;
+
+  if (rowWithMinCount === undefined) {
+    return result;
+  }
+
+  const minRowResult = result.filter((coord) => coord.row === rowWithMinCount);
+
+  return minRowResult;
 };
 // chooses colors with most number of squares first
 const getGuessesLeftV2 = (board: Board) => {
@@ -353,18 +356,14 @@ export const eliminateSquares = (board: Board, color = "") => {
         coords.row,
         coords.col
       );
-      //console.log({ marksForThisQueen, commonSquares, coords });
       commonSquares = commonSquares.filter((commonSquare) =>
         marksForThisQueen.some(
           (mark) =>
             mark.row === commonSquare.row && mark.col === commonSquare.col
         )
       );
-      //console.log({ resultingCommonSquares: commonSquares });
     }
 
-    // console.log("looked for common squares on color: " + tile.color);
-    // console.log({ commonSquares, allCoordsOfColor });
     for (let commonSquare of commonSquares) {
       placeX(board, commonSquare.row, commonSquare.col);
     }
