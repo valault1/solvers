@@ -1,5 +1,30 @@
-import { BOARD_COLORS } from "domains/Queens/constants/constants";
-import { BlankBoard, Board, Coords } from "domains/Queens/sharedTypes";
+import { BOARD_COLORS, COLORS_LIST } from "domains/Queens/constants/constants";
+import {
+  BlankBoard,
+  Board,
+  BoardColor,
+  Coords,
+} from "domains/Queens/sharedTypes";
+
+const useGetGuessesLeftV2 = false;
+let timerTime = new Date().getTime();
+const EVENT_LOOP_POLL_INCREMENT_MS = 100;
+
+let colorCounts: Record<BoardColor, number> = Object.keys(BOARD_COLORS).reduce(
+  (acc, colorName) => {
+    acc[colorName as BoardColor] = 0;
+    return acc;
+  },
+  {} as Record<BoardColor, number>
+);
+
+const populateColorCounts = (board: BlankBoard) => {
+  for (let row of board) {
+    for (let color of row) {
+      colorCounts[color]++;
+    }
+  }
+};
 
 const copyBoard = (board: Board) => {
   return board.map((row) => row.map((tile) => ({ ...tile })));
@@ -145,6 +170,22 @@ const getGuessesLeft = (board: Board) => {
   });
   return result;
 };
+// chooses colors with most number of squares first
+const getGuessesLeftV2 = (board: Board) => {
+  let result: (Coords & { color: BoardColor })[] = [];
+
+  board.forEach((row, i) => {
+    row.forEach((tile, j) => {
+      if (tile.token === "") {
+        result.push({ row: i, col: j, color: tile.color });
+      }
+    });
+  });
+  result.sort((a, b) => {
+    return colorCounts[a.color] - colorCounts[b.color];
+  });
+  return result.map((coord) => ({ row: coord.row, col: coord.col }));
+};
 
 const boardHasWon = (board: Board) => {
   let queenJCoords: number[] = [];
@@ -164,9 +205,7 @@ const boardHasWon = (board: Board) => {
   // if (!queenJCoords.some((coord, index) => coord !== index)) return false;
   // if (!queenICoords.every((coord, index) => coord !== index)) return false;
   const hasRightNumberOfQueens = queenJCoords.length === board.length;
-  if (hasRightNumberOfQueens) {
-    console.log({ hasRightNumberOfQueens, queenJCoords, queenICoords, board });
-  }
+
   return hasRightNumberOfQueens;
 };
 
@@ -208,11 +247,11 @@ const placeQueen = (board: Board, row: number, col: number) => {
   markXsAfterQueen(board, row, col);
 };
 
-const solveBoardRecursive = (
+const solveBoardRecursive = async (
   board: Board,
+  guessesLeft: Coords[],
   recursionCount: number = 0
-): Board | undefined => {
-  const guessesLeft = getGuessesLeft(board);
+): Promise<Board | undefined> => {
   if (guessesLeft.length === 0) {
     const hasWon = boardHasWon(board);
     if (hasWon) {
@@ -221,27 +260,83 @@ const solveBoardRecursive = (
       return undefined;
     }
   }
+  //console.log({ recursionCount, guessesLeft: guessesLeft.length });
   for (let guess of guessesLeft) {
     const guessedBoard = copyBoard(board);
     placeQueen(guessedBoard, guess.row, guess.col);
     markGuaranteedPlacements(guessedBoard);
-    const solvedBoard = solveBoardRecursive(guessedBoard, recursionCount + 1);
+    const solvedBoard = await solveBoardRecursive(
+      guessedBoard,
+      useGetGuessesLeftV2
+        ? getGuessesLeftV2(guessedBoard)
+        : getGuessesLeft(guessedBoard),
+      recursionCount + 1
+    );
+
+    // this polls the event loop, and allows the browser to update the UI
+    if (new Date().getTime() - timerTime > EVENT_LOOP_POLL_INCREMENT_MS) {
+      //console.log("polling event loop");
+      timerTime = new Date().getTime();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    }
+
+    if (recursionCount <= 1) {
+      // console.log({
+      //   msg: "knocked out a guess! recursionCount: ",
+      //   recursionCount,
+      //   guessesLeft,
+      // });
+    }
+
     if (solvedBoard) {
       return solvedBoard;
     }
   }
 };
 
-export const solveBoard = (blankBoard: BlankBoard): Board => {
+export const solveBoard = async (blankBoard: BlankBoard): Promise<Board> => {
   if (!blankBoard.length) return [];
   const board: Board = blankBoard.map((row) =>
     row.map((color) => ({ token: "", color }))
   );
 
+  populateColorCounts(blankBoard);
+
   const startTime = new Date().getTime();
 
-  const solvedBoard: Board = solveBoardRecursive(board);
+  if (useGetGuessesLeftV2) {
+    console.log(
+      "using v2 of getGuessesLeft (prioritizing by largest color first)"
+    );
+  } else {
+    console.log("using v1 of getGuessesLeft");
+  }
+
+  const solvedBoard: Board = await solveBoardRecursive(
+    board,
+    useGetGuessesLeftV2 ? getGuessesLeftV2(board) : getGuessesLeft(board)
+  );
 
   console.log({ solveTime: new Date().getTime() - startTime, solvedBoard });
   return solvedBoard;
 };
+
+/**
+ * Solve times
+ * v1
+ *   board1: 478
+ *   board2: 7
+ *   board3: 31
+ * v2 (prioritizing by largest color first)
+ *   board1: 490
+ *   board2: 4651
+ *   board3: 3091
+ * v3 (prioritizing by smallest color first)
+ *   board1: 25
+ *   board2: 66
+ *   board3: 3024
+ * v4 (using v1 getGuessesLeft, 100ms event loop polling)
+ *   board1: 703
+ *   board2: 66
+ *   board3: 103
+ */

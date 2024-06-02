@@ -1,5 +1,12 @@
 import { Error } from "@mui/icons-material";
-import { Alert, Card, Grid, Stack } from "@mui/material";
+import {
+  Alert,
+  Card,
+  CircularProgress,
+  Grid,
+  Stack,
+  Switch,
+} from "@mui/material";
 import ImageDataDisplay from "components/ImageDataDisplay";
 import ImageUpload from "components/ImageUpload";
 import { MainContainer } from "components/MainPage.elements";
@@ -12,13 +19,13 @@ import {
   getImageDataFromPixelArray,
   useImageParsing,
 } from "domains/Queens/hooks/useImageParsing";
+import { useMemoNonBlocking } from "domains/Queens/hooks/useMemoNonBlocking";
 import { Board } from "domains/Queens/sharedTypes";
 
 import * as React from "react";
 
 const showRawImage = false;
-const showCroppedSquares = false;
-const showCroppedBoard = false;
+const startInDebugMode = true;
 
 const ERRORS = {
   PARSING_BOARD: "Error parsing the board",
@@ -28,6 +35,10 @@ const ERRORS = {
 
 export const QueensSolver = () => {
   const [error, setError] = React.useState<string | undefined>(undefined);
+
+  const [isDebugMode, setIsDebugMode] = React.useState(startInDebugMode);
+  const showDebugInfo = isDebugMode || !!error;
+
   const { handleUploadClick, rawImage, pixelArray, imageUploadTime } =
     useImageParsing({ clearError: () => setError(undefined) });
 
@@ -42,10 +53,10 @@ export const QueensSolver = () => {
 
   // the cropped board image data, to display the cropped board (if showCroppedBoard is true)
   const croppedBoardImageData = React.useMemo(() => {
-    return showCroppedBoard || !!error
+    return showDebugInfo
       ? getImageDataFromPixelArray(croppedBoardPixelArray)
       : undefined;
-  }, [croppedBoardPixelArray, error]);
+  }, [croppedBoardPixelArray, showDebugInfo]);
 
   const { croppedImageSquares, board: blankBoard } = React.useMemo(() => {
     try {
@@ -61,19 +72,30 @@ export const QueensSolver = () => {
     return blankBoard.map((row) => row.map((color) => ({ token: "", color })));
   }, [blankBoard]);
 
-  console.log({ error });
+  const computeSolvedBoard = React.useCallback(
+    async () => await solveBoard(blankBoard),
+    [blankBoard]
+  );
 
-  const solvedBoard = React.useMemo(() => {
-    try {
-      return solveBoard(blankBoard);
-    } catch (e) {
-      console.log(e);
-      setError(ERRORS.SOLVING_BOARD);
-    }
-    return [];
-  }, [blankBoard]);
+  const {
+    data: solvedBoardData,
+    error: solveBoardError,
+    loading: isSolvingBoard,
+  } = useMemoNonBlocking({ callback: computeSolvedBoard });
+  const solvedBoard = React.useMemo(
+    () => solvedBoardData || [],
+    [solvedBoardData]
+  );
 
   const BoardComponent = React.useMemo(() => {
+    if (isSolvingBoard)
+      return (
+        <div>
+          Solving Board...
+          <CircularProgress />
+        </div>
+      );
+    if (!solvedBoard.length) return null;
     const timeSinceImageUpload = new Date().getTime() - imageUploadTime;
 
     const showTime = solvedBoard.length > 0;
@@ -90,9 +112,7 @@ export const QueensSolver = () => {
         {showTime && <>Solved in {timeSinceImageUpload / 1000} s</>}
       </Stack>
     );
-  }, [solvedBoard, imageUploadTime]);
-
-  console.log({ croppedBoardImageData, croppedBoardPixelArray });
+  }, [solvedBoard, imageUploadTime, isSolvingBoard]);
 
   return (
     <MainContainer gap="24px">
@@ -121,14 +141,32 @@ export const QueensSolver = () => {
           </div>
         </Stack>
       </Card>
-
+      <Stack direction="row" justifyContent={"center"} alignItems={"center"}>
+        <Switch
+          value={isDebugMode}
+          defaultChecked={startInDebugMode}
+          onChange={() => {
+            setIsDebugMode((prev) => !prev);
+          }}
+        />
+        Show debug info
+      </Stack>
       <ImageUpload handleUploadClick={handleUploadClick} />
+      {BoardComponent}
       {error && (
         <Alert color="error" variant="outlined" icon={<Error />}>
           {error}
         </Alert>
       )}
-      {(showCroppedBoard || !!error) && croppedBoardImageData && (
+      {showDebugInfo && !!blankBoardToDisplay.length && (
+        <>
+          <Alert variant="outlined" color="warning">
+            For debugging purposes, here is the board that we parsed
+          </Alert>
+          <BoardDisplay board={blankBoardToDisplay} />
+        </>
+      )}
+      {showDebugInfo && croppedBoardImageData && (
         <>
           <Alert color="warning" variant="outlined">
             For debugging purposes, here is the board that we cropped.
@@ -136,10 +174,8 @@ export const QueensSolver = () => {
           <ImageDataDisplay imageData={croppedBoardImageData} />
         </>
       )}
-
-      {BoardComponent}
       {/** raw sliced tiles, for debugging */}
-      {(!!error || showCroppedSquares) && !!croppedImageSquares.length && (
+      {showDebugInfo && !!croppedImageSquares.length && (
         <>
           <Alert variant="outlined" color="warning">
             For debugging purposes, here are the squares we broke the board into
@@ -155,14 +191,6 @@ export const QueensSolver = () => {
               </Stack>
             ))}
           </Stack>
-        </>
-      )}
-      {!!error && !!blankBoardToDisplay.length && (
-        <>
-          <Alert variant="outlined" color="warning">
-            For debugging purposes, here is the board that we parsed
-          </Alert>
-          <BoardDisplay board={blankBoardToDisplay} />
         </>
       )}
     </MainContainer>
