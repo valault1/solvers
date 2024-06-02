@@ -1,11 +1,17 @@
 import {
   COLORS_LIST_BY_COLOR,
   colorArrToString,
+  pollEventLoop,
 } from "domains/Queens/constants/constants";
 import { ImageColor, PixelArray, RgbaColor } from "domains/Queens/sharedTypes";
 
 export const colorToString = (color: RgbaColor) => {
   return colorArrToString([color.r, color.g, color.b]);
+};
+
+let timerTime = new Date().getTime();
+const setTimerTime = (newTime: number) => {
+  timerTime = newTime;
 };
 
 type CropOptions = {
@@ -255,9 +261,10 @@ const getPixelCounts = (pixelArray: PixelArray) => {
   return counts;
 };
 
-const cropMultipleTimes = (
+const cropMultipleTimes = async (
   options: Omit<CropOptions, "targetColor"> & { targetColors: ImageColor[] }
 ) => {
+  await pollEventLoop(timerTime, setTimerTime);
   let croppedArray = options.pixelArray;
   options.targetColors.forEach((targetColor) => {
     croppedArray = cropOffNextBlockOfColor({
@@ -269,12 +276,12 @@ const cropMultipleTimes = (
   return croppedArray;
 };
 
-export const cropPixelArrayToBoard = (pixelArray: PixelArray) => {
+export const cropPixelArrayToBoard = async (pixelArray: PixelArray) => {
   if (pixelArray.length === 0) return pixelArray;
 
   const startTime = new Date().getTime();
   // top
-  let croppedArray = cropMultipleTimes({
+  let croppedArray = await cropMultipleTimes({
     pixelArray,
     targetColors: ["white"],
     direction: "row",
@@ -282,7 +289,7 @@ export const cropPixelArrayToBoard = (pixelArray: PixelArray) => {
 
   // bottom (this is weird... but it works for both pre-cropped and normal screenshots!)
   try {
-    const bottomCroppedArray = cropMultipleTimes({
+    const bottomCroppedArray = await cropMultipleTimes({
       pixelArray: croppedArray,
       targetColors: ["gray", "gray", "white"],
       direction: "row",
@@ -293,7 +300,7 @@ export const cropPixelArrayToBoard = (pixelArray: PixelArray) => {
     if (bottomCroppedArray.length < bottomCroppedArray[0].length) {
       // ended up with a board that's not tall enough; crop it using just white
 
-      croppedArray = cropMultipleTimes({
+      croppedArray = await cropMultipleTimes({
         pixelArray: croppedArray,
         targetColors: ["white"],
         direction: "row",
@@ -305,7 +312,7 @@ export const cropPixelArrayToBoard = (pixelArray: PixelArray) => {
   } catch (e) {
     console.log("failed to crop bottom using grays; trying just white");
     // if that errors, try cropping just white; it may be a small board.
-    croppedArray = cropMultipleTimes({
+    croppedArray = await cropMultipleTimes({
       pixelArray: croppedArray,
       targetColors: ["white"],
       direction: "row",
@@ -314,14 +321,14 @@ export const cropPixelArrayToBoard = (pixelArray: PixelArray) => {
   }
 
   // left
-  croppedArray = cropMultipleTimes({
+  croppedArray = await cropMultipleTimes({
     pixelArray: croppedArray,
     targetColors: ["white"],
     direction: "column",
   });
 
   // right
-  croppedArray = cropMultipleTimes({
+  croppedArray = await cropMultipleTimes({
     pixelArray: croppedArray,
     targetColors: ["white"],
     direction: "column",

@@ -1,4 +1,8 @@
-import { COLORS_LIST } from "domains/Queens/constants/constants";
+import {
+  COLORS_LIST,
+  CONSTANT_BLANK_ARRAY,
+} from "domains/Queens/constants/constants";
+import { useMemoNonBlocking } from "domains/Queens/hooks/useMemoNonBlocking";
 import { Color, PixelArray, RgbaColor } from "domains/Queens/sharedTypes";
 import * as React from "react";
 var pixels = require("image-pixels");
@@ -107,14 +111,14 @@ export const getImageDataFromPixelArray = (pixelArray: PixelArray) => {
   return newImageData;
 };
 
-export const useImageParsing = ({ clearError }: { clearError: () => void }) => {
+export const useImageParsing = () => {
   const [rawImageData, setRawImageData] = React.useState<ImageData>();
   const [rawImageFile, setRawImageFile] = React.useState<string>();
   const [imageUploadTime, setImageUploadTime] = React.useState<number>(0);
 
   const handleUploadClick = (event: any) => {
     if (!event?.target?.files?.[0]) return;
-    clearError();
+
     var newlySelectedFile = event.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(newlySelectedFile);
@@ -131,8 +135,8 @@ export const useImageParsing = ({ clearError }: { clearError: () => void }) => {
     };
   };
 
-  const pixelArray = React.useMemo(() => {
-    if (!rawImageData) return [];
+  const calculatePixelArray = React.useCallback(async () => {
+    if (!rawImageData) return CONSTANT_BLANK_ARRAY;
 
     const startTime = new Date().getTime();
     const ndArray = getPixelNDArray(rawImageData);
@@ -144,11 +148,21 @@ export const useImageParsing = ({ clearError }: { clearError: () => void }) => {
 
     return posterizedPixelArray;
   }, [rawImageData]);
+  const initialDataValue = React.useMemo(() => [], []);
+  const {
+    data: processedPixelArray,
+    loading: isLoadingProcessedPixelArray,
+    error: processedPixelArrayError,
+    runDuration: processedPixelArrayTime,
+  } = useMemoNonBlocking({ callback: calculatePixelArray, initialDataValue });
 
   return {
     rawImageData,
     rawImage: rawImageFile,
-    pixelArray,
+    processedPixelArray,
+    isLoadingProcessedPixelArray,
+    processedPixelArrayError,
+    processedPixelArrayTime,
     handleUploadClick,
     imageUploadTime,
   };

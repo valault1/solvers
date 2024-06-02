@@ -12,6 +12,8 @@ export const BOARD_COLORS = {
   purple: [183, 164, 221],
   //teal
   teal: [173, 209, 215],
+  //teal
+  cyan: [86, 237, 231],
   //light blue
   lightBlue: [139, 181, 254],
   //light green
@@ -41,3 +43,18 @@ export const COLORS_LIST_BY_COLOR = Object.keys(COLORS_LIST).reduce(
   },
   {}
 );
+
+export const EVENT_LOOP_POLL_INCREMENT_MS = 100;
+
+export const pollEventLoop = async (
+  timerTime: number,
+  setTimerTime: (newTime: number) => void
+) => {
+  if (new Date().getTime() - timerTime > EVENT_LOOP_POLL_INCREMENT_MS) {
+    //console.log("polling event loop");
+    setTimerTime(new Date().getTime());
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  }
+};
+
+export const CONSTANT_BLANK_ARRAY: any[] = [];

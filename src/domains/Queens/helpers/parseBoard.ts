@@ -1,4 +1,8 @@
 import {
+  CONSTANT_BLANK_ARRAY,
+  pollEventLoop,
+} from "domains/Queens/constants/constants";
+import {
   cropOffNextBlockOfColorCol,
   cropOffNextBlockOfColorLegacy,
   getMajorityColor,
@@ -9,6 +13,11 @@ import {
   BoardColor,
   PixelArray,
 } from "domains/Queens/sharedTypes";
+
+let timerTime = new Date().getTime();
+const setTimerTime = (newTime: number) => {
+  timerTime = newTime;
+};
 
 export const rotateBoard = (board: BlankBoard): BlankBoard => {
   return board.map((row, i) => {
@@ -49,8 +58,8 @@ const parseRow = (
 // strategy:
 // Look at cropped board. take off top border.
 // then, go row by row. crop each row off the board, process it, and go again.
-export const getBlankBoard = (pixelArray: PixelArray) => {
-  if (!pixelArray?.length) return { board: [], croppedImageSquares: [] };
+export const getBlankBoard = async (pixelArray: PixelArray) => {
+  if (!pixelArray?.length) return CONSTANT_BLANK_ARRAY;
   const startTime = new Date().getTime();
   let board: BlankBoard = [];
   let croppedImageSquares: PixelArray[][] = [];
@@ -65,6 +74,8 @@ export const getBlankBoard = (pixelArray: PixelArray) => {
       "black"
     );
 
+    await pollEventLoop(timerTime, setTimerTime);
+
     croppedArray = remainingPiece;
     const { row, croppedSquaresRow } = parseRow(croppedPiece);
     if (row.length) board.push(row);
@@ -78,6 +89,6 @@ export const getBlankBoard = (pixelArray: PixelArray) => {
     parseTime: new Date().getTime() - startTime,
     blankBoard: rotatedBoard,
   });
-  // croppedImageSquares is just used for debugging.
-  return { board: rotatedBoard, croppedImageSquares };
+
+  return rotatedBoard;
 };

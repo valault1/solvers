@@ -1,4 +1,4 @@
-import { Error } from "@mui/icons-material";
+import { Error as ErrorIcon } from "@mui/icons-material";
 import {
   Alert,
   Card,
@@ -11,6 +11,10 @@ import ImageDataDisplay from "components/ImageDataDisplay";
 import ImageUpload from "components/ImageUpload";
 import { MainContainer } from "components/MainPage.elements";
 import { BoardDisplay } from "domains/Queens/components/BoardDisplay";
+import Instructions from "domains/Queens/components/Instructions";
+import SolveBoardPlayground from "domains/Queens/components/SolveBoardPlayground";
+import StepsDisplay, { Step } from "domains/Queens/components/StepsDisplay";
+import { CONSTANT_BLANK_ARRAY } from "domains/Queens/constants/constants";
 
 import { cropPixelArrayToBoard } from "domains/Queens/helpers/cropBoard";
 import { getBlankBoard } from "domains/Queens/helpers/parseBoard";
@@ -25,67 +29,76 @@ import { Board } from "domains/Queens/sharedTypes";
 import * as React from "react";
 
 const showRawImage = false;
-const startInDebugMode = true;
-
-const ERRORS = {
-  PARSING_BOARD: "Error parsing the board",
-  CROPPING_BOARD: "Error cropping the board.",
-  SOLVING_BOARD: "Error solving the board",
-};
+const startOnPlayground = false;
 
 export const QueensSolver = () => {
-  const [error, setError] = React.useState<string | undefined>(undefined);
+  const [showBoardPlayground, setShowBoardPlayground] =
+    React.useState(startOnPlayground);
 
-  const [isDebugMode, setIsDebugMode] = React.useState(startInDebugMode);
-  const showDebugInfo = isDebugMode || !!error;
+  const {
+    handleUploadClick,
+    rawImage,
+    processedPixelArray,
+    imageUploadTime,
+    processedPixelArrayError,
+    processedPixelArrayTime,
+    isLoadingProcessedPixelArray,
+  } = useImageParsing();
 
-  const { handleUploadClick, rawImage, pixelArray, imageUploadTime } =
-    useImageParsing({ clearError: () => setError(undefined) });
-
-  const croppedBoardPixelArray = React.useMemo(() => {
-    try {
-      return cropPixelArrayToBoard(pixelArray);
-    } catch (e) {
-      setError(ERRORS.CROPPING_BOARD);
-    }
-    return [];
-  }, [pixelArray]);
+  const croppedBoardCallback = React.useCallback(
+    async () => await cropPixelArrayToBoard(processedPixelArray),
+    [processedPixelArray]
+  );
+  const {
+    data: croppedBoardPixelArray,
+    error: croppedBoardError,
+    loading: isLoadingCroppedBoard,
+    runDuration: croppedBoardTime,
+  } = useMemoNonBlocking({
+    callback: croppedBoardCallback,
+    initialDataValue: CONSTANT_BLANK_ARRAY,
+  });
 
   // the cropped board image data, to display the cropped board (if showCroppedBoard is true)
   const croppedBoardImageData = React.useMemo(() => {
-    return showDebugInfo
-      ? getImageDataFromPixelArray(croppedBoardPixelArray)
-      : undefined;
-  }, [croppedBoardPixelArray, showDebugInfo]);
-
-  const { croppedImageSquares, board: blankBoard } = React.useMemo(() => {
-    try {
-      console.log({ croppedBoardPixelArray });
-      return getBlankBoard(croppedBoardPixelArray);
-    } catch (e) {
-      setError(ERRORS.PARSING_BOARD);
-    }
-    return { board: [], croppedImageSquares: [] };
+    return getImageDataFromPixelArray(croppedBoardPixelArray);
   }, [croppedBoardPixelArray]);
 
+  const parseBoardCallback = React.useCallback(
+    async () => await getBlankBoard(croppedBoardPixelArray),
+    [croppedBoardPixelArray]
+  );
+  const {
+    data: blankBoard,
+    loading: isLoadingParseBoard,
+    error: parseBoardError,
+    runDuration: parseBoardTime,
+  } = useMemoNonBlocking({
+    callback: parseBoardCallback,
+    initialDataValue: CONSTANT_BLANK_ARRAY,
+  });
+
   const blankBoardToDisplay: Board = React.useMemo(() => {
-    return blankBoard.map((row) => row.map((color) => ({ token: "", color })));
+    return blankBoard?.map((row: any) =>
+      row.map((color: any) => ({ token: "", color }))
+    );
   }, [blankBoard]);
 
-  const computeSolvedBoard = React.useCallback(
-    async () => await solveBoard(blankBoard),
-    [blankBoard]
-  );
+  const computeSolvedBoard = React.useCallback(async () => {
+    if (!blankBoard?.length) return CONSTANT_BLANK_ARRAY;
+    return await solveBoard(blankBoard);
+  }, [blankBoard]);
 
   const {
-    data: solvedBoardData,
+    data: solvedBoard,
     error: solveBoardError,
     loading: isSolvingBoard,
-  } = useMemoNonBlocking({ callback: computeSolvedBoard });
-  const solvedBoard = React.useMemo(
-    () => solvedBoardData || [],
-    [solvedBoardData]
-  );
+    runDuration: solvedBoardTime,
+  } = useMemoNonBlocking({
+    callback: computeSolvedBoard,
+    initialDataValue: CONSTANT_BLANK_ARRAY,
+    identifier: "solveBoard",
+  });
 
   const BoardComponent = React.useMemo(() => {
     if (isSolvingBoard)
@@ -95,102 +108,115 @@ export const QueensSolver = () => {
           <CircularProgress />
         </div>
       );
-    if (!solvedBoard.length) return null;
+    if (!solvedBoard?.length) return null;
     const timeSinceImageUpload = new Date().getTime() - imageUploadTime;
 
-    const showTime = solvedBoard.length > 0;
+    const showTime = solvedBoard?.length > 0;
     return (
       <Stack
         direction="column"
         gap={4}
         alignItems="center"
         justifyContent="center"
-        //This bottom padding stops mobile from cutting off right below the text
-        paddingBottom={40}
       >
         <BoardDisplay board={solvedBoard} />
-        {showTime && <>Solved in {timeSinceImageUpload / 1000} s</>}
+        {showTime && <>Total time: {timeSinceImageUpload / 1000} s</>}
       </Stack>
     );
   }, [solvedBoard, imageUploadTime, isSolvingBoard]);
 
+  const steps: Step[] = React.useMemo(() => {
+    return [
+      {
+        title: "Process image",
+        description:
+          "After you upload a screenshot, there are a lot of variations of color. To simplify processing, we posterize it to just 12 color values: 10 for the board colors, black for the border, and white for the background.",
+        time: processedPixelArrayTime,
+        error: processedPixelArrayError,
+        isLoading: isLoadingProcessedPixelArray,
+        isFinished: !!processedPixelArray?.length,
+      },
+      {
+        title: "Crop image to board",
+        description: "Next, we crop the image to just the board.",
+        time: croppedBoardTime,
+        error: croppedBoardError,
+        isLoading: isLoadingCroppedBoard,
+        isFinished: !!croppedBoardPixelArray?.length,
+      },
+      {
+        title: "Parse the board into a format we want",
+        description:
+          "Then, we parse the board into a data structure that is easy to work with. In this case, we just make a 2 dimensional array of objects that show the color and the state of each square on the board.",
+        time: parseBoardTime,
+        error: parseBoardError,
+        isLoading: isLoadingParseBoard,
+        isFinished: !!blankBoard?.length,
+        finishedContent: <BoardDisplay board={blankBoardToDisplay} />,
+      },
+      {
+        title: "Solve Board",
+        description:
+          "Finally, we solve the board. The current algorithm is just to guess every step and see if it works; if it doesn't, go back and try again!",
+        time: solvedBoardTime,
+        error: solveBoardError,
+        isLoading: isSolvingBoard,
+        isFinished: !!solvedBoard?.length,
+      },
+    ];
+  }, [
+    processedPixelArrayTime,
+    processedPixelArrayError,
+    isLoadingProcessedPixelArray,
+    processedPixelArray?.length,
+    croppedBoardTime,
+    croppedBoardError,
+    isLoadingCroppedBoard,
+    croppedBoardPixelArray?.length,
+    parseBoardTime,
+    parseBoardError,
+    isLoadingParseBoard,
+    blankBoard?.length,
+    solvedBoardTime,
+    solveBoardError,
+    isSolvingBoard,
+    solvedBoard?.length,
+    blankBoardToDisplay,
+  ]);
+
   return (
-    <MainContainer gap="24px">
+    <MainContainer
+      gap="24px"
+      //This bottom padding stops mobile from cutting off right below the text
+      paddingBottom={40}
+    >
       <h1>Queens Solver</h1>
-      {showRawImage && (
-        <Grid item>
-          <img width="100%" src={rawImage} alt="" />
-        </Grid>
-      )}
-      <Card style={{ padding: "20px", maxWidth: "350px" }}>
-        <Stack justifyContent={"center"} alignItems={"center"} gap="12px">
-          <b>
-            <u>Instructions</u>
-          </b>
-          <div>
-            1. Take a screenshot of today's Queens board. (Don't worry about
-            cropping it - just upload the whole screenshot!)
-          </div>
-          <div>
-            2. Upload the screenshot, and our solver will process the image and
-            display a solved board.
-          </div>
-          <div>
-            3. Put in the solution, and look like a genius with your lightning
-            fast time!
-          </div>
+      {startOnPlayground && (
+        <Stack direction="row" justifyContent={"center"} alignItems={"center"}>
+          <Switch
+            value={showBoardPlayground}
+            defaultChecked={startOnPlayground}
+            onChange={() => {
+              setShowBoardPlayground((prev) => !prev);
+            }}
+          />
+          Show playground
         </Stack>
-      </Card>
-      <Stack direction="row" justifyContent={"center"} alignItems={"center"}>
-        <Switch
-          value={isDebugMode}
-          defaultChecked={startInDebugMode}
-          onChange={() => {
-            setIsDebugMode((prev) => !prev);
-          }}
-        />
-        Show debug info
-      </Stack>
-      <ImageUpload handleUploadClick={handleUploadClick} />
-      {BoardComponent}
-      {error && (
-        <Alert color="error" variant="outlined" icon={<Error />}>
-          {error}
-        </Alert>
       )}
-      {showDebugInfo && !!blankBoardToDisplay.length && (
+      {showBoardPlayground ? (
+        <SolveBoardPlayground />
+      ) : (
         <>
-          <Alert variant="outlined" color="warning">
-            For debugging purposes, here is the board that we parsed
-          </Alert>
-          <BoardDisplay board={blankBoardToDisplay} />
-        </>
-      )}
-      {showDebugInfo && croppedBoardImageData && (
-        <>
-          <Alert color="warning" variant="outlined">
-            For debugging purposes, here is the board that we cropped.
-          </Alert>
-          <ImageDataDisplay imageData={croppedBoardImageData} />
-        </>
-      )}
-      {/** raw sliced tiles, for debugging */}
-      {showDebugInfo && !!croppedImageSquares.length && (
-        <>
-          <Alert variant="outlined" color="warning">
-            For debugging purposes, here are the squares we broke the board into
-          </Alert>
-          <Stack direction="row" gap={4}>
-            {croppedImageSquares.map((row, i) => (
-              <Stack key={i} direction="column" gap={4}>
-                {row.map((pixelArray, j) => (
-                  <ImageDataDisplay
-                    imageData={getImageDataFromPixelArray(pixelArray)}
-                  />
-                ))}
-              </Stack>
-            ))}
-          </Stack>
+          {showRawImage && (
+            <Grid item>
+              <img width="100%" src={rawImage} alt="" />
+            </Grid>
+          )}
+          <Instructions />
+
+          <ImageUpload handleUploadClick={handleUploadClick} />
+          <StepsDisplay steps={steps} />
+          {BoardComponent}
         </>
       )}
     </MainContainer>

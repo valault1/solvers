@@ -1,4 +1,10 @@
-import { BOARD_COLORS, COLORS_LIST } from "domains/Queens/constants/constants";
+import {
+  BOARD_COLORS,
+  COLORS_LIST,
+  CONSTANT_BLANK_ARRAY,
+  EVENT_LOOP_POLL_INCREMENT_MS,
+  pollEventLoop,
+} from "domains/Queens/constants/constants";
 import {
   BlankBoard,
   Board,
@@ -7,8 +13,11 @@ import {
 } from "domains/Queens/sharedTypes";
 
 const useGetGuessesLeftV2 = false;
+
 let timerTime = new Date().getTime();
-const EVENT_LOOP_POLL_INCREMENT_MS = 100;
+const setTimerTime = (newTime: number) => {
+  timerTime = newTime;
+};
 
 let colorCounts: Record<BoardColor, number> = Object.keys(BOARD_COLORS).reduce(
   (acc, colorName) => {
@@ -18,15 +27,23 @@ let colorCounts: Record<BoardColor, number> = Object.keys(BOARD_COLORS).reduce(
   {} as Record<BoardColor, number>
 );
 
-const populateColorCounts = (board: BlankBoard) => {
+let colorsInIncreasingFrequency: BoardColor[] = [];
+
+export const populateColorCounts = (board: BlankBoard) => {
   for (let row of board) {
     for (let color of row) {
       colorCounts[color]++;
     }
   }
+  colorsInIncreasingFrequency = Object.keys(colorCounts).sort(
+    (a, b) => colorCounts[a as BoardColor] - colorCounts[b as BoardColor]
+  ) as BoardColor[];
+  console.log({ colorsInIncreasingFrequency, colorCounts });
 };
 
-const copyBoard = (board: Board) => {
+console.log("colorsInIncreasingFrequency", colorsInIncreasingFrequency);
+
+export const copyBoard = (board: Board) => {
   return board.map((row) => row.map((tile) => ({ ...tile })));
 };
 
@@ -150,7 +167,7 @@ const markColors = (board: Board) => {
   });
 };
 
-const markGuaranteedPlacements = (board: Board) => {
+export const markGuaranteedPlacements = (board: Board) => {
   markRows(board);
   markColumns(board);
   markColors(board);
@@ -160,15 +177,30 @@ const markGuaranteedPlacements = (board: Board) => {
 // excludes any spaces marked X
 const getGuessesLeft = (board: Board) => {
   let result: Coords[] = [];
+  const rowCounts: Record<number, number> = {};
+  const colCounts: Record<number, number> = {};
 
   board.forEach((row, i) => {
     row.forEach((tile, j) => {
       if (tile.token === "") {
+        rowCounts[i] = (rowCounts[i] || 0) + 1;
+        colCounts[i] = (colCounts[j] || 0) + 1;
         result.push({ row: i, col: j });
       }
     });
   });
-  return result;
+
+  //return result;
+  //note: You only need to consider one row. So, look for the smallest row, and only look for queens in that.
+  return result.filter((coord) => coord.row === result[0].row);
+  const minCount = Math.min(...Object.values(rowCounts));
+  const rowWithMinCount = Object.keys(rowCounts).find(
+    (row) => rowCounts[Number(row)] === minCount
+  );
+
+  return rowWithMinCount !== undefined
+    ? result.filter((coord) => coord.row === Number(rowWithMinCount))
+    : result;
 };
 // chooses colors with most number of squares first
 const getGuessesLeftV2 = (board: Board) => {
@@ -216,11 +248,38 @@ const placeX = (board: Board, r: number, c: number) => {
   }
 };
 
+const getDiagonalXsToMark = (
+  board: Board,
+  row: number,
+  col: number
+): Coords[] => {
+  return [
+    { row: row + 1, col: col + 1 },
+    { row: row + 1, col: col - 1 },
+    { row: row - 1, col: col + 1 },
+    { row: row - 1, col: col - 1 },
+  ];
+};
+
 const markDiagonalXs = (board: Board, row: number, col: number) => {
   placeX(board, row + 1, col + 1);
   placeX(board, row - 1, col + 1);
   placeX(board, row + 1, col - 1);
   placeX(board, row - 1, col - 1);
+};
+
+const getColorXsToMark = (board: Board, color: string): Coords[] => {
+  let coords = [];
+  for (let i = 0; i < board.length; i++) {
+    let row = board[i];
+    for (let j = 0; j < board.length; j++) {
+      let tile = row[j];
+      if (tile.color === color && tile.token === "") {
+        coords.push({ row: i, col: j });
+      }
+    }
+  }
+  return coords;
 };
 
 const markColorXs = (board: Board, color: string) => {
@@ -233,13 +292,83 @@ const markColorXs = (board: Board, color: string) => {
   }
 };
 
-const markXsAfterQueen = (board: Board, row: number, col: number) => {
+const getXCoordsToMarkAfterQueen = (
+  board: Board,
+  row: number,
+  col: number
+): Coords[] => {
+  let coords = [];
   for (let i = 0; i < board.length; i++) {
-    placeX(board, i, col);
-    placeX(board, row, i);
+    coords.push({ row: i, col });
+    coords.push({ row, col: i });
   }
-  markColorXs(board, board[row][col].color);
-  markDiagonalXs(board, row, col);
+  coords.push(...getColorXsToMark(board, board[row][col].color));
+  coords.push(...getDiagonalXsToMark(board, row, col));
+  coords = coords.filter((coord) => !(coord.row === row && coord.col === col));
+  return coords;
+};
+
+const markXsAfterQueen = (board: Board, row: number, col: number) => {
+  // for (let i = 0; i < board.length; i++) {
+  //   placeX(board, i, col);
+  //   placeX(board, row, i);
+  // }
+  // markColorXs(board, board[row][col].color);
+  // markDiagonalXs(board, row, col);
+  const coordsToMark = getXCoordsToMarkAfterQueen(board, row, col);
+  for (let coords of coordsToMark) {
+    placeX(board, coords.row, coords.col);
+  }
+};
+
+// the strategy is to place all queens in a color, and see what x's are common to that color.
+// for example: The top left 3 squares are the same color. Place a queen in all 3 squares; if any of the same squares get turned to x's, mark those as x's.
+export const eliminateSquares = (board: Board, color = "") => {
+  const colorCoordsInOrder = getGuessesLeftV2(board);
+  if (!colorCoordsInOrder?.length) return;
+  let tilesByColor: Record<BoardColor, Coords[]> = colorCoordsInOrder.reduce(
+    (acc, coords) => {
+      const tile = board[coords.row][coords.col];
+      acc[tile.color] = [...(acc[tile.color] || []), coords];
+      return acc;
+    },
+    {} as Record<BoardColor, Coords[]>
+  );
+
+  for (let allCoordsOfColor of Object.values(tilesByColor)) {
+    if (!allCoordsOfColor?.length) continue;
+    // place a queen on the tileCoords. See what x's are placed.
+    let tile = board[allCoordsOfColor[0].row][allCoordsOfColor[0].col];
+    if (!!color && tile.color !== color) continue;
+    let commonSquares = [
+      ...getXCoordsToMarkAfterQueen(
+        board,
+        allCoordsOfColor[0].row,
+        allCoordsOfColor[0].col
+      ),
+    ];
+    for (let coords of allCoordsOfColor) {
+      const marksForThisQueen = getXCoordsToMarkAfterQueen(
+        board,
+        coords.row,
+        coords.col
+      );
+      //console.log({ marksForThisQueen, commonSquares, coords });
+      commonSquares = commonSquares.filter((commonSquare) =>
+        marksForThisQueen.some(
+          (mark) =>
+            mark.row === commonSquare.row && mark.col === commonSquare.col
+        )
+      );
+      //console.log({ resultingCommonSquares: commonSquares });
+    }
+
+    // console.log("looked for common squares on color: " + tile.color);
+    // console.log({ commonSquares, allCoordsOfColor });
+    for (let commonSquare of commonSquares) {
+      placeX(board, commonSquare.row, commonSquare.col);
+    }
+  }
 };
 
 const placeQueen = (board: Board, row: number, col: number) => {
@@ -260,11 +389,18 @@ const solveBoardRecursive = async (
       return undefined;
     }
   }
-  //console.log({ recursionCount, guessesLeft: guessesLeft.length });
+
+  const boards: Board[] = [];
   for (let guess of guessesLeft) {
     const guessedBoard = copyBoard(board);
     placeQueen(guessedBoard, guess.row, guess.col);
-    markGuaranteedPlacements(guessedBoard);
+    // markGuaranteedPlacements(guessedBoard);
+    // eliminateSquares(guessedBoard);
+    narrowDownBoard(guessedBoard);
+    boards.push(guessedBoard);
+
+    await pollEventLoop(timerTime, setTimerTime);
+
     const solvedBoard = await solveBoardRecursive(
       guessedBoard,
       useGetGuessesLeftV2
@@ -272,19 +408,12 @@ const solveBoardRecursive = async (
         : getGuessesLeft(guessedBoard),
       recursionCount + 1
     );
-
-    // this polls the event loop, and allows the browser to update the UI
-    if (new Date().getTime() - timerTime > EVENT_LOOP_POLL_INCREMENT_MS) {
-      //console.log("polling event loop");
-      timerTime = new Date().getTime();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-    }
-
-    if (recursionCount <= 1) {
+    if (recursionCount <= 0) {
       // console.log({
       //   msg: "knocked out a guess! recursionCount: ",
       //   recursionCount,
       //   guessesLeft,
+      //   guessedBoard,
       // });
     }
 
@@ -294,24 +423,40 @@ const solveBoardRecursive = async (
   }
 };
 
+export const createBoardFromBlankBoard = (blankBoard: BlankBoard): Board => {
+  return blankBoard.map((row) => row.map((color) => ({ token: "", color })));
+};
+
+const boardsAreEqual = (board1: Board, board2: Board) => {
+  for (let i = 0; i < board1.length; i++) {
+    for (let j = 0; j < board1[i].length; j++) {
+      if (board1[i][j].token !== board2[i][j].token) return false;
+    }
+  }
+  return true;
+};
+
+export const narrowDownBoard = (board: Board) => {
+  let boardCopy = copyBoard(board);
+  let boardsAreNotEqual = true;
+  while (boardsAreNotEqual) {
+    //console.log("Boards still not equal, try again");
+    boardCopy = copyBoard(board);
+    markGuaranteedPlacements(board);
+    eliminateSquares(board);
+    boardsAreNotEqual = !boardsAreEqual(board, boardCopy);
+  }
+};
+
 export const solveBoard = async (blankBoard: BlankBoard): Promise<Board> => {
-  if (!blankBoard.length) return [];
-  const board: Board = blankBoard.map((row) =>
-    row.map((color) => ({ token: "", color }))
-  );
+  if (!blankBoard.length) return CONSTANT_BLANK_ARRAY;
+  const board: Board = createBoardFromBlankBoard(blankBoard);
 
   populateColorCounts(blankBoard);
 
   const startTime = new Date().getTime();
 
-  if (useGetGuessesLeftV2) {
-    console.log(
-      "using v2 of getGuessesLeft (prioritizing by largest color first)"
-    );
-  } else {
-    console.log("using v1 of getGuessesLeft");
-  }
-
+  narrowDownBoard(board);
   const solvedBoard: Board = await solveBoardRecursive(
     board,
     useGetGuessesLeftV2 ? getGuessesLeftV2(board) : getGuessesLeft(board)
