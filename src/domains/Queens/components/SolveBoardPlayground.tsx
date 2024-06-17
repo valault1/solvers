@@ -29,6 +29,7 @@ import ImageDataDisplay from "components/ImageDataDisplay";
 import { getImageDataFromPixelArray } from "domains/Queens/hooks/useImageParsing";
 
 const EMPTY_BOARD = createBoardFromBlankBoard(MOCK_BLANK_BOARD_2);
+const SCREENSHOT = MOCK_SCREENSHOTS[0];
 
 const SolveBoardPlayground = () => {
   const [board, setBoard] = React.useState(EMPTY_BOARD);
@@ -124,17 +125,20 @@ const SolveBoardPlayground = () => {
         >
           <PrimaryButton
             onClick={() =>
-              testScreenshotFromUrl(MOCK_SCREENSHOTS[0]).then((res) =>
+              testScreenshotFromUrl(SCREENSHOT.url).then((res) =>
                 setTestResults(res)
               )
             }
           >
             test a screenshot
           </PrimaryButton>
-          <img src={MOCK_SCREENSHOTS[0]} alt="" width={"70%"} />
+          <img src={SCREENSHOT.url} alt="" width={"70%"} />
           {!!croppedBoardImageData && (
             <>
-              <ImageDataDisplay imageData={croppedBoardImageData} />
+              <ImageDataDisplay
+                imageData={croppedBoardImageData}
+                scale={0.25}
+              />
             </>
           )}
 

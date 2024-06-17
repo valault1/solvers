@@ -288,6 +288,7 @@ export const cropPixelArrayToBoard = async (pixelArray: PixelArray) => {
   });
 
   // bottom (this is weird... but it works for both pre-cropped and normal screenshots!)
+  // TODO: NEW STRATEGY: crop whites until it fails
   try {
     const bottomCroppedArray = await cropMultipleTimes({
       pixelArray: croppedArray,
@@ -296,9 +297,9 @@ export const cropPixelArrayToBoard = async (pixelArray: PixelArray) => {
       reversed: true,
     });
 
-    if (bottomCroppedArray.length < bottomCroppedArray[0].length) {
-      // ended up with a board that's not tall enough; crop it using just white
-      console.log("Board not wide enough; just crop white");
+    if (bottomCroppedArray.length < bottomCroppedArray[0].length / 2) {
+      // ended up with a board that's more than half as tall as it is wide; just crop white
+      console.log("Board half as tall as it is wide; just crop white");
       croppedArray = await cropMultipleTimes({
         pixelArray: croppedArray,
         targetColors: ["white"],
