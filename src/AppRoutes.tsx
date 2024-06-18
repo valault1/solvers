@@ -4,6 +4,7 @@ import { CalculatorsView } from "domains/Calculators/CalculatorsView";
 import { ThirdWorldFarmerController } from "domains/FarmGame/ThirdWorldFarmerController";
 import { MancalaController } from "domains/Mancala/MancalaController";
 import { PhysicsCalculatorController } from "domains/Physics/PhysicsCalculatorsController";
+import { QueensPlayer } from "domains/Queens/QueensPlayer";
 import { QueensSolver } from "domains/Queens/QueensSolver";
 import { RemoteController } from "domains/Remote/RemoteController";
 import { ReviewsController } from "domains/Reviews/ReviewsController";
@@ -29,6 +30,8 @@ export function getRoute(label: string) {
 
 export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Wordle Solver", element: <WordleController /> },
+  { label: "Queens Solver", element: <QueensSolver />, isHidden: false },
+  { label: "Queens Player", element: <QueensPlayer />, isHidden: false },
   {
     label: "Rummikub Solver",
     route: "rummikub",
@@ -66,7 +69,6 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Remote", element: <RemoteController />, isHidden: true },
   { label: "BuildALot", element: <GameController />, isHidden: true },
   { label: "Subgroups", element: <SubgroupsController />, isHidden: false },
-  { label: "Queens", element: <QueensSolver />, isHidden: false },
 ];
 export const AppRoutes: React.FC = () => {
   return (
