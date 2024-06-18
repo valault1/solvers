@@ -84,11 +84,12 @@ export const getBlankBoard = async (pixelArray: PixelArray) => {
   }
 
   // for some reason, the board is rotated. So unrotate it.
-  const rotatedBoard = rotateBoard(board);
+  // update 6-18-24: turns out the display was rotated. the board is fine.
+  //const rotatedBoard = rotateBoard(board);
   console.log({
     parseTime: new Date().getTime() - startTime,
-    blankBoard: rotatedBoard,
+    blankBoard: board,
   });
 
-  return rotatedBoard;
+  return board;
 };

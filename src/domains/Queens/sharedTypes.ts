@@ -14,7 +14,11 @@ export type Color = { red: number; green: number; blue: number };
 export type Token = "Q" | "X" | "";
 export type BoardColor = keyof typeof BOARD_COLORS;
 export type ImageColor = keyof typeof COLORS_LIST;
-export type BoardTile = { token: Token; color: BoardColor };
+export type BoardTile = {
+  token: Token;
+  color: BoardColor;
+  isConflicting?: boolean;
+};
 export type Board = BoardTile[][];
 export type BlankBoardRow = BoardColor[];
 export type BlankBoard = BlankBoardRow[];

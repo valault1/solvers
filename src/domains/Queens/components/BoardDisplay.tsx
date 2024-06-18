@@ -1,18 +1,33 @@
+import { Close, Star } from "@mui/icons-material";
 import { Stack } from "@mui/material";
 import {
   COLORS_LIST,
   colorArrToString,
 } from "domains/Queens/constants/constants";
-import { Board } from "domains/Queens/sharedTypes";
+import { Board, Token } from "domains/Queens/sharedTypes";
 import * as React from "react";
 
+const TokenDisplay = ({ token }: { token: Token }) => {
+  if (token === "Q") return <Star />;
+  if (token === "X") return <Close />;
+  return <></>;
+};
+
 const BOARD_SIZE = 30;
-export const BoardDisplay = ({ board }: { board: Board }) => (
-  <Stack direction="row">
+export type OnClickTile = (i: number, j: number) => void;
+export const BoardDisplay = ({
+  board,
+  onClickTile,
+}: {
+  board: Board;
+  onClickTile?: OnClickTile;
+}) => (
+  <Stack direction="column">
     {board.map((row, i) => (
-      <Stack key={i} direction="column">
-        {row.map(({ token, color: colorName }, j) => (
+      <Stack key={i} direction="row">
+        {row.map(({ token, color: colorName, isConflicting }, j) => (
           <div
+            onClick={() => onClickTile?.(i, j)}
             key={j}
             style={{
               width: BOARD_SIZE,
@@ -20,14 +35,15 @@ export const BoardDisplay = ({ board }: { board: Board }) => (
               backgroundColor: `rgba(${colorArrToString(
                 COLORS_LIST[colorName]
               )})`,
-              color: "black",
+              color: isConflicting ? "red" : "black",
               border: "1px solid black",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              cursor: "pointer",
             }}
           >
-            {token}
+            {<TokenDisplay token={token} />}
           </div>
         ))}
       </Stack>
