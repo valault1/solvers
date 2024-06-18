@@ -1,6 +1,7 @@
 import { Battleship } from "domains/Battleship/Battleship";
 import { GameController } from "domains/BuildALot/features/GameController/GameController";
 import { CalculatorsView } from "domains/Calculators/CalculatorsView";
+import { DysonSphereCalculator } from "domains/DysonSphere/DysonSphereCalculator";
 import { ThirdWorldFarmerController } from "domains/FarmGame/ThirdWorldFarmerController";
 import { MancalaController } from "domains/Mancala/MancalaController";
 import { PhysicsCalculatorController } from "domains/Physics/PhysicsCalculatorsController";
@@ -69,6 +70,12 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Remote", element: <RemoteController />, isHidden: true },
   { label: "BuildALot", element: <GameController />, isHidden: true },
   { label: "Subgroups", element: <SubgroupsController />, isHidden: false },
+
+  {
+    label: "Dyson Sphere",
+    element: <DysonSphereCalculator />,
+    isHidden: false,
+  },
 ];
 export const AppRoutes: React.FC = () => {
   return (
