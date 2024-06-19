@@ -1,13 +1,4 @@
-import { Error as ErrorIcon } from "@mui/icons-material";
-import {
-  Alert,
-  Card,
-  CircularProgress,
-  Grid,
-  Stack,
-  Switch,
-} from "@mui/material";
-import ImageDataDisplay from "components/ImageDataDisplay";
+import { CircularProgress, Grid, Stack, Switch } from "@mui/material";
 import ImageUpload from "components/ImageUpload";
 import { MainContainer } from "components/MainPage.elements";
 import { BoardDisplay } from "domains/Queens/components/BoardDisplay";
@@ -19,20 +10,15 @@ import { CONSTANT_BLANK_ARRAY } from "domains/Queens/constants/constants";
 import { cropPixelArrayToBoard } from "domains/Queens/helpers/cropBoard";
 import { getBlankBoard } from "domains/Queens/helpers/parseBoard";
 import { solveBoard } from "domains/Queens/helpers/solveBoard";
-import {
-  getImageDataFromPixelArray,
-  useImageParsing,
-} from "domains/Queens/hooks/useImageParsing";
+import { useImageParsing } from "domains/Queens/hooks/useImageParsing";
 import { useMemoNonBlocking } from "domains/Queens/hooks/useMemoNonBlocking";
-import { MOCK_SCREENSHOTS } from "domains/Queens/mocks/mockScreenshots";
 
 import { Board } from "domains/Queens/sharedTypes";
-import { testScreenshotFromUrl } from "domains/Queens/tests/testScreenshots";
 
 import * as React from "react";
 
 const showRawImage = false;
-const startOnPlayground = true;
+const startOnPlayground = false;
 
 export const QueensSolver = () => {
   const [showBoardPlayground, setShowBoardPlayground] =
@@ -63,9 +49,9 @@ export const QueensSolver = () => {
   });
 
   // the cropped board image data, to display the cropped board (if showCroppedBoard is true)
-  const croppedBoardImageData = React.useMemo(() => {
-    return getImageDataFromPixelArray(croppedBoardPixelArray);
-  }, [croppedBoardPixelArray]);
+  // const croppedBoardImageData = React.useMemo(() => {
+  //   return getImageDataFromPixelArray(croppedBoardPixelArray);
+  // }, [croppedBoardPixelArray]);
 
   const parseBoardCallback = React.useCallback(
     async () => await getBlankBoard(croppedBoardPixelArray),
@@ -186,6 +172,8 @@ export const QueensSolver = () => {
     solvedBoard?.length,
     blankBoardToDisplay,
   ]);
+
+  console.log({ showBoardPlayground });
 
   return (
     <MainContainer

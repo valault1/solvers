@@ -1,22 +1,15 @@
+import { Card } from "@mui/material";
 import { MainContainer } from "components/MainPage.elements";
-import {
-  BoardDisplay,
-  OnClickTile,
-} from "domains/Queens/components/BoardDisplay";
-import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
 
-import SolveBoardPlayground from "domains/Queens/components/SolveBoardPlayground";
-import { createBoardFromBlankBoard } from "domains/Queens/helpers/solveBoard";
-import { MOCK_BLANK_BOARD_2 } from "domains/Queens/mocks/mocks";
-import { Board } from "domains/Queens/sharedTypes";
+import {
+  INSTRUCTIONS_PADDING,
+  INSTRUCTIONS_WIDTH,
+} from "domains/Queens/components/Instructions";
+import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
 
 import * as React from "react";
 
-const EMPTY_BOARD = createBoardFromBlankBoard(MOCK_BLANK_BOARD_2);
-
 export const QueensPlayer = () => {
-  const [board, setBoard] = React.useState(EMPTY_BOARD);
-
   return (
     <MainContainer
       gap="24px"
@@ -24,7 +17,15 @@ export const QueensPlayer = () => {
       paddingBottom={40}
     >
       <h1>Play Queens!</h1>
-      <PlayableBoard blankBoard={MOCK_BLANK_BOARD_2} />
+
+      <Card
+        style={{ padding: INSTRUCTIONS_PADDING, maxWidth: INSTRUCTIONS_WIDTH }}
+      >
+        These boards are randomly generated. They're a little derpy, but mostly
+        playable!
+      </Card>
+
+      <PlayableBoard />
 
       {/* <SolveBoardPlayground /> */}
     </MainContainer>

@@ -22,6 +22,8 @@ export const BOARD_COLORS = {
   gray: [223, 223, 223],
 };
 
+export const BOARD_COLOR_NAMES = Object.keys(BOARD_COLORS);
+
 export const COLORS_LIST = {
   //border black
   black: [1, 1, 1],

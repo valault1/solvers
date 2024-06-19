@@ -9,6 +9,25 @@ export type RgbaColor = {
 
 export type PixelArray = RgbaColor[][];
 
+// BoardWithBorders ------------------------------------------------------------
+// the tiles and boards with borders are for generated a board
+export type TileWithBorders = {
+  top?: boolean;
+  bottom?: boolean;
+  left?: boolean;
+  right?: boolean;
+  token: Token;
+  region: number;
+};
+export type BoardWithBorders = TileWithBorders[][];
+
+// BoardWithRegions ------------------------------------------------------------
+// This is a blank board that has regions, but has not been assigned colors
+export type TileWithRegion = { token: Token; region: number };
+export type BoardWithRegions = TileWithRegion[][];
+
+// Board
+// This board is the normal one played - it has colors, tokens, and conflicts
 export type Color = { red: number; green: number; blue: number };
 
 export type Token = "Q" | "X" | "";
@@ -18,6 +37,11 @@ export type BoardTile = {
   token: Token;
   color: BoardColor;
   isConflicting?: boolean;
+  // borders
+  bottom?: boolean;
+  top?: boolean;
+  right?: boolean;
+  left?: boolean;
 };
 export type Board = BoardTile[][];
 export type BlankBoardRow = BoardColor[];

@@ -5,25 +5,15 @@ import {
   BoardDisplay,
   OnClickTile,
 } from "domains/Queens/components/BoardDisplay";
-
-import SolveBoardPlayground from "domains/Queens/components/SolveBoardPlayground";
 import { BOARD_COLORS } from "domains/Queens/constants/constants";
-import {
-  copyBoard,
-  createBoardFromBlankBoard,
-} from "domains/Queens/helpers/solveBoard";
-import { MOCK_BLANK_BOARD_2 } from "domains/Queens/mocks/mocks";
-import {
-  BlankBoard,
-  Board,
-  Token,
-  BoardColor,
-  Coords,
-} from "domains/Queens/sharedTypes";
+import { generateBoardFromSeed } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
+import { RNG } from "domains/Queens/helpers/randomNum";
+import { copyBoard } from "domains/Queens/helpers/solveBoard";
+
+import { Board, Token, BoardColor, Coords } from "domains/Queens/sharedTypes";
 
 import * as React from "react";
 
-const EMPTY_BOARD = createBoardFromBlankBoard(MOCK_BLANK_BOARD_2);
 const getNewTileOnClick = (tile: Token): Token => {
   if (tile === "X") return "Q";
   if (tile === "Q") return "";
@@ -126,12 +116,17 @@ const markConflicts = (board: Board) => {
   markConflictingColors(board);
 };
 
-export const PlayableBoard = ({ blankBoard }: { blankBoard: BlankBoard }) => {
-  const [board, setBoard] = React.useState(
-    createBoardFromBlankBoard(blankBoard)
-  );
+const SEED = 74128237;
+const rng = new RNG(SEED);
+const INITIAL_SEED = rng.getRandomNewSeed();
+const SIDE_LENGTH = 10;
+const INITIAL_BOARD = generateBoardFromSeed(SIDE_LENGTH, INITIAL_SEED);
+
+export const PlayableBoard = () => {
+  const [board, setBoard] = React.useState(INITIAL_BOARD);
   const [movesPlayed, setMovesPlayed] = React.useState<Coords[]>([]);
   const [hasWon, setHasWon] = React.useState(false);
+  const [seed, setSeed] = React.useState(INITIAL_SEED);
 
   const onClickTile: OnClickTile = (i, j) => {
     setMovesPlayed((prev) => [...prev, { row: i, col: j }]);
@@ -143,6 +138,13 @@ export const PlayableBoard = ({ blankBoard }: { blankBoard: BlankBoard }) => {
     setHasWon(checkForVictory(newBoard));
     setBoard(newBoard);
   };
+
+  const onClickGenerateBoard = React.useCallback(() => {
+    const newSeed = rng.getRandomNewSeed();
+    setSeed(newSeed);
+    const newBoard = generateBoardFromSeed(SIDE_LENGTH, newSeed);
+    setBoard(newBoard);
+  }, []);
 
   const undoLastMove = () => {};
 
@@ -157,6 +159,8 @@ export const PlayableBoard = ({ blankBoard }: { blankBoard: BlankBoard }) => {
       <Stack>
         <PrimaryButton onClick={undoLastMove}>Undo</PrimaryButton>
       </Stack>
+      Current seed: {seed}
+      <PrimaryButton onClick={onClickGenerateBoard}>New board</PrimaryButton>
     </MainContainer>
   );
 };

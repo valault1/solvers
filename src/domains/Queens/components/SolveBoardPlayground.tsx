@@ -36,7 +36,7 @@ const SolveBoardPlayground = () => {
   const [testResults, setTestResults] =
     React.useState<TestResults>(BLANK_TEST_RESULTS);
   console.log({ testResults });
-  const { posterizedPixelArray, croppedBoard, blankBoard, solvedBoard } =
+  const { /*posterizedPixelArray,*/ croppedBoard, blankBoard, solvedBoard } =
     testResults;
   const blankBoardToDisplay = React.useMemo(() => {
     return blankBoard?.map((row: any) =>
