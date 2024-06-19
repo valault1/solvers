@@ -13,7 +13,7 @@ const TokenDisplay = ({ token }: { token: Token }) => {
   return <></>;
 };
 
-const BOARD_SIZE = 40;
+const BOARD_SIZE = 30;
 const BORDER_COLOR = "black";
 const BORDER_CSS = `solid ${BORDER_COLOR}`;
 // adds padding if the border isn't thick, so that the tiles all stay in line

@@ -115,7 +115,8 @@ const markConflicts = (board: Board) => {
 };
 
 const SEED = 74128237;
-const rng = new RNG(SEED);
+const USE_STANDARD_SEED = false;
+const rng = new RNG(USE_STANDARD_SEED ? SEED : new Date().getTime());
 const INITIAL_SEED = rng.getRandomNewSeed();
 const SIDE_LENGTH = 10;
 const INITIAL_BOARD = generateBoardFromSeed(SIDE_LENGTH, INITIAL_SEED);
