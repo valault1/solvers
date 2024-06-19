@@ -84,7 +84,6 @@ const markConflictingColors = (board: Board) => {
 };
 
 const checkForVictory = (board: Board): boolean => {
-  console.log("Checking for victory");
   const targetNumQueens = board.length;
   let numQueens = 0;
   for (let row of board) {
@@ -95,7 +94,6 @@ const checkForVictory = (board: Board): boolean => {
       }
     }
   }
-  console.log({ numQueens });
   return numQueens === targetNumQueens;
 };
 const clearAllConflicts = (board: Board) => {
