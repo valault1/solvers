@@ -46,6 +46,14 @@ export type BoardTile = {
 export type Board = BoardTile[][];
 export type BlankBoardRow = BoardColor[];
 export type BlankBoard = BlankBoardRow[];
+
+export type TileChange = {
+  prevToken: Token;
+  newToken: Token;
+  row: number;
+  col: number;
+};
+export type Move = TileChange[];
 export type Coords = { row: number; col: number };
 
 export type Guess = {

@@ -370,7 +370,7 @@ export const eliminateSquares = (board: Board, color = "") => {
   }
 };
 
-const placeQueen = (board: Board, row: number, col: number) => {
+export const placeQueen = (board: Board, row: number, col: number) => {
   board[row][col].token = "Q";
   markXsAfterQueen(board, row, col);
 };

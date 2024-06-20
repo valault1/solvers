@@ -7,10 +7,16 @@ import {
 } from "domains/Queens/components/BoardDisplay";
 import { BOARD_COLORS } from "domains/Queens/constants/constants";
 import { generateBoardFromSeed } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
-import { RNG } from "domains/Queens/helpers/randomNum";
-import { copyBoard } from "domains/Queens/helpers/solveBoard";
+import { range, RNG } from "domains/Queens/helpers/randomNum";
+import { copyBoard, placeQueen } from "domains/Queens/helpers/solveBoard";
 
-import { Board, Token, BoardColor, Coords } from "domains/Queens/sharedTypes";
+import {
+  Board,
+  Token,
+  BoardColor,
+  Coords,
+  Move,
+} from "domains/Queens/sharedTypes";
 
 import * as React from "react";
 
@@ -114,6 +120,12 @@ const markConflicts = (board: Board) => {
   markConflictingColors(board);
 };
 
+const undoMove = (board: Board, move: Move) => {
+  move.forEach((tileChange) => {
+    board[tileChange.row][tileChange.col].token = tileChange.prevToken;
+  });
+};
+
 const SEED = 74128237;
 const USE_STANDARD_SEED = false;
 const rng = new RNG(USE_STANDARD_SEED ? SEED : new Date().getTime());
@@ -123,18 +135,77 @@ const INITIAL_BOARD = generateBoardFromSeed(SIDE_LENGTH, INITIAL_SEED);
 
 export const PlayableBoard = () => {
   const [board, setBoard] = React.useState(INITIAL_BOARD);
-  const [movesPlayed, setMovesPlayed] = React.useState<Coords[]>([]);
+  const [movesPlayed, setMovesPlayed] = React.useState<Move[]>([]);
   const [hasWon, setHasWon] = React.useState(false);
   const [seed, setSeed] = React.useState(INITIAL_SEED);
 
+  const recordMove = React.useCallback(
+    (newBoard: Board) => {
+      const result: Move = [];
+      for (let i of range(board.length)) {
+        for (let j of range(board.length)) {
+          const newBoardTile = newBoard[i][j].token;
+          const oldBoardTile = board[i][j].token;
+
+          if (newBoardTile !== oldBoardTile) {
+            result.push({
+              prevToken: oldBoardTile,
+              newToken: newBoardTile,
+              row: i,
+              col: j,
+            });
+          }
+        }
+      }
+
+      setMovesPlayed((prev) => [...prev, result]);
+    },
+    [setMovesPlayed, board]
+  );
+  console.log({ movesPlayed });
+
+  const validateBoard = React.useCallback(
+    (newBoard: Board) => {
+      markConflicts(newBoard);
+      setHasWon(checkForVictory(newBoard));
+    },
+    [setHasWon]
+  );
+
   const onClickTile: OnClickTile = (i, j) => {
-    setMovesPlayed((prev) => [...prev, { row: i, col: j }]);
     const newBoard = copyBoard(board);
     const currentTile = newBoard[i][j].token;
-    const newTile = getNewTileOnClick(currentTile);
-    newBoard[i][j].token = newTile;
-    markConflicts(newBoard);
-    setHasWon(checkForVictory(newBoard));
+    const newToken = getNewTileOnClick(currentTile);
+    if (newToken === "Q") {
+      placeQueen(newBoard, i, j);
+    } else if (newToken === "") {
+      // this means they removed a queen
+      // find the time the queen was placed in movesPlayed, and undo that move as the next move
+      let moveThatPlacedQueen: Move | undefined = undefined;
+      for (let index = movesPlayed.length - 1; index >= 0; index--) {
+        const move = movesPlayed[index];
+        const queenTileChange = move.find(
+          (tileChange) =>
+            tileChange.newToken === "Q" &&
+            tileChange.row === i &&
+            tileChange.col === j
+        );
+        if (queenTileChange) {
+          moveThatPlacedQueen = move;
+          break;
+        }
+      }
+
+      console.log({ moveThatPlacedQueen, newToken, movesPlayed, i, j });
+      if (moveThatPlacedQueen) {
+        undoMove(newBoard, moveThatPlacedQueen);
+      }
+      newBoard[i][j].token = newToken;
+    } else {
+      newBoard[i][j].token = newToken;
+    }
+    recordMove(newBoard);
+    validateBoard(newBoard);
     setBoard(newBoard);
   };
 
@@ -145,7 +216,14 @@ export const PlayableBoard = () => {
     setBoard(newBoard);
   }, []);
 
-  const undoLastMove = () => {};
+  const undoLastMove = React.useCallback(() => {
+    const newBoard = copyBoard(board);
+    const moveToUndo = movesPlayed[movesPlayed.length - 1];
+    undoMove(newBoard, moveToUndo);
+    validateBoard(newBoard);
+    setBoard(newBoard);
+    setMovesPlayed((prev) => prev.slice(0, prev.length - 1));
+  }, [movesPlayed, board, validateBoard]);
 
   return (
     <MainContainer
