@@ -1,5 +1,5 @@
 import { rotateBoard } from "domains/Queens/helpers/parseBoard";
-import { BlankBoard, BoardColor } from "domains/Queens/sharedTypes";
+import { BlankBoard, BoardColor, Coords } from "domains/Queens/sharedTypes";
 
 const repeated = (color: BoardColor, num: number) => {
   return Array(num).fill(color);
@@ -192,4 +192,49 @@ export const MOCK_BLANK_BOARD_2: BlankBoard = [
     "brownGray",
     "pink",
   ],
+];
+
+export const mockRegionSizes: number[] = [2, 14, 30, 14, 13, 10, 3, 6, 2, 5];
+
+export const mockStarPositions: Coords[] = [
+  {
+    row: 0,
+    col: 3,
+  },
+  {
+    row: 1,
+    col: 0,
+  },
+  {
+    row: 2,
+    col: 5,
+  },
+  {
+    row: 3,
+    col: 7,
+  },
+  {
+    row: 4,
+    col: 2,
+  },
+  {
+    row: 5,
+    col: 8,
+  },
+  {
+    row: 6,
+    col: 6,
+  },
+  {
+    row: 7,
+    col: 9,
+  },
+  {
+    row: 8,
+    col: 4,
+  },
+  {
+    row: 9,
+    col: 1,
+  },
 ];

@@ -5,11 +5,14 @@ import {
   EVENT_LOOP_POLL_INCREMENT_MS,
   pollEventLoop,
 } from "domains/Queens/constants/constants";
+import { range } from "domains/Queens/helpers/randomNum";
 import {
   BlankBoard,
   Board,
   BoardColor,
   Coords,
+  RowOrColGroup,
+  TileWithCoords,
 } from "domains/Queens/sharedTypes";
 
 const useGetGuessesLeftV2 = false;
@@ -426,13 +429,121 @@ export const createBoardFromBlankBoard = (blankBoard: BlankBoard): Board => {
   return blankBoard.map((row) => row.map((color) => ({ token: "", color })));
 };
 
-const boardsAreEqual = (board1: Board, board2: Board) => {
+export const boardsAreEqual = (board1: Board, board2: Board) => {
   for (let i = 0; i < board1.length; i++) {
     for (let j = 0; j < board1[i].length; j++) {
       if (board1[i][j].token !== board2[i][j].token) return false;
     }
   }
   return true;
+};
+
+const eliminateSquaresInRowColGroup = ({
+  board,
+  group,
+}: {
+  board: Board;
+  group: RowOrColGroup;
+}) => {
+  const colorsInGroup = new Set(
+    group.squares.map((square) => square.tile.color)
+  );
+
+  // rule 1: check for a group that completely contains n colors
+  //  get colors in group
+  //  check if those colors exist outside of the group
+  const colorsOutsideGroup = new Set(
+    group.squaresOutsideGroup.map((square) => square.tile.color)
+  );
+  const colorsInGroupArr = Array.from(colorsInGroup);
+  const colorsContainedInGroup = new Set(
+    colorsInGroupArr.filter((color) => !colorsOutsideGroup.has(color))
+  );
+  if (colorsContainedInGroup.size === group.groupSize) {
+    group.squares.forEach((square) => {
+      if (!colorsContainedInGroup.has(square.tile.color)) {
+        board[square.row][square.col].token = "X";
+      }
+    });
+  }
+
+  // rule 2: check for a group that contains only n colors
+  //  count the number of colors in the group
+  //  if it equals n, eliminate other instances of those colors on the board.
+  if (colorsInGroup.size === group.groupSize) {
+    group.squaresOutsideGroup.forEach((square) => {
+      if (colorsInGroup.has(square.tile.color)) {
+        board[square.row][square.col].token = "X";
+      }
+    });
+  }
+};
+
+// returns
+const getRowGroups = (board: Board): RowOrColGroup[] => {
+  const groups: RowOrColGroup[] = [];
+  for (let rowBegin = 0; rowBegin < board.length - 2; rowBegin++) {
+    for (let rowEnd = rowBegin; rowEnd < board.length; rowEnd++) {
+      const squares: TileWithCoords[] = [];
+      const squaresOutsideGroup: TileWithCoords[] = [];
+      board.forEach((row, i) => {
+        row.forEach((tile, j) => {
+          if (tile.token !== "X") {
+            const newSquare = { tile, row: i, col: j };
+            if (rowBegin <= i && i <= rowEnd) {
+              squares.push(newSquare);
+            } else {
+              squaresOutsideGroup.push(newSquare);
+            }
+          }
+        });
+      });
+      groups.push({
+        squares,
+        squaresOutsideGroup,
+        groupSize: rowEnd - rowBegin + 1,
+      });
+    }
+  }
+  return groups;
+};
+
+const getColGroups = (board: Board): RowOrColGroup[] => {
+  const groups: RowOrColGroup[] = [];
+  for (let colBegin = 0; colBegin < board.length - 2; colBegin++) {
+    for (let colEnd = colBegin; colEnd < board.length; colEnd++) {
+      const squares: TileWithCoords[] = [];
+      const squaresOutsideGroup: TileWithCoords[] = [];
+      board.forEach((row, i) => {
+        row.forEach((tile, j) => {
+          if (tile.token !== "X") {
+            const newSquare = { tile, row: i, col: j };
+            if (colBegin <= j && j <= colEnd) {
+              squares.push(newSquare);
+            } else {
+              squaresOutsideGroup.push(newSquare);
+            }
+          }
+        });
+      });
+      groups.push({
+        squares,
+        squaresOutsideGroup,
+        groupSize: colEnd - colBegin + 1,
+      });
+    }
+  }
+  return groups;
+};
+
+export const eliminateRowColGroups = (board: Board) => {
+  const rowGroups = getRowGroups(board);
+  const colGroups = getColGroups(board);
+
+  [...rowGroups, ...colGroups].forEach((group) =>
+    eliminateSquaresInRowColGroup({ board, group })
+  );
+  //const colGroups = getColGroups(board);
 };
 
 export const narrowDownBoard = (board: Board) => {
@@ -443,6 +554,7 @@ export const narrowDownBoard = (board: Board) => {
     boardCopy = copyBoard(board);
     markGuaranteedPlacements(board);
     eliminateSquares(board);
+    eliminateRowColGroups(board);
     boardsAreNotEqual = !boardsAreEqual(board, boardCopy);
   }
 };

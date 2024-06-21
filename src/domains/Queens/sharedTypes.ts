@@ -9,6 +9,18 @@ export type RgbaColor = {
 
 export type PixelArray = RgbaColor[][];
 
+export type TileWithCoords = { tile: BoardTile } & Coords;
+
+export type RowOrColGroup = {
+  squares: TileWithCoords[];
+  squaresOutsideGroup: TileWithCoords[];
+  colBegin?: number;
+  colEnd?: number;
+  rowBegin?: number;
+  rowEnd?: number;
+  groupSize: number;
+};
+
 // BoardWithBorders ------------------------------------------------------------
 // the tiles and boards with borders are for generated a board
 export type TileWithBorders = {
@@ -44,6 +56,7 @@ export type BoardTile = {
   right?: boolean;
   left?: boolean;
 };
+
 export type Board = BoardTile[][];
 export type BlankBoardRow = BoardColor[];
 export type BlankBoard = BlankBoardRow[];

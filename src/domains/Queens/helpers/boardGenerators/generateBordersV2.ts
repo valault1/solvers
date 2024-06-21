@@ -252,27 +252,23 @@ export const generateRegionsV2 = ({
   const regionlessBoard = createBlankBoard(sideLength);
   placeStars(regionlessBoard, starPositions);
 
-  console.log(
-    "Attempting to fill regions. will try " + MAX_ATTEMPTS + " times."
-  );
+  // console.log(
+  //   "Attempting to fill regions. will try " + MAX_ATTEMPTS + " times."
+  // );
   const startTime = new Date().getTime();
 
   let board = regionlessBoard;
 
   while (!areBoardRegionsFilled(board) && attemptCounter < MAX_ATTEMPTS) {
     attemptCounter++;
-    console.log("attempt #" + attemptCounter);
+
     board = copyBoard(regionlessBoard);
     fillBoardRegionsV2({ board, regionSizes, starPositions, rng });
   }
 
-  console.log({ board });
-
   const timeTaken = new Date().getTime() - startTime;
-  console.log(
-    "finished attempting to fill regions in " + timeTaken / 1000 + " seconds"
-  );
-  console.log("used " + attemptCounter + " attempts");
+  //console.log("Filled regions in  " + timeTaken / 1000 + " seconds");
+  // console.log("used " + attemptCounter + " attempts");
 
   return board;
 };

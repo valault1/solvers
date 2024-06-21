@@ -38,10 +38,10 @@ const getStarPositions = (sideLength: number, rng: RNG): Coords[] => {
   let colPlacements: number[] = [];
   while (!isValid && counter < 50) {
     colPlacements = rng.getNumbersInRangeInRandomOrder(sideLength);
-    isValid = areValidRowPlacements(rowPlacements, colPlacements);
+    isValid = true; //areValidRowPlacements(rowPlacements, colPlacements);
     counter++;
   }
-  console.log("got star positions - iterations: " + counter);
+  //console.log("got star positions - iterations: " + counter);
 
   let positions: Coords[] = [];
   for (let i = 0; i < sideLength; i++) {
@@ -59,7 +59,7 @@ const getColorSizes = (sideLength: number, rng: RNG): number[] => {
 
   const hardMax = sideLength * 3;
   const minSize = 2;
-  const spaceToLeaveForEachRemainingColor = 4;
+  const spaceToLeaveForEachRemainingColor = 5;
   let remainingSquares = sideLength * sideLength;
   const sizes = range(sideLength).map((i) => {
     const numRemainingColors = sideLength - (i + 1);
@@ -74,7 +74,7 @@ const getColorSizes = (sideLength: number, rng: RNG): number[] => {
   return sizes;
 };
 
-const colorsToRegions = (board: Board): Board => {
+export const colorsToRegions = (board: Board): Board => {
   return board.map((row, i) =>
     row.map((tile, j) => ({
       token: "",
