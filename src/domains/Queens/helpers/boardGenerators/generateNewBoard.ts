@@ -1,5 +1,6 @@
 import { BOARD_COLOR_NAMES } from "domains/Queens/constants/constants";
 import { generateBorders } from "domains/Queens/helpers/boardGenerators/generateBorders";
+import { generateRegionsV2 } from "domains/Queens/helpers/boardGenerators/generateBordersV2";
 import { range, RNG } from "domains/Queens/helpers/randomNum";
 import {
   Board,
@@ -73,7 +74,7 @@ const getColorSizes = (sideLength: number, rng: RNG): number[] => {
   return sizes;
 };
 
-const colorsToRegions = (board: BoardWithBorders): Board => {
+const colorsToRegions = (board: Board): Board => {
   return board.map((row, i) =>
     row.map((tile, j) => ({
       token: "",
@@ -91,7 +92,13 @@ export const generateBoardFromSeed = (
   const starPositions = getStarPositions(10, rng);
   const regionSizes = getColorSizes(sideLength, rng);
 
-  const board: BoardWithBorders = generateBorders({
+  // const board: BoardWithBorders = generateBorders({
+  //   starPositions,
+  //   regionSizes,
+  //   rng,
+  // });
+
+  const board = generateRegionsV2({
     starPositions,
     regionSizes,
     rng,

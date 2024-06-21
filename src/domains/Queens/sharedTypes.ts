@@ -36,6 +36,7 @@ export type ImageColor = keyof typeof COLORS_LIST;
 export type BoardTile = {
   token: Token;
   color: BoardColor;
+  region?: number;
   isConflicting?: boolean;
   // borders
   bottom?: boolean;
