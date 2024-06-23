@@ -1,6 +1,6 @@
-import { cropPixelArrayToBoard } from "domains/Queens/helpers/cropBoard";
-import { getBlankBoard } from "domains/Queens/helpers/parseBoard";
-import { solveBoard } from "domains/Queens/helpers/solveBoard";
+import { cropPixelArrayToBoard } from "domains/Queens/helpers/solver/cropBoard";
+import { getBlankBoard } from "domains/Queens/helpers/solver/parseBoard";
+import { solveBoard } from "domains/Queens/helpers/solver/solveBoard";
 import { processRawImage } from "domains/Queens/hooks/useImageParsing";
 import { BlankBoard, Board, PixelArray } from "domains/Queens/sharedTypes";
 

@@ -9,6 +9,40 @@ import {
   Coords,
 } from "domains/Queens/sharedTypes";
 
+const addBordersToTile = (board: Board, row: number, col: number) => {
+  const max = board.length - 1;
+  const currentRegion = board[row][col].region;
+
+  if (row > 0 && currentRegion !== board[row - 1][col].region) {
+    board[row][col].top = true;
+  }
+  if (row < max && currentRegion !== board[row + 1][col].region) {
+    board[row][col].bottom = true;
+  }
+  if (col > 0 && currentRegion !== board[row][col - 1].region) {
+    board[row][col].left = true;
+  }
+  if (col < max && currentRegion !== board[row][col + 1].region) {
+    board[row][col].right = true;
+  }
+  console.log({
+    row,
+    max,
+    currentRegion,
+    regionBelow: board[row + 1]?.[col]?.region,
+    col,
+    tile: board[row][col],
+  });
+};
+
+export const addBordersToBoard = (board: Board) => {
+  board.forEach((row, i) => {
+    row.forEach((tile, j) => {
+      addBordersToTile(board, i, j);
+    });
+  });
+};
+
 const areValidRowPlacements = (
   rowPlacements: number[],
   colPlacements: number[]
@@ -79,17 +113,19 @@ export const colorsToRegions = (board: Board): Board => {
     row.map((tile, j) => ({
       token: "",
       color: BOARD_COLOR_NAMES[tile.region] as BoardColor,
+      region: tile.region,
     }))
   );
 };
 
 export const generateBoardFromSeed = (
   sideLength: number,
-  seed: number
+  seed: number,
+  shouldColorBoard = true
 ): Board => {
   const rng = new RNG(seed);
 
-  const starPositions = getStarPositions(10, rng);
+  const starPositions = getStarPositions(sideLength, rng);
   const regionSizes = getColorSizes(sideLength, rng);
 
   // const board: BoardWithBorders = generateBorders({
@@ -103,8 +139,9 @@ export const generateBoardFromSeed = (
     regionSizes,
     rng,
   });
+  console.log({ boardWithRegions: board });
 
-  const coloredBoard = colorsToRegions(board);
+  const coloredBoard = shouldColorBoard ? colorsToRegions(board) : board;
 
   return coloredBoard;
 };

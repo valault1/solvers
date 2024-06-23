@@ -11,7 +11,7 @@ import {
   markGuaranteedPlacements,
   narrowDownBoard,
   populateColorCounts,
-} from "domains/Queens/helpers/solveBoard";
+} from "domains/Queens/helpers/solver/solveBoard";
 import { BoardDisplay } from "domains/Queens/components/BoardDisplay";
 import { PrimaryButton } from "components/Form.elements";
 import {

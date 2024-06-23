@@ -1,17 +1,14 @@
-import {
-  checkForVictory,
-  clearAllTokens,
-} from "domains/Queens/components/PlayableBoard";
+import { checkForVictory } from "domains/Queens/hooks/useMakeMove";
 import { pollEventLoop } from "domains/Queens/constants/constants";
 import { generateBoardFromSeed } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import { RNG } from "domains/Queens/helpers/randomNum";
-import { DETERMINISTIC_SEEDS } from "domains/Queens/helpers/seedsToUse";
 import {
   boardsAreEqual,
   copyBoard,
   narrowDownBoard,
-} from "domains/Queens/helpers/solveBoard";
+} from "domains/Queens/helpers/solver/solveBoard";
 import { Board } from "domains/Queens/sharedTypes";
+import { clearAllTokens } from "domains/Queens/components/PlayableBoard";
 
 let timerTime = new Date().getTime();
 const setTimerTime = (newTime: number) => {
@@ -30,38 +27,44 @@ export const solveBoardDeterministically = (board: Board) => {
   return checkForVictory(board);
 };
 
-export const generateBoardAndTestForDeterminism = async (seed?: number) => {
+export const generateBoardAndTestForDeterminism = async ({
+  seed,
+  sideLength,
+}: {
+  seed?: number;
+  sideLength?: number;
+} = {}) => {
   const rng = new RNG(seed);
   let hasFoundDeterministicBoard = false;
   const MAX_ATTEMPTS = 10000;
   let isDeterministic, board, boardSeed;
   let counter = 0;
+
   while (!hasFoundDeterministicBoard && counter < MAX_ATTEMPTS) {
     await pollEventLoop(timerTime, setTimerTime);
     counter++;
     boardSeed = rng.getRandomNewSeed();
-    board = generateBoardFromSeed(10, boardSeed);
+    board = generateBoardFromSeed(sideLength ?? 10, boardSeed);
     isDeterministic = solveBoardDeterministically(board);
     hasFoundDeterministicBoard = isDeterministic;
   }
   console.log(`Attempted ${counter} times`);
   clearAllTokens(board);
-  console.log({ boardSeed });
   return { board, isDeterministic, seed: boardSeed };
 };
 
 export const getTextToCopy = (arr: number[]) => {
-  return `export const DETERMINISTIC_SEEDS: number[] = [${[
-    ...DETERMINISTIC_SEEDS,
-    ...arr,
-  ].join(", ")}];`;
+  return `export const DETERMINISTIC_SEEDS: number[] = [${[...arr].join(
+    ", "
+  )}];`;
 };
-export const generateDeterministicSeeds = async () => {
-  const NUM_TO_GENERATE = 100000;
+
+export const generateDeterministicSeeds = async (numToGenerate = 100000) => {
   let result: number[] = [];
-  while (result.length < NUM_TO_GENERATE) {
-    const { seed, isDeterministic } =
-      await generateBoardAndTestForDeterminism();
+  while (result.length < numToGenerate) {
+    const { seed, isDeterministic } = await generateBoardAndTestForDeterminism({
+      sideLength: 10,
+    });
     if (isDeterministic) {
       result.push(seed);
       console.log(getTextToCopy(result));

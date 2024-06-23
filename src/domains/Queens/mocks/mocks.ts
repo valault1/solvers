@@ -1,4 +1,4 @@
-import { rotateBoard } from "domains/Queens/helpers/parseBoard";
+import { rotateBoard } from "domains/Queens/helpers/solver/parseBoard";
 import { BlankBoard, BoardColor, Coords } from "domains/Queens/sharedTypes";
 
 const repeated = (color: BoardColor, num: number) => {

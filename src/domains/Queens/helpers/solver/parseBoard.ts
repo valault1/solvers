@@ -6,7 +6,7 @@ import {
   cropOffNextBlockOfColorCol,
   cropOffNextBlockOfColorLegacy,
   getMajorityColor,
-} from "domains/Queens/helpers/cropBoard";
+} from "domains/Queens/helpers/solver/cropBoard";
 import {
   BlankBoard,
   BlankBoardRow,

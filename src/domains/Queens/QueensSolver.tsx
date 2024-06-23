@@ -7,9 +7,9 @@ import SolveBoardPlayground from "domains/Queens/components/SolveBoardPlayground
 import StepsDisplay, { Step } from "domains/Queens/components/StepsDisplay";
 import { CONSTANT_BLANK_ARRAY } from "domains/Queens/constants/constants";
 
-import { cropPixelArrayToBoard } from "domains/Queens/helpers/cropBoard";
-import { getBlankBoard } from "domains/Queens/helpers/parseBoard";
-import { solveBoard } from "domains/Queens/helpers/solveBoard";
+import { cropPixelArrayToBoard } from "domains/Queens/helpers/solver/cropBoard";
+import { getBlankBoard } from "domains/Queens/helpers/solver/parseBoard";
+import { solveBoard } from "domains/Queens/helpers/solver/solveBoard";
 import { useImageParsing } from "domains/Queens/hooks/useImageParsing";
 import { useMemoNonBlocking } from "domains/Queens/hooks/useMemoNonBlocking";
 

@@ -1,5 +1,5 @@
 import { range, RNG } from "domains/Queens/helpers/randomNum";
-import { copyBoard } from "domains/Queens/helpers/solveBoard";
+import { copyBoard } from "domains/Queens/helpers/solver//solveBoard";
 import {
   Board,
   BoardTile,

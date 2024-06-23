@@ -1,0 +1,13 @@
+{
+  "type": "commonjs",
+  "scripts": {
+    "build": "webpack"
+  },
+  "dependencies": {
+    "fs": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
+  }
+}

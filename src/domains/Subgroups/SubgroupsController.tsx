@@ -4,7 +4,7 @@ import { MainContainer } from "components/MainPage.elements";
 import { useSubgroups } from "domains/Subgroups/useSubgroups";
 import Select from "@mui/material/Select";
 import { theme } from "components/theme/theme";
-import { MenuItem } from "@mui/material";
+import { MenuItem, Stack } from "@mui/material";
 import { PrimaryButton } from "components/Form.elements";
 
 type SubgroupsControllerProps = {};
@@ -51,10 +51,8 @@ export const SubgroupsController = ({}: SubgroupsControllerProps) => {
 
   return (
     <MainContainer>
-      <SelectContainer>
+      <Stack direction="column" gap={2}>
         Select names to see all subgroups with those names
-        <br />
-        <br />
         <Select
           value={selectedNames}
           multiple
@@ -77,7 +75,7 @@ export const SubgroupsController = ({}: SubgroupsControllerProps) => {
             Clear
           </PrimaryButton>
         )}
-      </SelectContainer>
+      </Stack>
       <h1>Subgroups that contain {formattedSelectedNames}</h1>
       <div>
         number of subgroups with this combination:{" "}
