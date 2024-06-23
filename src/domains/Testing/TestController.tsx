@@ -8,9 +8,9 @@ export const TestController = ({ test }: { test: Test }) => {
   const [result, setResult] = React.useState<any>();
   const [timeInSeconds, setTimeInSeconds] = React.useState<number>();
 
-  const runTest = () => {
+  const runTest = async () => {
     let startTime = new Date().getTime();
-    const res = test.functionToTest(...test.defaultInputs);
+    const res = await test.functionToTest(...test.defaultInputs);
     let runTime = new Date().getTime() - startTime;
     setTimeInSeconds(runTime / 1000);
     setResult(res);

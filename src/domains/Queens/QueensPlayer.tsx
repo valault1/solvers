@@ -29,7 +29,7 @@ export const QueensPlayer = () => {
       //This bottom padding stops mobile from cutting off right below the text
       paddingBottom={40}
     >
-      <TestCenter
+      {/* <TestCenter
         tests={[
           {
             isHidden: true,
@@ -80,7 +80,7 @@ export const QueensPlayer = () => {
             },
           },
         ]}
-      />
+      /> */}
       <h1>Play Queens!</h1>
 
       <Card

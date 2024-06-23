@@ -2,6 +2,7 @@ import {
   checkForVictory,
   clearAllTokens,
 } from "domains/Queens/components/PlayableBoard";
+import { pollEventLoop } from "domains/Queens/constants/constants";
 import { generateBoardFromSeed } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import { RNG } from "domains/Queens/helpers/randomNum";
 import { DETERMINISTIC_SEEDS } from "domains/Queens/helpers/seedsToUse";
@@ -11,6 +12,11 @@ import {
   narrowDownBoard,
 } from "domains/Queens/helpers/solveBoard";
 import { Board } from "domains/Queens/sharedTypes";
+
+let timerTime = new Date().getTime();
+const setTimerTime = (newTime: number) => {
+  timerTime = newTime;
+};
 
 export const solveBoardDeterministically = (board: Board) => {
   let boardDidChange = true;
@@ -24,13 +30,14 @@ export const solveBoardDeterministically = (board: Board) => {
   return checkForVictory(board);
 };
 
-export const generateBoardAndTestForDeterminism = (seed?: number) => {
+export const generateBoardAndTestForDeterminism = async (seed?: number) => {
   const rng = new RNG(seed);
   let hasFoundDeterministicBoard = false;
   const MAX_ATTEMPTS = 10000;
   let isDeterministic, board, boardSeed;
   let counter = 0;
   while (!hasFoundDeterministicBoard && counter < MAX_ATTEMPTS) {
+    await pollEventLoop(timerTime, setTimerTime);
     counter++;
     boardSeed = rng.getRandomNewSeed();
     board = generateBoardFromSeed(10, boardSeed);
@@ -49,11 +56,12 @@ export const getTextToCopy = (arr: number[]) => {
     ...arr,
   ].join(", ")}];`;
 };
-export const generateDeterministicSeeds = () => {
-  const NUM_TO_GENERATE = 50;
+export const generateDeterministicSeeds = async () => {
+  const NUM_TO_GENERATE = 100000;
   let result: number[] = [];
   while (result.length < NUM_TO_GENERATE) {
-    const { seed, isDeterministic } = generateBoardAndTestForDeterminism();
+    const { seed, isDeterministic } =
+      await generateBoardAndTestForDeterminism();
     if (isDeterministic) {
       result.push(seed);
       console.log(getTextToCopy(result));

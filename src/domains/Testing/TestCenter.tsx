@@ -4,7 +4,6 @@ import { TestController } from "domains/Testing/TestController";
 import * as React from "react";
 
 export const TestCenter = ({ tests }: { tests: Test[] }) => {
-  return null;
   return (
     <MainContainer>
       <h1>Testing Center</h1>
