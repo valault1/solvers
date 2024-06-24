@@ -25,14 +25,6 @@ const addBordersToTile = (board: Board, row: number, col: number) => {
   if (col < max && currentRegion !== board[row][col + 1].region) {
     board[row][col].right = true;
   }
-  console.log({
-    row,
-    max,
-    currentRegion,
-    regionBelow: board[row + 1]?.[col]?.region,
-    col,
-    tile: board[row][col],
-  });
 };
 
 export const addBordersToBoard = (board: Board) => {
@@ -139,7 +131,6 @@ export const generateBoardFromSeed = (
     regionSizes,
     rng,
   });
-  console.log({ boardWithRegions: board });
 
   const coloredBoard = shouldColorBoard ? colorsToRegions(board) : board;
 

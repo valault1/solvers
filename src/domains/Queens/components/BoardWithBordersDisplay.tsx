@@ -1,9 +1,6 @@
 import { Close, Star } from "@mui/icons-material";
 import { Stack } from "@mui/material";
-import {
-  COLORS_LIST,
-  colorArrToString,
-} from "domains/Queens/constants/constants";
+
 import { Board, BoardWithBorders, Token } from "domains/Queens/sharedTypes";
 import * as React from "react";
 

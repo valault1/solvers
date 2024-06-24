@@ -1,0 +1,77 @@
+import { Board, Coords, Token } from "domains/Queens/sharedTypes";
+
+const TIMES_STORAGE_KEY = "queensTimes";
+
+const getStorageKey = ({
+  seedIndex,
+  boardSize,
+}: {
+  seedIndex: number;
+  boardSize: number;
+}) => {
+  return `${TIMES_STORAGE_KEY}-${seedIndex}-${boardSize}`;
+};
+
+export type TimeStorageObject =
+  | {
+      time?: number;
+      isFinished?: boolean;
+      // starPositions will exist if they are finished.
+      starPositions?: Coords[];
+      // boardState will exist if they have started but haven't finished
+      boardState?: Token[][];
+    }
+  | undefined;
+export const saveBoardProgress = ({
+  newTimeStorageObject,
+  seedIndex,
+  boardSize,
+}: {
+  newTimeStorageObject: TimeStorageObject;
+  seedIndex: number;
+  boardSize: number;
+}) => {
+  const currentTimeObject = getStorageTimeObject({ seedIndex, boardSize });
+
+  const key = getStorageKey({ seedIndex, boardSize });
+  localStorage.setItem(
+    key,
+    JSON.stringify({
+      ...(currentTimeObject || {}),
+      ...(newTimeStorageObject || {}),
+    })
+  );
+};
+
+export const getStorageTimeObject = ({
+  seedIndex,
+  boardSize,
+}: {
+  seedIndex: number;
+  boardSize: number;
+}): TimeStorageObject => {
+  const key = getStorageKey({ seedIndex, boardSize });
+  const currentTimeObject = JSON.parse(localStorage.getItem(key) || "{}");
+  return currentTimeObject;
+};
+
+export const getTime = ({
+  seedIndex,
+  boardSize,
+}: {
+  seedIndex: number;
+  boardSize: number;
+}): number | undefined => {
+  const currentTimeObject = getStorageTimeObject({ seedIndex, boardSize });
+  return currentTimeObject.time;
+};
+
+export const getStarPositions = (board: Board) => {
+  let starPositions: Coords[] = [];
+  board.forEach((row, i) =>
+    row.forEach((tile, j) => {
+      if (tile.token === "Q") starPositions.push({ row: i, col: j });
+    })
+  );
+  return starPositions;
+};

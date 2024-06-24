@@ -117,9 +117,11 @@ export const undoMove = (board: Board, move: Move) => {
 export const useMakeMove = ({
   board,
   setBoard,
+  onWin,
 }: {
   board: Board;
   setBoard: (b: Board) => void;
+  onWin?: (board: Board) => void;
 }) => {
   const [movesPlayed, setMovesPlayed] = React.useState<Move[]>([]);
   const [hasWon, setHasWon] = React.useState(false);
@@ -127,9 +129,13 @@ export const useMakeMove = ({
   const validateBoard = React.useCallback(
     (newBoard: Board) => {
       markConflicts(newBoard);
-      setHasWon(checkForVictory(newBoard));
+      const newHasWon = checkForVictory(newBoard);
+      if (newHasWon && !hasWon) {
+        onWin?.(newBoard);
+      }
+      setHasWon(newHasWon);
     },
-    [setHasWon]
+    [setHasWon, onWin, hasWon]
   );
 
   // clear the "hasWon" state if the board changes

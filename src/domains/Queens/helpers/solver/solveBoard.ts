@@ -455,10 +455,12 @@ const eliminateSquaresInRowColGroup = ({
   const colorsOutsideGroup = new Set(
     group.squaresOutsideGroup.map((square) => square.tile.color)
   );
+
   const colorsInGroupArr = Array.from(colorsInGroup);
   const colorsContainedInGroup = new Set(
     colorsInGroupArr.filter((color) => !colorsOutsideGroup.has(color))
   );
+
   if (colorsContainedInGroup.size === group.groupSize) {
     group.squares.forEach((square) => {
       if (!colorsContainedInGroup.has(square.tile.color)) {
@@ -549,6 +551,7 @@ export const eliminateRowColGroups = (board: Board) => {
 export const narrowDownBoard = (board: Board) => {
   let boardCopy = copyBoard(board);
   let boardsAreNotEqual = true;
+
   while (boardsAreNotEqual) {
     //console.log("Boards still not equal, try again");
     boardCopy = copyBoard(board);

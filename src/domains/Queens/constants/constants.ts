@@ -20,6 +20,24 @@ export const BOARD_COLORS = {
   lightGreen: [188, 222, 166],
   //gray section
   gray: [223, 223, 223],
+  // below: added for 20x20
+  darkBlue: [0, 0, 139],
+
+  darkGreen: [1, 50, 32],
+
+  silver: [192, 192, 192],
+
+  darkPurple: [139, 0, 139],
+
+  darkOrange: [255, 140, 0],
+
+  darkRed: [139, 0, 0],
+
+  brown: [165, 42, 42],
+
+  deepPink: [170, 50, 106],
+
+  brightYellow: [255, 234, 0],
 };
 
 export const BOARD_COLOR_NAMES = Object.keys(BOARD_COLORS);

@@ -3,6 +3,11 @@ import {
   addBordersToBoard,
   generateBoardFromSeed,
 } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
+import {
+  TimeStorageObject,
+  getStorageTimeObject,
+} from "domains/Queens/helpers/localStorageHelper";
+import { placeQueen } from "domains/Queens/helpers/solver/solveBoard";
 import { Board } from "domains/Queens/sharedTypes";
 import React from "react";
 
@@ -26,6 +31,16 @@ export const useNavigateBoards = ({ sideLength }: { sideLength: number }) => {
       sideLength,
       seeds[currentBoardIndex]
     );
+
+    const { isFinished, time, starPositions }: TimeStorageObject =
+      getStorageTimeObject({
+        boardSize: sideLength,
+        seedIndex: currentBoardIndex,
+      });
+
+    if (isFinished) {
+      starPositions.forEach(({ row, col }) => placeQueen(newBoard, row, col));
+    }
 
     addBordersToBoard(newBoard);
     console.log({ newBoard });
