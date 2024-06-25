@@ -2,8 +2,8 @@ const { generateBoardAndTestForDeterminism } = require("./index");
 const fs = require("fs");
 
 const NUMBER_SEEDS_TO_GENERATE = 100;
-const BOARD_SIDE_LENGTHS = [12]; //12, 13, 14, 15, 16, 17, 18, 19, 20];
-const TARGETS = BOARD_SIDE_LENGTHS.map(() => 1000);
+const BOARD_SIDE_LENGTHS = [8, 9, 10, 11, 12, 13]; //12, 13, 14, 15, 16, 17, 18, 19, 20];
+const TARGETS = BOARD_SIDE_LENGTHS.map(() => 100);
 
 const toNum = (input: string) => {
   let resultChars: string[] = [];
@@ -85,6 +85,7 @@ const generateDeterministicSeeds = async (numToGenerate = 100000) => {
 
       if (totalNumSeeds >= target) {
         targetsReached++;
+        console.log(`Reached target of ${target} seeds for length ${length}`);
         continue;
       }
       const { seed, isDeterministic } =
