@@ -48,9 +48,8 @@ export const generateBoardAndTestForDeterminism = async ({
     isDeterministic = solveBoardDeterministically(board);
     hasFoundDeterministicBoard = isDeterministic;
   }
-  console.log(`Attempted ${counter} times`);
   clearAllTokens(board);
-  return { board, isDeterministic, seed: boardSeed };
+  return { board, isDeterministic, seed: boardSeed, boardsGenerated: counter };
 };
 
 export const getTextToCopy = (arr: number[]) => {
@@ -73,3 +72,5 @@ export const generateDeterministicSeeds = async (numToGenerate = 100000) => {
   }
   return result;
 };
+
+export default generateBoardAndTestForDeterminism;
