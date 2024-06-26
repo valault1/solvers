@@ -1,16 +1,10 @@
 import { Stack } from "@mui/material";
 import { PrimaryButton } from "components/Form.elements";
-import { DETERMINISTIC_SEEDS } from "domains/Queens/boards/seeds";
 import { BoardDisplay } from "domains/Queens/components/BoardDisplay";
-import {
-  addBordersToBoard,
-  generateBoardFromSeed,
-} from "domains/Queens/helpers/boardGenerators/generateNewBoard";
-import { RNG } from "domains/Queens/helpers/randomNum";
+import { addBordersToBoard } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import { rotateBoard } from "domains/Queens/helpers/solver/parseBoard";
 import {
   copyBoard,
-  narrowDownBoard,
   runSolveRules,
 } from "domains/Queens/helpers/solver/solveBoard";
 import { useMakeMove } from "domains/Queens/hooks/useMakeMove";
@@ -75,7 +69,9 @@ export const PlayableBoard = ({
 
   return (
     <Stack direction={"column"} gap={2}>
-      <PrimaryButton onClick={clearBoard}>Clear board</PrimaryButton>
+      <PrimaryButton onClick={clearBoard} disabled={hasWon}>
+        Clear board
+      </PrimaryButton>
       <BoardDisplay board={board} onClickTile={onClickTile} hasWon={hasWon} />
       <Stack gap={2}>
         <PrimaryButton onClick={undoLastMove} disabled={hasWon}>

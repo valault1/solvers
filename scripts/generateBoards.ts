@@ -1,7 +1,7 @@
 import boardGenerator from "../src/domains/Queens/helpers/boardGenerators/generateNewBoard.test";
 import { Seeds } from "./Seeds";
 import { getConfig } from "./getConfig";
-import { SeedInfo, getPreExistingSeeds, readSeedsFromFile } from "./saveSeeds";
+import { readSeedsFromFile } from "./saveSeeds";
 
 const generateBoardAndTestForDeterminism =
   //@ts-ignore

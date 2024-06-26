@@ -141,15 +141,17 @@ export const writeSeedsObjectToFile = (seeds: Seeds) => {
     totalTimeTaken: sum(seeds.timesTakenSeconds),
     totalBoardsGenerated: sum(seeds.boardsGenerated),
     averageTimeTakenPerSeed:
-      sum(seeds.timesTakenSeconds) / seeds.seeds.length || 1,
+      sum(seeds.timesTakenSeconds) / seeds.seeds.length || 0,
     averageBoardsGeneratedPerSeed:
       sum(seeds.boardsGenerated) / seeds.seeds.length || 1,
     averageTimePerAttemptMs:
       (sum(seeds.timesTakenSeconds) * 1000) / sum(seeds.boardsGenerated),
   });
 
+  const contentWithTsIgnore = `// @ts-nocheck\n${content}`;
+
   try {
-    fs.writeFileSync(seeds.filePath, content);
+    fs.writeFileSync(seeds.filePath, contentWithTsIgnore);
     console.log("Wrote seeds to file! " + seeds.filePath);
   } catch (err) {
     console.error(

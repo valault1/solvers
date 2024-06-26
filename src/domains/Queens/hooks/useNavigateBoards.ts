@@ -1,23 +1,9 @@
 import { getSeeds } from "domains/Queens/boards/seeds";
-import {
-  addBordersToBoard,
-  generateBoardFromSeed,
-} from "domains/Queens/helpers/boardGenerators/generateNewBoard";
-import {
-  TimeStorageObject,
-  getFirstUnfinishedBoard,
-  getStorageTimeObject,
-} from "domains/Queens/helpers/localStorageHelper";
-import { placeQueen } from "domains/Queens/helpers/solver/solveBoard";
-import { Board } from "domains/Queens/sharedTypes";
+import { getFirstUnfinishedBoard } from "domains/Queens/helpers/localStorageHelper";
+
 import React from "react";
 
 const DEFAULT_SEED_INDEX = 0;
-const DEFAULT_SIDE_LENGTH = 8;
-const INITIAL_BOARD = generateBoardFromSeed(
-  DEFAULT_SIDE_LENGTH,
-  getSeeds(DEFAULT_SIDE_LENGTH)[DEFAULT_SEED_INDEX]
-);
 
 export const useNavigateBoards = ({ sideLength }: { sideLength: number }) => {
   const seeds = React.useMemo(() => {

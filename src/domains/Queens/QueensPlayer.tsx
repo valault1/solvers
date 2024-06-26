@@ -15,7 +15,6 @@ import { WinTime } from "domains/Queens/components/Time";
 import {
   TimeStorageObject,
   boardToTokens,
-  getFirstUnfinishedBoard,
   getStarPositions,
   getStorageTimeObject,
   saveBoardProgress,
@@ -102,7 +101,9 @@ export const QueensPlayer = () => {
     setBoard(newBoard);
   }, [currentBoardIndex, sideLength]);
 
-  console.log({ timeTaken });
+  const onClick = () => {
+    console.log("clicked!");
+  };
 
   return (
     <MainContainer
@@ -157,6 +158,19 @@ export const QueensPlayer = () => {
       </Stack>
       board {currentBoardIndex + 1} of {maxBoardIndex}
       {false && <PrimaryButton variant="text">Select level</PrimaryButton>}
+      {/* <Stack direction="column" gap={2}>
+        Testing onClickTile
+        <div
+          onClick={onClick}
+          style={{
+            width: 40,
+            height: 40,
+            padding: 20,
+            backgroundColor: "cyan",
+            border: "5px solid white",
+          }}
+        ></div>
+      </Stack> */}
     </MainContainer>
   );
 };

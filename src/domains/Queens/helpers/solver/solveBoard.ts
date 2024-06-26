@@ -1,11 +1,9 @@
 import {
   BOARD_COLORS,
-  COLORS_LIST,
   CONSTANT_BLANK_ARRAY,
-  EVENT_LOOP_POLL_INCREMENT_MS,
   pollEventLoop,
 } from "domains/Queens/constants/constants";
-import { range } from "domains/Queens/helpers/randomNum";
+
 import {
   BlankBoard,
   Board,
@@ -30,17 +28,12 @@ let colorCounts: Record<BoardColor, number> = Object.keys(BOARD_COLORS).reduce(
   {} as Record<BoardColor, number>
 );
 
-let colorsInIncreasingFrequency: BoardColor[] = [];
-
 export const populateColorCounts = (board: BlankBoard) => {
   for (let row of board) {
     for (let color of row) {
       colorCounts[color]++;
     }
   }
-  colorsInIncreasingFrequency = Object.keys(colorCounts).sort(
-    (a, b) => colorCounts[a as BoardColor] - colorCounts[b as BoardColor]
-  ) as BoardColor[];
 };
 
 export const copyBoard = (board: Board) => {
@@ -267,13 +260,6 @@ const getDiagonalXsToMark = (
   ];
 };
 
-const markDiagonalXs = (board: Board, row: number, col: number) => {
-  placeX(board, row + 1, col + 1);
-  placeX(board, row - 1, col + 1);
-  placeX(board, row + 1, col - 1);
-  placeX(board, row - 1, col - 1);
-};
-
 const getColorXsToMark = (board: Board, color: string): Coords[] => {
   let coords = [];
   for (let i = 0; i < board.length; i++) {
@@ -286,16 +272,6 @@ const getColorXsToMark = (board: Board, color: string): Coords[] => {
     }
   }
   return coords;
-};
-
-const markColorXs = (board: Board, color: string) => {
-  for (let row of board) {
-    for (let tile of row) {
-      if (tile.color === color && tile.token === "") {
-        tile.token = "X";
-      }
-    }
-  }
 };
 
 const getXCoordsToMarkAfterQueen = (
@@ -315,12 +291,6 @@ const getXCoordsToMarkAfterQueen = (
 };
 
 const markXsAfterQueen = (board: Board, row: number, col: number) => {
-  // for (let i = 0; i < board.length; i++) {
-  //   placeX(board, i, col);
-  //   placeX(board, row, i);
-  // }
-  // markColorXs(board, board[row][col].color);
-  // markDiagonalXs(board, row, col);
   const coordsToMark = getXCoordsToMarkAfterQueen(board, row, col);
   for (let coords of coordsToMark) {
     placeX(board, coords.row, coords.col);
@@ -561,7 +531,7 @@ export const narrowDownBoard = (board: Board) => {
   while (boardsAreNotEqual) {
     //console.log("Boards still not equal, try again");
     boardCopy = copyBoard(board);
-    runSolveRules(boardCopy);
+    runSolveRules(board);
     boardsAreNotEqual = !boardsAreEqual(board, boardCopy);
   }
 };

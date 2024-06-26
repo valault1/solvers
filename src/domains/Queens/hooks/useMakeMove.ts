@@ -1,9 +1,5 @@
 import { OnClickTile } from "domains/Queens/components/BoardDisplay";
 import { BOARD_COLORS } from "domains/Queens/constants/constants";
-import {
-  boardToTokens,
-  saveBoardProgress,
-} from "domains/Queens/helpers/localStorageHelper";
 import { range } from "domains/Queens/helpers/randomNum";
 import {
   copyBoard,

@@ -14,6 +14,8 @@ const TokenDisplay = ({ token }: { token: Token }) => {
 };
 
 const BOARD_SIZE = 30;
+// this is the gap between the click zone and the border
+const CLICK_ZONE_GAP = 5;
 const BORDER_COLOR = "black";
 const BORDER_CSS = `solid ${BORDER_COLOR}`;
 // adds padding if the border isn't thick, so that the tiles all stay in line
@@ -33,7 +35,6 @@ export const BoardDisplay = ({
       <Stack key={i} direction="row">
         {row.map(({ token, color: colorName, isConflicting, ...tile }, j) => (
           <div
-            onClick={hasWon ? undefined : () => onClickTile?.(i, j)}
             key={j}
             style={{
               width: BOARD_SIZE,
@@ -41,7 +42,6 @@ export const BoardDisplay = ({
               backgroundColor: `rgba(${colorArrToString(
                 COLORS_LIST[colorName]
               )})`,
-              color: isConflicting ? "red" : "black",
               border: "1px solid black",
               display: "flex",
               alignItems: "center",
@@ -57,7 +57,23 @@ export const BoardDisplay = ({
               paddingLeft: tile.left ? undefined : NO_BORDER_PADDING,
             }}
           >
-            {<TokenDisplay token={token} />}
+            {/* This inner div is the one that takes a click*/}
+            <div
+              onClick={hasWon ? undefined : () => onClickTile?.(i, j)}
+              style={{
+                width: BOARD_SIZE - CLICK_ZONE_GAP,
+                height: BOARD_SIZE - CLICK_ZONE_GAP,
+                backgroundColor: `rgba(${colorArrToString(
+                  COLORS_LIST[colorName]
+                )})`,
+                color: isConflicting ? "red" : "black",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {<TokenDisplay token={token} />}
+            </div>
           </div>
         ))}
       </Stack>
