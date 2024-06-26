@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
 import { generateRegionsV2 } from "domains/Queens/helpers/boardGenerators/generateBordersV2";
 import { colorsToRegions } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
-import {
+import generateBoardAndTestForDeterminism, {
   generateDeterministicSeeds,
   getTextToCopy,
 } from "domains/Queens/helpers/boardGenerators/generateNewBoard.test";

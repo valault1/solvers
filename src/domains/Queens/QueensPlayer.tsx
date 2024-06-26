@@ -7,25 +7,41 @@ import {
 } from "domains/Queens/components/Instructions";
 import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
 import { useNavigateBoards } from "domains/Queens/hooks/useNavigateBoards";
-import { SIDE_LENGTH_OPTIONS } from "domains/Queens/boards/seeds";
+import { SIDE_LENGTH_OPTIONS, getSeeds } from "domains/Queens/boards/seeds";
 
 import * as React from "react";
 import { Timer } from "domains/Queens/components/Timer";
 import { WinTime } from "domains/Queens/components/Time";
 import {
+  TimeStorageObject,
+  boardToTokens,
+  getFirstUnfinishedBoard,
   getStarPositions,
   getStorageTimeObject,
   saveBoardProgress,
 } from "domains/Queens/helpers/localStorageHelper";
 import { Board } from "domains/Queens/sharedTypes";
+import {
+  addBordersToBoard,
+  generateBoardFromSeed,
+} from "domains/Queens/helpers/boardGenerators/generateNewBoard";
+import { placeQueen } from "domains/Queens/helpers/solver/solveBoard";
+
+const DEFAULT_SEED_INDEX = 0;
+const DEFAULT_SIDE_LENGTH = 8;
+const INITIAL_BOARD = generateBoardFromSeed(
+  DEFAULT_SIDE_LENGTH,
+  getSeeds(DEFAULT_SIDE_LENGTH)[DEFAULT_SEED_INDEX]
+);
 
 export const QueensPlayer = () => {
+  const [board, setBoard] = React.useState<Board>(INITIAL_BOARD);
   const [sideLength, setSideLength] = React.useState(SIDE_LENGTH_OPTIONS[0]);
   const [startTime, setStartTime] = React.useState(new Date().getTime());
-  const [endTime, setEndTime] = React.useState<number | undefined>();
+  const [hasWon, setHasWon] = React.useState(false);
+  const [timeTaken, setTimeTaken] = React.useState(0);
 
   const {
-    board,
     prevBoard,
     disablePrev,
     nextBoard,
@@ -34,43 +50,59 @@ export const QueensPlayer = () => {
     maxBoardIndex,
   } = useNavigateBoards({ sideLength });
 
-  const onWin = React.useCallback(
-    (board: Board) => {
-      setEndTime(new Date().getTime());
-      const timeTaken = new Date().getTime() - startTime;
+  const saveBoard = React.useCallback(
+    ({ board, didWin }: { board: Board; didWin: boolean }) => {
       saveBoardProgress({
         newTimeStorageObject: {
-          time: timeTaken,
-          isFinished: true,
-          starPositions: getStarPositions(board),
+          time: new Date().getTime() - startTime,
+          isFinished: didWin,
+          boardState: didWin ? undefined : boardToTokens(board),
+          starPositions: didWin ? getStarPositions(board) : undefined,
         },
         boardSize: sideLength,
         seedIndex: currentBoardIndex,
       });
     },
-    [setEndTime, currentBoardIndex, sideLength, startTime]
+    [currentBoardIndex, sideLength, startTime]
+  );
+
+  const onWin = React.useCallback(
+    (board: Board) => {
+      const timeTaken = new Date().getTime() - startTime;
+      setHasWon(true);
+
+      setTimeTaken(timeTaken);
+    },
+    [setHasWon, startTime]
   );
 
   React.useEffect(() => {
-    setStartTime(new Date().getTime());
-    setEndTime(undefined);
+    const seeds = getSeeds(sideLength);
+    const newBoard = generateBoardFromSeed(
+      sideLength,
+      seeds[currentBoardIndex]
+    );
+    const { isFinished, time, starPositions }: TimeStorageObject =
+      getStorageTimeObject({
+        boardSize: sideLength,
+        seedIndex: currentBoardIndex,
+      });
+
+    if (isFinished) {
+      starPositions?.forEach(({ row, col }) => placeQueen(newBoard, row, col));
+      setHasWon(true);
+      setTimeTaken(time);
+    } else {
+      console.log("resetting time");
+      setStartTime(new Date().getTime());
+      setHasWon(false);
+    }
+
+    addBordersToBoard(newBoard);
+    setBoard(newBoard);
   }, [currentBoardIndex, sideLength]);
 
-  const timeTaken = React.useMemo(() => {
-    const time = getStorageTimeObject({
-      boardSize: sideLength,
-      seedIndex: currentBoardIndex,
-    })?.time;
-    if (time !== undefined) {
-      console.log("found time in storage! " + time);
-      setEndTime(1);
-      return time * 1000;
-    }
-    if (endTime !== undefined) {
-      return endTime - startTime;
-    }
-    return new Date().getTime() - startTime;
-  }, [startTime, endTime, sideLength, currentBoardIndex]);
+  console.log({ timeTaken });
 
   return (
     <MainContainer
@@ -82,8 +114,8 @@ export const QueensPlayer = () => {
       <Card
         style={{ padding: INSTRUCTIONS_PADDING, maxWidth: INSTRUCTIONS_WIDTH }}
       >
-        These boards are randomly generated. They are guaranteed to be solvable
-        without guessing!
+        These boards are procedurally generated. They are guaranteed to be
+        solvable without guessing!
       </Card>
       <Stack direction="column" gap={2}>
         Select board size:
@@ -104,12 +136,17 @@ export const QueensPlayer = () => {
           ))}
         </Select>
       </Stack>
-      {endTime === undefined ? (
+      {!hasWon ? (
         <Timer startTime={startTime} />
       ) : (
         <WinTime timeTaken={timeTaken} />
       )}
-      <PlayableBoard initialBoard={board} onWin={onWin} />
+      <PlayableBoard
+        initialBoard={board}
+        onWin={onWin}
+        saveBoard={saveBoard}
+        hasWon={hasWon}
+      />
       <Stack gap={2} direction="row">
         <PrimaryButton fullWidth onClick={prevBoard} disabled={disablePrev}>
           Previous board
@@ -119,6 +156,7 @@ export const QueensPlayer = () => {
         </PrimaryButton>
       </Stack>
       board {currentBoardIndex + 1} of {maxBoardIndex}
+      {false && <PrimaryButton variant="text">Select level</PrimaryButton>}
     </MainContainer>
   );
 };

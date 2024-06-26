@@ -12,6 +12,20 @@ const getStorageKey = ({
   return `${TIMES_STORAGE_KEY}-${seedIndex}-${boardSize}`;
 };
 
+export const boardToTokens = (board: Board) => {
+  return board.map((row) => row.map((tile) => tile.token));
+};
+
+export const tokensToBoard = ({
+  board,
+  tokens,
+}: {
+  board: Board;
+  tokens: Token[][];
+}) => {
+  return board.map((row) => row.map((tile) => tile.token));
+};
+
 export type TimeStorageObject =
   | {
       time?: number;
@@ -74,4 +88,18 @@ export const getStarPositions = (board: Board) => {
     })
   );
   return starPositions;
+};
+
+export const getFirstUnfinishedBoard = ({
+  boardSize,
+}: {
+  boardSize: number;
+}) => {
+  for (let i = 0; i < boardSize; i++) {
+    const currentTimeObject = getStorageTimeObject({ seedIndex: i, boardSize });
+    if (!currentTimeObject.isFinished) {
+      return i;
+    }
+  }
+  return 0;
 };

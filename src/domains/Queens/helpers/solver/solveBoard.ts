@@ -548,6 +548,12 @@ export const eliminateRowColGroups = (board: Board) => {
   //const colGroups = getColGroups(board);
 };
 
+export const runSolveRules = (board: Board) => {
+  markGuaranteedPlacements(board);
+  eliminateSquares(board);
+  eliminateRowColGroups(board);
+};
+
 export const narrowDownBoard = (board: Board) => {
   let boardCopy = copyBoard(board);
   let boardsAreNotEqual = true;
@@ -555,9 +561,7 @@ export const narrowDownBoard = (board: Board) => {
   while (boardsAreNotEqual) {
     //console.log("Boards still not equal, try again");
     boardCopy = copyBoard(board);
-    markGuaranteedPlacements(board);
-    eliminateSquares(board);
-    eliminateRowColGroups(board);
+    runSolveRules(boardCopy);
     boardsAreNotEqual = !boardsAreEqual(board, boardCopy);
   }
 };

@@ -5,6 +5,7 @@ import {
 } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import {
   TimeStorageObject,
+  getFirstUnfinishedBoard,
   getStorageTimeObject,
 } from "domains/Queens/helpers/localStorageHelper";
 import { placeQueen } from "domains/Queens/helpers/solver/solveBoard";
@@ -22,33 +23,37 @@ export const useNavigateBoards = ({ sideLength }: { sideLength: number }) => {
   const seeds = React.useMemo(() => {
     return getSeeds(sideLength);
   }, [sideLength]);
-  const [board, setBoard] = React.useState<Board>(INITIAL_BOARD);
+
   const [currentBoardIndex, setCurrentBoardIndex] =
     React.useState(DEFAULT_SEED_INDEX);
 
-  React.useEffect(() => {
-    const newBoard = generateBoardFromSeed(
-      sideLength,
-      seeds[currentBoardIndex]
-    );
+  // React.useEffect(() => {
+  //   const newBoard = generateBoardFromSeed(
+  //     sideLength,
+  //     seeds[currentBoardIndex]
+  //   );
 
-    const { isFinished, time, starPositions }: TimeStorageObject =
-      getStorageTimeObject({
-        boardSize: sideLength,
-        seedIndex: currentBoardIndex,
-      });
+  //   const { isFinished, time, starPositions }: TimeStorageObject =
+  //     getStorageTimeObject({
+  //       boardSize: sideLength,
+  //       seedIndex: currentBoardIndex,
+  //     });
 
-    if (isFinished) {
-      starPositions.forEach(({ row, col }) => placeQueen(newBoard, row, col));
-    }
+  //   if (isFinished) {
+  //     starPositions.forEach(({ row, col }) => placeQueen(newBoard, row, col));
+  //   }
 
-    addBordersToBoard(newBoard);
-    console.log({ newBoard });
-    setBoard(newBoard);
-  }, [currentBoardIndex, seeds, sideLength]);
+  //   addBordersToBoard(newBoard);
+  //   console.log({ newBoard });
+  //   setBoard(newBoard);
+  // }, [currentBoardIndex, seeds, sideLength]);
 
   const disableNext = currentBoardIndex >= seeds.length - 1;
   const disablePrev = currentBoardIndex <= 0;
+
+  React.useEffect(() => {
+    setCurrentBoardIndex(getFirstUnfinishedBoard({ boardSize: sideLength }));
+  }, [sideLength]);
 
   const nextBoard = React.useCallback(() => {
     setCurrentBoardIndex((prev) => prev + 1);
@@ -58,7 +63,6 @@ export const useNavigateBoards = ({ sideLength }: { sideLength: number }) => {
     setCurrentBoardIndex((prev) => prev - 1);
   }, [setCurrentBoardIndex]);
   return {
-    board,
     nextBoard,
     prevBoard,
     disableNext,

@@ -1,5 +1,9 @@
 import { OnClickTile } from "domains/Queens/components/BoardDisplay";
 import { BOARD_COLORS } from "domains/Queens/constants/constants";
+import {
+  boardToTokens,
+  saveBoardProgress,
+} from "domains/Queens/helpers/localStorageHelper";
 import { range } from "domains/Queens/helpers/randomNum";
 import {
   copyBoard,
@@ -118,30 +122,29 @@ export const useMakeMove = ({
   board,
   setBoard,
   onWin,
+  saveBoard,
 }: {
   board: Board;
   setBoard: (b: Board) => void;
   onWin?: (board: Board) => void;
+  saveBoard?: ({ board, didWin }: { board: Board; didWin: boolean }) => void;
 }) => {
   const [movesPlayed, setMovesPlayed] = React.useState<Move[]>([]);
-  const [hasWon, setHasWon] = React.useState(false);
 
   const validateBoard = React.useCallback(
     (newBoard: Board) => {
       markConflicts(newBoard);
-      const newHasWon = checkForVictory(newBoard);
-      if (newHasWon && !hasWon) {
+      const hasWon = checkForVictory(newBoard);
+      if (hasWon) {
         onWin?.(newBoard);
       }
-      setHasWon(newHasWon);
+      saveBoard?.({
+        board: newBoard,
+        didWin: hasWon,
+      });
     },
-    [setHasWon, onWin, hasWon]
+    [onWin, saveBoard]
   );
-
-  // clear the "hasWon" state if the board changes
-  React.useEffect(() => {
-    validateBoard(board);
-  }, [board, validateBoard]);
 
   const recordMove = React.useCallback(
     (newBoard: Board) => {
@@ -209,8 +212,9 @@ export const useMakeMove = ({
     }
     recordMove(newBoard);
     validateBoard(newBoard);
+
     setBoard(newBoard);
   };
 
-  return { hasWon, undoLastMove, onClickTile };
+  return { undoLastMove, onClickTile };
 };

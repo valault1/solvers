@@ -4,7 +4,7 @@ import * as React from "react";
 
 export const WinTime = ({ timeTaken }: { timeTaken: number }) => {
   const seconds = React.useMemo(
-    () => twoDigits((timeTaken / 1000) % 60),
+    () => twoDigits(round((timeTaken / 1000) % 60, 0)),
     [timeTaken]
   );
   const minutes = React.useMemo(
@@ -20,3 +20,5 @@ export const WinTime = ({ timeTaken }: { timeTaken: number }) => {
 };
 
 const twoDigits = (num: number) => String(num).padStart(2, "0");
+const round = (numberToRound: number, numDecimalPlaces: number) =>
+  Math.round(numberToRound * 10 ** numDecimalPlaces) / 10 ** numDecimalPlaces;

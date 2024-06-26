@@ -2,11 +2,16 @@ import { Stack } from "@mui/material";
 import { PrimaryButton } from "components/Form.elements";
 import { DETERMINISTIC_SEEDS } from "domains/Queens/boards/seeds";
 import { BoardDisplay } from "domains/Queens/components/BoardDisplay";
-import { generateBoardFromSeed } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
+import {
+  addBordersToBoard,
+  generateBoardFromSeed,
+} from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import { RNG } from "domains/Queens/helpers/randomNum";
+import { rotateBoard } from "domains/Queens/helpers/solver/parseBoard";
 import {
   copyBoard,
   narrowDownBoard,
+  runSolveRules,
 } from "domains/Queens/helpers/solver/solveBoard";
 import { useMakeMove } from "domains/Queens/hooks/useMakeMove";
 
@@ -25,9 +30,13 @@ export const clearAllTokens = (board: Board) => {
 export const PlayableBoard = ({
   initialBoard,
   onWin,
+  saveBoard,
+  hasWon,
 }: {
   initialBoard?: Board;
   onWin?: (board: Board) => void;
+  saveBoard?: ({ board, didWin }: { board: Board; didWin: boolean }) => void;
+  hasWon?: boolean;
 }) => {
   const [board, setBoard] = React.useState(initialBoard ?? []);
 
@@ -39,6 +48,7 @@ export const PlayableBoard = ({
     board,
     setBoard,
     onWin,
+    saveBoard,
   });
 
   const clearBoard = React.useCallback(() => {
@@ -49,7 +59,14 @@ export const PlayableBoard = ({
 
   const solveBoard = React.useCallback(() => {
     const newBoard = copyBoard(board);
-    narrowDownBoard(newBoard);
+    runSolveRules(newBoard);
+    console.log("finished narrowing down board");
+    setBoard(newBoard);
+  }, [board, setBoard]);
+
+  const runRotateBoard = React.useCallback(() => {
+    const newBoard = rotateBoard(board);
+    addBordersToBoard(newBoard);
     console.log("finished narrowing down board");
     setBoard(newBoard);
   }, [board, setBoard]);
@@ -59,12 +76,19 @@ export const PlayableBoard = ({
   return (
     <Stack direction={"column"} gap={2}>
       <PrimaryButton onClick={clearBoard}>Clear board</PrimaryButton>
-      <BoardDisplay board={board} onClickTile={onClickTile} />
+      <BoardDisplay board={board} onClickTile={onClickTile} hasWon={hasWon} />
       <Stack gap={2}>
-        <PrimaryButton onClick={undoLastMove}>Undo last move</PrimaryButton>
-        <PrimaryButton onClick={solveBoard}>
-          Solve some of the board
+        <PrimaryButton onClick={undoLastMove} disabled={hasWon}>
+          Undo last move
         </PrimaryButton>
+        {false && (
+          <PrimaryButton onClick={solveBoard}>
+            Solve some of the board
+          </PrimaryButton>
+        )}
+        {false && (
+          <PrimaryButton onClick={runRotateBoard}>rotate board</PrimaryButton>
+        )}
       </Stack>
     </Stack>
   );

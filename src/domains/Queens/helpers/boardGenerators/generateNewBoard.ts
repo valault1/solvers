@@ -15,15 +15,23 @@ const addBordersToTile = (board: Board, row: number, col: number) => {
 
   if (row > 0 && currentRegion !== board[row - 1][col].region) {
     board[row][col].top = true;
+  } else {
+    board[row][col].top = false;
   }
   if (row < max && currentRegion !== board[row + 1][col].region) {
     board[row][col].bottom = true;
+  } else {
+    board[row][col].bottom = false;
   }
   if (col > 0 && currentRegion !== board[row][col - 1].region) {
     board[row][col].left = true;
+  } else {
+    board[row][col].left = false;
   }
   if (col < max && currentRegion !== board[row][col + 1].region) {
     board[row][col].right = true;
+  } else {
+    board[row][col].right = false;
   }
 };
 

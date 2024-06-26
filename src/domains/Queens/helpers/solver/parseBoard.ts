@@ -10,6 +10,7 @@ import {
 import {
   BlankBoard,
   BlankBoardRow,
+  Board,
   BoardColor,
   PixelArray,
 } from "domains/Queens/sharedTypes";
@@ -19,7 +20,13 @@ const setTimerTime = (newTime: number) => {
   timerTime = newTime;
 };
 
-export const rotateBoard = (board: BlankBoard): BlankBoard => {
+export const rotateBlankBoard = (board: BlankBoard): BlankBoard => {
+  return board.map((row, i) => {
+    return row.map((color, j) => board[j][i]);
+  });
+};
+
+export const rotateBoard = (board: Board): Board => {
   return board.map((row, i) => {
     return row.map((color, j) => board[j][i]);
   });

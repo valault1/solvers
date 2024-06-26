@@ -140,9 +140,10 @@ export const writeSeedsObjectToFile = (seeds: Seeds) => {
     numSeeds: seeds.seeds.length,
     totalTimeTaken: sum(seeds.timesTakenSeconds),
     totalBoardsGenerated: sum(seeds.boardsGenerated),
-    averageTimeTakenPerSeed: sum(seeds.timesTakenSeconds) / seeds.seeds.length,
+    averageTimeTakenPerSeed:
+      sum(seeds.timesTakenSeconds) / seeds.seeds.length || 1,
     averageBoardsGeneratedPerSeed:
-      sum(seeds.boardsGenerated) / seeds.seeds.length,
+      sum(seeds.boardsGenerated) / seeds.seeds.length || 1,
     averageTimePerAttemptMs:
       (sum(seeds.timesTakenSeconds) * 1000) / sum(seeds.boardsGenerated),
   });

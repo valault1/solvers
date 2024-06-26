@@ -1,11 +1,11 @@
-import { rotateBoard } from "domains/Queens/helpers/solver/parseBoard";
+import { rotateBlankBoard } from "domains/Queens/helpers/solver/parseBoard";
 import { BlankBoard, BoardColor, Coords } from "domains/Queens/sharedTypes";
 
 const repeated = (color: BoardColor, num: number) => {
   return Array(num).fill(color);
 };
 
-export const MOCK_BLANK_BOARD: BlankBoard = rotateBoard([
+export const MOCK_BLANK_BOARD: BlankBoard = rotateBlankBoard([
   [...repeated("lightBlue", 3), ...repeated("yellow", 6)],
   [
     ...repeated("lightBlue", 1),
