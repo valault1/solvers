@@ -1,9 +1,12 @@
-import { seeds as seeds8 } from "domains/Queens/boards/seeds8.v3";
-import { seeds as seeds9 } from "domains/Queens/boards/seeds9.v2";
-import { seeds as seeds10 } from "domains/Queens/boards/seeds10.v2";
-import { seeds as seeds11 } from "domains/Queens/boards/seeds11.v2";
-import { seeds as seeds12 } from "domains/Queens/boards/seeds12.v2";
-// import { seeds as seeds13 } from "domains/Queens/boards/seeds13.v2";
+import { seeds as seeds7 } from "domains/Queens/boards/seeds7.v4";
+import { seeds as seeds8 } from "domains/Queens/boards/seeds8.v4";
+import { seeds as seeds9 } from "domains/Queens/boards/seeds9.v4";
+import { seeds as seeds10 } from "domains/Queens/boards/seeds10.v4";
+import { seeds as seeds11 } from "domains/Queens/boards/seeds11.v4";
+import { seeds as seeds12 } from "domains/Queens/boards/seeds12.v4";
+import { seeds as seeds13 } from "domains/Queens/boards/seeds13.v4";
+import { seeds as seeds14 } from "domains/Queens/boards/seeds14.v4";
+import { seeds as seeds15 } from "domains/Queens/boards/seeds15.v4";
 // import { seeds as seeds14 } from "domains/Queens/boards/seeds14.v2";
 // import { seeds as seeds15 } from "domains/Queens/boards/seeds15.v2";
 // import { seeds as seeds16 } from "domains/Queens/boards/seeds16.v2";
@@ -13,15 +16,21 @@ import { seeds as seeds12 } from "domains/Queens/boards/seeds12.v2";
 // import { seeds as seeds20 } from "domains/Queens/boards/seeds20.v2";
 
 export const SIDE_LENGTH_OPTIONS = [
+  7,
   8,
   9,
   10,
   11,
   12, //13, 14, 15, 16, 17, 18, 19, 20,
+  13,
+  14,
+  15,
 ];
 
 export const getSeeds = (sideLength: number) => {
   switch (sideLength) {
+    case 7:
+      return seeds7;
     case 8:
       return seeds8;
     case 9:
@@ -32,12 +41,12 @@ export const getSeeds = (sideLength: number) => {
       return seeds11;
     case 12:
       return seeds12;
-    // case 13:
-    //   return seeds13;
-    // case 14:
-    //   return seeds14;
-    // case 15:
-    //   return seeds15;
+    case 13:
+      return seeds13;
+    case 14:
+      return seeds14;
+    case 15:
+      return seeds15;
     // case 16:
     //   return seeds16;
     // case 17:

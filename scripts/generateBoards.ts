@@ -91,9 +91,9 @@ const generateDeterministicSeeds = async (numToGenerate = 1000000) => {
 
 const testName = process.argv[2] || "UNNAMED_TEST";
 const resultsFilePath = "./_testResults.log";
-const boardSize = 7;
+const boardSize = 13;
 const timeBoardGeneration = async () => {
-  const maxSeedsToFind = 100;
+  const maxSeedsToFind = 10;
   let numSeedsFound = 0;
   let numBoardsGenerated = 0;
   let totalTimeTaken = 0;
@@ -129,6 +129,7 @@ generateDeterministicSeeds();
   RESULTS
   - space to leave = 4 made a big difference! for size 7,  ~100 boards per seed to 66 boards per seed.
   - 3 is even better
+  - Then, I removed the random region sizes at all, and just expanded to fill empty spaces. It worked super fast! But, it was generating regions with 1 square...
   
   Questions
   - Currently, most of the time, the final region counts are not equal to the region sizes. If I fix that, would it help?

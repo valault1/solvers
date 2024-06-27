@@ -318,6 +318,7 @@ const colorsToRegions = (board: Board): Board => {
     row.map((tile, j) => ({
       token: "",
       color: BOARD_COLOR_NAMES[tile.region] as BoardColor,
+      region: tile.region,
     }))
   );
 };
@@ -454,25 +455,38 @@ const fillBoardRegionsV2 = ({
     starPositions[region],
   ]);
 
-  let didMakeChange = true;
-  // if we ever don't make any change going through all regions, skip to the next part
-  while (didMakeChange) {
-    didMakeChange = false;
-    let regionsInRandomOrder = rng.getNumbersInRangeInRandomOrder(
-      regions.length
-    );
-    for (let region of regionsInRandomOrder) {
-      if (regionSquares[region].length >= regionSizes[region]) continue;
-      const possibleSquares = getEmptySquaresAdjacentToRegion({
-        board,
-        thisRegionSquares: regionSquares[region],
-      });
-      if (possibleSquares.length) {
-        let { row, col } = rng.getRandomElementFromArray(possibleSquares);
-        board[row][col].region = region;
-        regionSquares[region].push({ row, col });
-        didMakeChange = true;
-      }
+  // let didMakeChange = true;
+  // // if we ever don't make any change going through all regions, skip to the next part
+  // while (didMakeChange) {
+  //   didMakeChange = false;
+  //   let regionsInRandomOrder = rng.getNumbersInRangeInRandomOrder(
+  //     regions.length
+  //   );
+  //   for (let region of regionsInRandomOrder) {
+  //     if (regionSquares[region].length >= regionSizes[region]) continue;
+  //     const possibleSquares = getEmptySquaresAdjacentToRegion({
+  //       board,
+  //       thisRegionSquares: regionSquares[region],
+  //     });
+  //     if (possibleSquares.length) {
+  //       let { row, col } = rng.getRandomElementFromArray(possibleSquares);
+  //       board[row][col].region = region;
+  //       regionSquares[region].push({ row, col });
+  //       didMakeChange = true;
+  //     }
+  //   }
+  // }
+
+  // fill in at least one square for each region
+  for (let region of regions) {
+    const possibleSquares = getEmptySquaresAdjacentToRegion({
+      board,
+      thisRegionSquares: regionSquares[region],
+    });
+    if (possibleSquares.length) {
+      let { row, col } = rng.getRandomElementFromArray(possibleSquares);
+      board[row][col].region = region;
+      //regionSquares[region].push({ row, col });
     }
   }
 
@@ -497,21 +511,21 @@ const fillBoardRegionsV2 = ({
       }
     }
   }
-  // How often do these colors match the numbers in regionSizes?
-  const finalRegionCounts = [];
-  for (let region of regions) {
-    finalRegionCounts.push(regionSquares[region].length);
-  }
-  let areEqual = true;
-  for (let region of regions) {
-    if (finalRegionCounts[region] !== regionSizes[region]) {
-      areEqual = false;
-      break;
-    }
-  }
-  if (areEqual) {
-    //console.log("final region counts are equal to region sizes");
-  }
+  // // How often do these colors match the numbers in regionSizes?
+  // const finalRegionCounts = [];
+  // for (let region of regions) {
+  //   finalRegionCounts.push(regionSquares[region].length);
+  // }
+  // let areEqual = true;
+  // for (let region of regions) {
+  //   if (finalRegionCounts[region] !== regionSizes[region]) {
+  //     areEqual = false;
+  //     break;
+  //   }
+  // }
+  // if (areEqual) {
+  //   console.log("final region counts are equal to region sizes");
+  // }
 };
 
 const generateRegionsV2 = ({

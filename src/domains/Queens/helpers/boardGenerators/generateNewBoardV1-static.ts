@@ -297,6 +297,7 @@ const colorsToRegions = (board: Board): Board => {
     row.map((tile, j) => ({
       token: "",
       color: BOARD_COLOR_NAMES[tile.region] as BoardColor,
+      region: tile.region,
     }))
   );
 };

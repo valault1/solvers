@@ -29,10 +29,11 @@ import { PATHS } from "AppRoutes";
 import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LevelsProgress } from "domains/Queens/components/LevelsProgress";
+import { generateBoardFromSeedV2 } from "domains/Queens/helpers/boardGenerators/generateNewBoardV2-static";
 
 const DEFAULT_SEED_INDEX = 0;
 export const DEFAULT_SIDE_LENGTH = 8;
-const INITIAL_BOARD = generateBoardFromSeed(
+const INITIAL_BOARD = generateBoardFromSeedV2(
   DEFAULT_SIDE_LENGTH,
   getSeeds(DEFAULT_SIDE_LENGTH)[DEFAULT_SEED_INDEX]
 );
@@ -98,7 +99,10 @@ export const QueensPlayer = () => {
 
   React.useEffect(() => {
     const seeds = getSeeds(boardSize);
-    const newBoard = generateBoardFromSeed(boardSize, seeds[currentBoardIndex]);
+    const newBoard = generateBoardFromSeedV2(
+      boardSize,
+      seeds[currentBoardIndex]
+    );
     const { isFinished, time, starPositions }: TimeStorageObject =
       getStorageTimeObject({
         boardSize: boardSize,
@@ -116,6 +120,8 @@ export const QueensPlayer = () => {
     }
 
     addBordersToBoard(newBoard);
+    console.log("ADDED BORDERS");
+    console.log({ newBoard });
     setBoard(newBoard);
   }, [currentBoardIndex, boardSize]);
 
