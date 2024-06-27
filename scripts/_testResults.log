@@ -1,0 +1,271 @@
+test name: normal
+Found 100 seeds in 13312 boards
+Average ms per seed:  56.08
+Average boards per seed: 133.12
+----------------------------------
+
+test name: normal
+Found 100 seeds in 9542 boards
+Average ms per seed:  38.97
+Average boards per seed: 95.42
+----------------------------------
+
+test name: normal
+time of test: 2024-06-27T18:07:01.300Z
+Found 100 seeds in 11824 boards
+Average ms per seed:  51.01
+Average boards per seed: 118.24
+----------------------------------
+
+test name: hard max = sideLength * 2
+time of test: 2024-06-27T18:08:10.389Z
+Found 100 seeds in 17815 boards
+Average ms per seed:  72.65
+Average boards per seed: 178.15
+----------------------------------
+
+test name: hard max = sideLength * 4
+time of test: 2024-06-27T18:08:28.534Z
+Found 100 seeds in 10965 boards
+Average ms per seed:  45.2
+Average boards per seed: 109.65
+----------------------------------
+
+test name: hard max = sideLength * 4
+time of test: 2024-06-27T18:08:38.173Z
+Found 100 seeds in 11004 boards
+Average ms per seed:  46.66
+Average boards per seed: 110.04
+----------------------------------
+
+test name: hard max = sideLength * 3.5
+time of test: 2024-06-27T18:09:15.646Z
+Found 100 seeds in 11174 boards
+Average ms per seed:  47.12
+Average boards per seed: 111.74
+----------------------------------
+
+test name: hard max = sideLength * 3.5
+time of test: 2024-06-27T18:09:23.592Z
+Found 100 seeds in 9677 boards
+Average ms per seed:  41.71
+Average boards per seed: 96.77
+----------------------------------
+
+test name: space to leave = 4
+time of test: 2024-06-27T18:09:43.251Z
+Found 100 seeds in 6424 boards
+Average ms per seed:  26.78
+Average boards per seed: 64.24
+----------------------------------
+
+test name: space to leave = 4
+time of test: 2024-06-27T18:09:51.743Z
+Found 100 seeds in 6657 boards
+Average ms per seed:  27.58
+Average boards per seed: 66.57
+----------------------------------
+
+test name: space to leave = 4
+time of test: 2024-06-27T18:10:39.944Z
+Found 100 seeds in 8311 boards
+Average ms per seed:  35.81
+Average boards per seed: 83.11
+----------------------------------
+
+test name: space to leave = 4
+time of test: 2024-06-27T18:10:48.036Z
+Found 100 seeds in 5976 boards
+Average ms per seed:  26.99
+Average boards per seed: 59.76
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:10:58.765Z
+Found 100 seeds in 4192 boards
+Average ms per seed:  17.98
+Average boards per seed: 41.92
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:11:04.547Z
+Found 100 seeds in 4594 boards
+Average ms per seed:  19.12
+Average boards per seed: 45.94
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:11:10.022Z
+Found 100 seeds in 4700 boards
+Average ms per seed:  19.34
+Average boards per seed: 47
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:12:22.565Z
+Board size: 7
+Found 100 seeds in 3873 boards
+Average ms per seed:  16.46
+Average boards per seed: 38.73
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:12:38.159Z
+Board size: 8
+Found 100 seeds in 9605 boards
+Average ms per seed:  72.28
+Average boards per seed: 96.05
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:12:50.321Z
+Board size: 8
+Found 100 seeds in 10894 boards
+Average ms per seed:  66.74
+Average boards per seed: 108.94
+----------------------------------
+
+test name: space to leave = 5
+time of test: 2024-06-27T18:13:27.857Z
+Board size: 8
+Found 100 seeds in 44441 boards
+Average ms per seed:  293.56
+Average boards per seed: 444.41
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:14:03.943Z
+Board size: 8
+Found 100 seeds in 11635 boards
+Average ms per seed:  71.68
+Average boards per seed: 116.35
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:15:12.371Z
+Board size: 9
+Found 100 seeds in 28334 boards
+Average ms per seed:  250.82
+Average boards per seed: 283.34
+----------------------------------
+
+test name: space to leave = 5
+time of test: 2024-06-27T18:17:35.823Z
+Board size: 9
+Found 100 seeds in 130365 boards
+Average ms per seed:  1220.58
+Average boards per seed: 1303.65
+----------------------------------
+
+test name: space to leave = 5
+time of test: 2024-06-27T18:19:17.220Z
+Board size: 10
+Found 8 seeds in 42458 boards
+Average ms per seed:  6906.875
+Average boards per seed: 5307.25
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:19:34.311Z
+Board size: 10
+Found 10 seeds in 7569 boards
+Average ms per seed:  970.6
+Average boards per seed: 756.9
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:21:09.477Z
+Board size: 11
+Found 9 seeds in 35026 boards
+Average ms per seed:  8347.666666666666
+Average boards per seed: 3891.777777777778
+----------------------------------
+
+test name: space to leave = 5
+time of test: 2024-06-27T18:23:50.815Z
+Board size: 11
+Found 5 seeds in 78014 boards
+Average ms per seed:  28381
+Average boards per seed: 15602.8
+----------------------------------
+
+test name: space to leave = 4
+time of test: 2024-06-27T18:25:54.500Z
+Board size: 11
+Found 7 seeds in 64006 boards
+Average ms per seed:  16731.714285714286
+Average boards per seed: 9143.714285714286
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:29:11.926Z
+Board size: 7
+Found 100 seeds in 4341 boards
+Average ms per seed:  18.02
+Average boards per seed: 43.41
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:29:39.549Z
+Board size: 7
+Found 100 seeds in 3756 boards
+Average ms per seed:  14.88
+Average boards per seed: 37.56
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T18:29:45.043Z
+Board size: 7
+Found 100 seeds in 4286 boards
+Average ms per seed:  16.87
+Average boards per seed: 42.86
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T19:15:27.155Z
+Board size: 7
+Found 100 seeds in 4178 boards
+Average ms per seed:  17.07
+Average boards per seed: 41.78
+----------------------------------
+
+test name: space to leave = 3
+time of test: 2024-06-27T19:19:42.505Z
+Board size: 7
+Found 100 seeds in 4069 boards
+Average ms per seed:  16.88
+Average boards per seed: 40.69
+----------------------------------
+
+test name: space to leave = 3, fill regions in random order
+time of test: 2024-06-27T19:19:55.561Z
+Board size: 7
+Found 100 seeds in 4046 boards
+Average ms per seed:  17
+Average boards per seed: 40.46
+----------------------------------
+
+test name: space to leave = 3, fill regions in random order
+time of test: 2024-06-27T19:19:59.837Z
+Board size: 7
+Found 100 seeds in 4121 boards
+Average ms per seed:  16.96
+Average boards per seed: 41.21
+----------------------------------
+
+test name: space to leave = 3, fill regions in random order
+time of test: 2024-06-27T19:24:59.997Z
+Board size: 7
+Found 100 seeds in 5263 boards
+Average ms per seed:  24.42
+Average boards per seed: 52.63
+----------------------------------
+
+test name: space to leave = 3, fill regions in random order
+time of test: 2024-06-27T19:25:11.912Z
+Board size: 7
+Found 100 seeds in 4490 boards
+Average ms per seed:  19.36
+Average boards per seed: 44.9
+----------------------------------
+

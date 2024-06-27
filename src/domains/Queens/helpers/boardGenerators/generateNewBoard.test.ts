@@ -5,13 +5,11 @@ import { RNG } from "domains/Queens/helpers/randomNum";
 import {
   boardsAreEqual,
   copyBoard,
-  eliminateRowColGroups,
-  eliminateSquares,
-  markGuaranteedPlacements,
   narrowDownBoard,
 } from "domains/Queens/helpers/solver/solveBoard";
 import { Board } from "domains/Queens/sharedTypes";
 import { clearAllTokens } from "domains/Queens/components/PlayableBoard";
+import { generateBoardFromSeedV2 } from "domains/Queens/helpers/boardGenerators/generateNewBoardV2-static";
 
 let timerTime = new Date().getTime();
 const setTimerTime = (newTime: number) => {
@@ -24,10 +22,6 @@ export const solveBoardDeterministically = (board: Board) => {
   let counter = 0;
   while (boardDidChange && counter < COUNTER_MAX) {
     const oldBoard = copyBoard(board);
-    // time the amount spent on each step
-    // markGuaranteedPlacements(board);
-    // eliminateSquares(board);
-    // eliminateRowColGroups(board);
     narrowDownBoard(board);
     boardDidChange = !boardsAreEqual(oldBoard, board);
   }
@@ -51,7 +45,7 @@ export const generateBoardAndTestForDeterminism = async ({
     await pollEventLoop(timerTime, setTimerTime);
     counter++;
     boardSeed = rng.getRandomNewSeed();
-    board = generateBoardFromSeed(sideLength ?? 10, boardSeed);
+    board = generateBoardFromSeedV2(sideLength ?? 10, boardSeed);
     isDeterministic = solveBoardDeterministically(board);
     hasFoundDeterministicBoard = isDeterministic;
   }
