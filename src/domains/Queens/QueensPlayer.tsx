@@ -1,4 +1,4 @@
-import { Card, MenuItem, Select, Stack } from "@mui/material";
+import { Card, Stack } from "@mui/material";
 import { PrimaryButton } from "components/Form.elements";
 import { MainContainer } from "components/MainPage.elements";
 import {
@@ -25,17 +25,31 @@ import {
   generateBoardFromSeed,
 } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import { placeQueen } from "domains/Queens/helpers/solver/solveBoard";
+import { PATHS } from "AppRoutes";
+import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { LevelsProgress } from "domains/Queens/components/LevelsProgress";
 
 const DEFAULT_SEED_INDEX = 0;
-const DEFAULT_SIDE_LENGTH = 8;
+export const DEFAULT_SIDE_LENGTH = 8;
 const INITIAL_BOARD = generateBoardFromSeed(
   DEFAULT_SIDE_LENGTH,
   getSeeds(DEFAULT_SIDE_LENGTH)[DEFAULT_SEED_INDEX]
 );
 
+export const SEED_INDEX_PARAM = "seedIndex";
+export const BOARD_SIZE_PARAM = "boardSize";
+
 export const QueensPlayer = () => {
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const startingBoardSize =
+    parseInt(searchParams.get(BOARD_SIZE_PARAM)) || undefined;
   const [board, setBoard] = React.useState<Board>(INITIAL_BOARD);
-  const [sideLength, setSideLength] = React.useState(SIDE_LENGTH_OPTIONS[0]);
+  const [boardSize, setBoardSize] = React.useState(
+    startingBoardSize || SIDE_LENGTH_OPTIONS[0]
+  );
   const [startTime, setStartTime] = React.useState(new Date().getTime());
   const [hasWon, setHasWon] = React.useState(false);
   const [timeTaken, setTimeTaken] = React.useState(0);
@@ -47,7 +61,14 @@ export const QueensPlayer = () => {
     disableNext,
     currentBoardIndex,
     maxBoardIndex,
-  } = useNavigateBoards({ sideLength });
+  } = useNavigateBoards({ sideLength: boardSize });
+
+  React.useEffect(() => {
+    setSearchParams({
+      [BOARD_SIZE_PARAM]: boardSize.toString(),
+      [SEED_INDEX_PARAM]: currentBoardIndex.toString(),
+    });
+  }, [boardSize, currentBoardIndex, setSearchParams]);
 
   const saveBoard = React.useCallback(
     ({ board, didWin }: { board: Board; didWin: boolean }) => {
@@ -58,11 +79,11 @@ export const QueensPlayer = () => {
           boardState: didWin ? undefined : boardToTokens(board),
           starPositions: didWin ? getStarPositions(board) : undefined,
         },
-        boardSize: sideLength,
+        boardSize: boardSize,
         seedIndex: currentBoardIndex,
       });
     },
-    [currentBoardIndex, sideLength, startTime]
+    [currentBoardIndex, boardSize, startTime]
   );
 
   const onWin = React.useCallback(
@@ -76,14 +97,11 @@ export const QueensPlayer = () => {
   );
 
   React.useEffect(() => {
-    const seeds = getSeeds(sideLength);
-    const newBoard = generateBoardFromSeed(
-      sideLength,
-      seeds[currentBoardIndex]
-    );
+    const seeds = getSeeds(boardSize);
+    const newBoard = generateBoardFromSeed(boardSize, seeds[currentBoardIndex]);
     const { isFinished, time, starPositions }: TimeStorageObject =
       getStorageTimeObject({
-        boardSize: sideLength,
+        boardSize: boardSize,
         seedIndex: currentBoardIndex,
       });
 
@@ -99,11 +117,7 @@ export const QueensPlayer = () => {
 
     addBordersToBoard(newBoard);
     setBoard(newBoard);
-  }, [currentBoardIndex, sideLength]);
-
-  const onClick = () => {
-    console.log("clicked!");
-  };
+  }, [currentBoardIndex, boardSize]);
 
   return (
     <MainContainer
@@ -118,25 +132,8 @@ export const QueensPlayer = () => {
         These boards are procedurally generated. They are guaranteed to be
         solvable without guessing!
       </Card>
-      <Stack direction="column" gap={2}>
-        Select board size:
-        <Select
-          value={sideLength}
-          native={false}
-          onChange={(e) => {
-            const val = e.target.value;
-            // @ts-ignore
-            setSideLength(val);
-          }}
-          fullWidth
-        >
-          {SIDE_LENGTH_OPTIONS.map((length) => (
-            <MenuItem value={length}>
-              {length}x{length}
-            </MenuItem>
-          ))}
-        </Select>
-      </Stack>
+      <LevelsProgress boardSize={boardSize} width={INSTRUCTIONS_WIDTH} />
+      <BoardSizeSelect onChange={setBoardSize} value={boardSize} />
       {!hasWon ? (
         <Timer startTime={startTime} />
       ) : (
@@ -157,20 +154,14 @@ export const QueensPlayer = () => {
         </PrimaryButton>
       </Stack>
       board {currentBoardIndex + 1} of {maxBoardIndex}
-      {false && <PrimaryButton variant="text">Select level</PrimaryButton>}
-      {/* <Stack direction="column" gap={2}>
-        Testing onClickTile
-        <div
-          onClick={onClick}
-          style={{
-            width: 40,
-            height: 40,
-            padding: 20,
-            backgroundColor: "cyan",
-            border: "5px solid white",
-          }}
-        ></div>
-      </Stack> */}
+      {true && (
+        <PrimaryButton
+          variant="text"
+          onClick={() => navigate(PATHS.levelSelect, { replace: false })}
+        >
+          Select level
+        </PrimaryButton>
+      )}
     </MainContainer>
   );
 };

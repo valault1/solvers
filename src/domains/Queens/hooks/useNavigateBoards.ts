@@ -1,38 +1,29 @@
+import { SEED_INDEX_PARAM } from "domains/Queens/QueensPlayer";
 import { getSeeds } from "domains/Queens/boards/seeds";
 import { getFirstUnfinishedBoard } from "domains/Queens/helpers/localStorageHelper";
 
 import React from "react";
+import { useSearchParams } from "react-router-dom";
 
-const DEFAULT_SEED_INDEX = 0;
+const DEFAULT_SEED_INDEX = getFirstUnfinishedBoard({
+  boardSize: 8,
+});
 
 export const useNavigateBoards = ({ sideLength }: { sideLength: number }) => {
+  const [searchParams] = useSearchParams();
+
+  const startingIndex =
+    parseInt(searchParams.get(SEED_INDEX_PARAM)) || undefined;
+  console.log({ startingIndex, searchParams });
   const seeds = React.useMemo(() => {
     return getSeeds(sideLength);
   }, [sideLength]);
 
-  const [currentBoardIndex, setCurrentBoardIndex] =
-    React.useState(DEFAULT_SEED_INDEX);
+  console.log({ startingIndex, DEFAULT_SEED_INDEX });
 
-  // React.useEffect(() => {
-  //   const newBoard = generateBoardFromSeed(
-  //     sideLength,
-  //     seeds[currentBoardIndex]
-  //   );
-
-  //   const { isFinished, time, starPositions }: TimeStorageObject =
-  //     getStorageTimeObject({
-  //       boardSize: sideLength,
-  //       seedIndex: currentBoardIndex,
-  //     });
-
-  //   if (isFinished) {
-  //     starPositions.forEach(({ row, col }) => placeQueen(newBoard, row, col));
-  //   }
-
-  //   addBordersToBoard(newBoard);
-  //   console.log({ newBoard });
-  //   setBoard(newBoard);
-  // }, [currentBoardIndex, seeds, sideLength]);
+  const [currentBoardIndex, setCurrentBoardIndex] = React.useState(
+    startingIndex || DEFAULT_SEED_INDEX
+  );
 
   const disableNext = currentBoardIndex >= seeds.length - 1;
   const disablePrev = currentBoardIndex <= 0;

@@ -95,7 +95,7 @@ export const writeSeedsToFile = (seedObject: SeedInfo, newSeeds: number[]) => {
 };
 
 export const readSeedsFromFile = (boardSize: number) => {
-  const filePath = `../src/domains/Queens/boards/seeds${boardSize}.v3.ts`;
+  const filePath = `../src/domains/Queens/boards/seeds${boardSize}.v4.ts`;
   let fileContent = "";
   try {
     fileContent = fs.readFileSync(filePath, "utf8");

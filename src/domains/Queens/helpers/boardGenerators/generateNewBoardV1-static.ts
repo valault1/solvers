@@ -193,7 +193,7 @@ class RNG {
 }
 
 type BoardColor = keyof typeof BOARD_COLORS;
-const BOARD_COLORS = {
+export const BOARD_COLORS = {
   pink: [214, 163, 188],
   //brown/gray
   brownGray: [183, 179, 161],
@@ -215,6 +215,24 @@ const BOARD_COLORS = {
   lightGreen: [188, 222, 166],
   //gray section
   gray: [223, 223, 223],
+  // below: added for 20x20
+  darkBlue: [0, 0, 139],
+
+  darkGreen: [1, 50, 32],
+
+  silver: [192, 192, 192],
+
+  darkPurple: [139, 0, 139],
+
+  darkOrange: [255, 140, 0],
+
+  darkRed: [139, 0, 0],
+
+  brown: [165, 42, 42],
+
+  deepPink: [170, 50, 106],
+
+  brightYellow: [255, 234, 0],
 };
 type BoardTile = {
   token: Token;
@@ -504,7 +522,7 @@ export const generateBoardFromSeedV1 = (
 ): Board => {
   const rng = new RNG(seed);
 
-  const starPositions = getStarPositions(10, rng);
+  const starPositions = getStarPositions(sideLength, rng);
   const regionSizes = getColorSizes(sideLength, rng);
 
   // const board: BoardWithBorders = generateBorders({

@@ -77,7 +77,7 @@ export const PlayableBoard = ({
         <PrimaryButton onClick={undoLastMove} disabled={hasWon}>
           Undo last move
         </PrimaryButton>
-        {false && (
+        {true && (
           <PrimaryButton onClick={solveBoard}>
             Solve some of the board
           </PrimaryButton>

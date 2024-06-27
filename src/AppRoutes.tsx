@@ -7,6 +7,7 @@ import { MancalaController } from "domains/Mancala/MancalaController";
 import { PhysicsCalculatorController } from "domains/Physics/PhysicsCalculatorsController";
 import { QueensPlayer } from "domains/Queens/QueensPlayer";
 import { QueensSolver } from "domains/Queens/QueensSolver";
+import { SelectLevel } from "domains/Queens/components/SelectLevel";
 import { RemoteController } from "domains/Remote/RemoteController";
 import { ReviewsController } from "domains/Reviews/ReviewsController";
 import { RummikubController } from "domains/Rummikub/RummikubController";
@@ -17,6 +18,10 @@ import { Wordcounter } from "domains/Wordcounter/Wordcounter";
 import { WordleController } from "domains/Wordle/WordleController";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+
+export const PATHS = {
+  levelSelect: "/queens-level-select",
+};
 
 type NavbarPage = {
   label: string;
@@ -30,18 +35,20 @@ export function getRoute(label: string) {
 }
 
 export const NAVBAR_PAGES: NavbarPage[] = [
+  { label: "Queens Player", element: <QueensPlayer />, isHidden: false },
   { label: "Wordle Solver", element: <WordleController /> },
   { label: "Queens Solver", element: <QueensSolver />, isHidden: false },
-  { label: "Queens Player", element: <QueensPlayer />, isHidden: false },
+  { label: "Trap The Cat", element: <TrapTheCat /> },
   {
     label: "Rummikub Solver",
     route: "rummikub",
     element: <RummikubController />,
+    isHidden: true,
   },
 
   { label: "Calculators", element: <CalculatorsView /> },
   { label: "Tic Tac Toe", element: <TicTacToeController /> },
-  { label: "Trap The Cat", element: <TrapTheCat /> },
+
   {
     label: "Wordcounter",
     element: <Wordcounter />,
@@ -74,7 +81,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   {
     label: "Dyson Sphere",
     element: <DysonSphereCalculator />,
-    isHidden: false,
+    isHidden: true,
   },
 ];
 export const AppRoutes: React.FC = () => {
@@ -84,7 +91,8 @@ export const AppRoutes: React.FC = () => {
         const path = page.route || getRoute(page.label);
         return <Route path={path} element={page.element} key={path} />;
       })}
-      <Route path={"/"} element={<WordleController />} />
+      <Route path={"/"} element={<QueensPlayer />} />
+      <Route path={PATHS.levelSelect} element={<SelectLevel />} />
     </Routes>
   );
 };

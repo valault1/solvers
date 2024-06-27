@@ -1,4 +1,5 @@
 import { CircularProgress, Grid, Stack, Switch } from "@mui/material";
+import { PrimaryButton } from "components/Form.elements";
 import ImageUpload from "components/ImageUpload";
 import { MainContainer } from "components/MainPage.elements";
 import { BoardDisplay } from "domains/Queens/components/BoardDisplay";
@@ -182,6 +183,9 @@ export const QueensSolver = () => {
       paddingBottom={40}
     >
       <h1>Queens Solver</h1>
+      <PrimaryButton href="https://lnkd.in/queens">
+        Play Queens on Linkedin
+      </PrimaryButton>
       {startOnPlayground && (
         <Stack direction="row" justifyContent={"center"} alignItems={"center"}>
           <Switch

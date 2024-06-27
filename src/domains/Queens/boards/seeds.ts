@@ -1,4 +1,4 @@
-import { seeds as seeds8 } from "domains/Queens/boards/seeds8.v2";
+import { seeds as seeds8 } from "domains/Queens/boards/seeds8.v3";
 import { seeds as seeds9 } from "domains/Queens/boards/seeds9.v2";
 import { seeds as seeds10 } from "domains/Queens/boards/seeds10.v2";
 import { seeds as seeds11 } from "domains/Queens/boards/seeds11.v2";

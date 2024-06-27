@@ -5,6 +5,9 @@ import { RNG } from "domains/Queens/helpers/randomNum";
 import {
   boardsAreEqual,
   copyBoard,
+  eliminateRowColGroups,
+  eliminateSquares,
+  markGuaranteedPlacements,
   narrowDownBoard,
 } from "domains/Queens/helpers/solver/solveBoard";
 import { Board } from "domains/Queens/sharedTypes";
@@ -21,6 +24,10 @@ export const solveBoardDeterministically = (board: Board) => {
   let counter = 0;
   while (boardDidChange && counter < COUNTER_MAX) {
     const oldBoard = copyBoard(board);
+    // time the amount spent on each step
+    // markGuaranteedPlacements(board);
+    // eliminateSquares(board);
+    // eliminateRowColGroups(board);
     narrowDownBoard(board);
     boardDidChange = !boardsAreEqual(oldBoard, board);
   }

@@ -10,6 +10,12 @@ const Instructions = () => {
       style={{ padding: INSTRUCTIONS_PADDING, maxWidth: INSTRUCTIONS_WIDTH }}
     >
       <Stack justifyContent="center" alignItems="center" gap="12px">
+        <div>
+          This is a solver written specifically for the Linkedin game Queens.
+          Play it at the link above! If you get stuck, use this solver to help
+          you out.
+        </div>
+
         <b>
           <u>Instructions</u>
         </b>

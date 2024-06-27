@@ -456,6 +456,8 @@ const getRowGroups = (board: Board): RowOrColGroup[] => {
   const groups: RowOrColGroup[] = [];
   for (let rowBegin = 0; rowBegin < board.length - 2; rowBegin++) {
     for (let rowEnd = rowBegin; rowEnd < board.length; rowEnd++) {
+      const groupSize = rowEnd - rowBegin + 1;
+      //if (groupSize > Math.floor(board.length / 2) + 1) continue;
       const squares: TileWithCoords[] = [];
       const squaresOutsideGroup: TileWithCoords[] = [];
       board.forEach((row, i) => {
@@ -473,7 +475,7 @@ const getRowGroups = (board: Board): RowOrColGroup[] => {
       groups.push({
         squares,
         squaresOutsideGroup,
-        groupSize: rowEnd - rowBegin + 1,
+        groupSize,
       });
     }
   }
@@ -510,7 +512,7 @@ const getColGroups = (board: Board): RowOrColGroup[] => {
 
 export const eliminateRowColGroups = (board: Board) => {
   const rowGroups = getRowGroups(board);
-  const colGroups = getColGroups(board);
+  const colGroups: RowOrColGroup[] = getColGroups(board);
 
   [...rowGroups, ...colGroups].forEach((group) =>
     eliminateSquaresInRowColGroup({ board, group })
@@ -525,6 +527,26 @@ export const runSolveRules = (board: Board) => {
 };
 
 export const narrowDownBoard = (board: Board) => {
+  let boardCopy = copyBoard(board);
+  let boardsAreNotEqual = true;
+
+  while (boardsAreNotEqual) {
+    //console.log("Boards still not equal, try again");
+    boardCopy = copyBoard(board);
+    markGuaranteedPlacements(board);
+    boardsAreNotEqual = !boardsAreEqual(board, boardCopy);
+    if (!boardsAreNotEqual) {
+      eliminateSquares(board);
+    }
+    boardsAreNotEqual = !boardsAreEqual(board, boardCopy);
+    if (!boardsAreNotEqual) {
+      eliminateRowColGroups(board);
+    }
+    boardsAreNotEqual = !boardsAreEqual(board, boardCopy);
+  }
+};
+
+export const narrowDownBoardOld = (board: Board) => {
   let boardCopy = copyBoard(board);
   let boardsAreNotEqual = true;
 
