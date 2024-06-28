@@ -1,13 +1,7 @@
 import { BOARD_COLOR_NAMES } from "domains/Queens/constants/constants";
-import { generateBorders } from "domains/Queens/helpers/boardGenerators/generateBorders";
 import { generateRegionsV2 } from "domains/Queens/helpers/boardGenerators/generateBordersV2";
 import { range, RNG } from "domains/Queens/helpers/randomNum";
-import {
-  Board,
-  BoardColor,
-  BoardWithBorders,
-  Coords,
-} from "domains/Queens/sharedTypes";
+import { Board, BoardColor, Coords } from "domains/Queens/sharedTypes";
 
 const addBordersToTile = (board: Board, row: number, col: number) => {
   const max = board.length - 1;
@@ -43,27 +37,27 @@ export const addBordersToBoard = (board: Board) => {
   });
 };
 
-const areValidRowPlacements = (
-  rowPlacements: number[],
-  colPlacements: number[]
-): boolean => {
-  let coords = range(rowPlacements.length).map((i) => {
-    return { row: rowPlacements[i], col: colPlacements[i] };
-  });
+// const areValidRowPlacements = (
+//   rowPlacements: number[],
+//   colPlacements: number[]
+// ): boolean => {
+//   let coords = range(rowPlacements.length).map((i) => {
+//     return { row: rowPlacements[i], col: colPlacements[i] };
+//   });
 
-  for (let i = 1; i < coords.length; i++) {
-    // check for conflict between this and the previous star
-    let currentStar = coords[i];
-    let prevStar = coords[i - 1];
-    if (
-      currentStar.col <= prevStar.col + 1 &&
-      currentStar.col >= prevStar.col - 1
-    ) {
-      return false;
-    }
-  }
-  return true;
-};
+//   for (let i = 1; i < coords.length; i++) {
+//     // check for conflict between this and the previous star
+//     let currentStar = coords[i];
+//     let prevStar = coords[i - 1];
+//     if (
+//       currentStar.col <= prevStar.col + 1 &&
+//       currentStar.col >= prevStar.col - 1
+//     ) {
+//       return false;
+//     }
+//   }
+//   return true;
+// };
 
 const getStarPositions = (sideLength: number, rng: RNG): Coords[] => {
   let isValid = false;

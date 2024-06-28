@@ -1,5 +1,4 @@
-import { SEED_INDEX_PARAM } from "domains/Queens/QueensPlayer";
-import { getSeeds } from "domains/Queens/boards/seeds";
+import { SIDE_LENGTH_OPTIONS, getSeeds } from "domains/Queens/boards/seeds";
 import { getFirstUnfinishedBoard } from "domains/Queens/helpers/localStorageHelper";
 
 import React from "react";
@@ -9,17 +8,33 @@ const DEFAULT_SEED_INDEX = getFirstUnfinishedBoard({
   boardSize: 8,
 });
 
-export const useNavigateBoards = ({ sideLength }: { sideLength: number }) => {
-  const [searchParams] = useSearchParams();
+export const SEED_INDEX_PARAM = "seedIndex";
+export const BOARD_SIZE_PARAM = "boardSize";
+
+export const useNavigateBoards = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const startingIndex =
     parseInt(searchParams.get(SEED_INDEX_PARAM)) || undefined;
-  console.log({ startingIndex, searchParams });
-  const seeds = React.useMemo(() => {
-    return getSeeds(sideLength);
-  }, [sideLength]);
+  const startingBoardSize =
+    parseInt(searchParams.get(BOARD_SIZE_PARAM)) || undefined;
 
-  console.log({ startingIndex, DEFAULT_SEED_INDEX });
+  const [boardSize, setBoardSize] = React.useState(
+    startingBoardSize || SIDE_LENGTH_OPTIONS[0]
+  );
+
+  const seeds = React.useMemo(() => {
+    return getSeeds(boardSize);
+  }, [boardSize]);
+
+  const handleSetBoardSize = React.useCallback(
+    (size: number) => {
+      setBoardSize(size);
+      setSearchParams({ [BOARD_SIZE_PARAM]: size.toString() });
+      setCurrentBoardIndex(getFirstUnfinishedBoard({ boardSize: size }));
+    },
+    [setBoardSize, setSearchParams]
+  );
 
   const [currentBoardIndex, setCurrentBoardIndex] = React.useState(
     startingIndex || DEFAULT_SEED_INDEX
@@ -28,17 +43,31 @@ export const useNavigateBoards = ({ sideLength }: { sideLength: number }) => {
   const disableNext = currentBoardIndex >= seeds.length - 1;
   const disablePrev = currentBoardIndex <= 0;
 
-  React.useEffect(() => {
-    setCurrentBoardIndex(getFirstUnfinishedBoard({ boardSize: sideLength }));
-  }, [sideLength]);
+  const handleSetCurrentBoardIndex = React.useCallback(
+    (index: number) => {
+      setCurrentBoardIndex(index);
+      setSearchParams({ [SEED_INDEX_PARAM]: index.toString() });
+    },
+    [setCurrentBoardIndex, setSearchParams]
+  );
 
   const nextBoard = React.useCallback(() => {
-    setCurrentBoardIndex((prev) => prev + 1);
-  }, [setCurrentBoardIndex]);
+    const newIndex = currentBoardIndex + 1;
+    handleSetCurrentBoardIndex(newIndex);
+  }, [currentBoardIndex, handleSetCurrentBoardIndex]);
 
   const prevBoard = React.useCallback(() => {
-    setCurrentBoardIndex((prev) => prev - 1);
-  }, [setCurrentBoardIndex]);
+    const newIndex = currentBoardIndex - 1;
+    handleSetCurrentBoardIndex(newIndex);
+  }, [currentBoardIndex, handleSetCurrentBoardIndex]);
+
+  // const numBoardsCompleted = React.useMemo(() => {
+  //   return getSeeds(boardSize)
+  //     .map((seed, i) => {
+  //       return getStorageTimeObject({ seedIndex: i, boardSize });
+  //     })
+  //     .filter((obj) => obj.isFinished).length;
+  // }, [boardSize]);
   return {
     nextBoard,
     prevBoard,
@@ -46,5 +75,7 @@ export const useNavigateBoards = ({ sideLength }: { sideLength: number }) => {
     disablePrev,
     currentBoardIndex,
     maxBoardIndex: seeds.length,
+    boardSize,
+    setBoardSize: handleSetBoardSize,
   };
 };

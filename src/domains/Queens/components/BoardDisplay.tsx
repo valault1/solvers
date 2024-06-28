@@ -71,9 +71,7 @@ export const BoardDisplay = ({
                   boxSizing: "border-box",
                   width: SQUARE_SIZE,
                   height: SQUARE_SIZE,
-                  backgroundColor: `rgba(${colorArrToString(
-                    COLORS_LIST[colorName]
-                  )})`,
+                  backgroundColor: `${colorName}`,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",

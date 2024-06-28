@@ -1,5 +1,5 @@
 import { OnClickTile } from "domains/Queens/components/BoardDisplay";
-import { BOARD_COLORS } from "domains/Queens/constants/constants";
+import { ORIGINAL_BOARD_COLORS } from "domains/Queens/constants/constants";
 import { range } from "domains/Queens/helpers/randomNum";
 import {
   copyBoard,
@@ -49,7 +49,7 @@ const markConflictingRows = (board: Board) => {
 };
 
 const markConflictingColors = (board: Board) => {
-  const BOARD_COLOR_NAMES = Object.keys(BOARD_COLORS);
+  const BOARD_COLOR_NAMES = Object.keys(ORIGINAL_BOARD_COLORS);
   //@ts-ignore
   const dict: Record<BoardColor, { row: number; column: number }[]> =
     BOARD_COLOR_NAMES.reduce((accum, name) => {

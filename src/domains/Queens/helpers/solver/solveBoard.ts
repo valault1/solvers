@@ -1,7 +1,9 @@
 import {
-  BOARD_COLORS,
+  ORIGINAL_BOARD_COLORS,
   CONSTANT_BLANK_ARRAY,
   pollEventLoop,
+  BOARD_COLORS_HEX,
+  HEX_BOARD_COLORS,
 } from "domains/Queens/constants/constants";
 
 import {
@@ -20,13 +22,12 @@ const setTimerTime = (newTime: number) => {
   timerTime = newTime;
 };
 
-let colorCounts: Record<BoardColor, number> = Object.keys(BOARD_COLORS).reduce(
-  (acc, colorName) => {
-    acc[colorName as BoardColor] = 0;
-    return acc;
-  },
-  {} as Record<BoardColor, number>
-);
+let colorCounts: Record<BoardColor, number> = Object.keys(
+  ORIGINAL_BOARD_COLORS
+).reduce((acc, colorName) => {
+  acc[colorName as BoardColor] = 0;
+  return acc;
+}, {} as Record<BoardColor, number>);
 
 export const populateColorCounts = (board: BlankBoard) => {
   for (let row of board) {
@@ -116,7 +117,8 @@ const markColors = (board: Board) => {
       lastBlankCoord: Coords | undefined;
     }
   > = {};
-  Object.keys(BOARD_COLORS).forEach((colorName) => {
+
+  HEX_BOARD_COLORS.forEach((colorName) => {
     colorCounts[colorName] = {
       xCount: 0,
       blankCount: 0,

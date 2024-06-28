@@ -1,6 +1,54 @@
 // DO NOT EDIT
 // This is meant to be a static copy of the generateNewBoard function, so that it's functionality will never change, and we can always use these seeds.
 
+// for now, I am importing board colors, since I don't think that will break the functionality of the board generation.
+// Just in case, I included here as BOARD_COLORS_OLD a copy of what BOARD_COLORS was at the time of making this
+import { ORIGINAL_BOARD_COLORS } from "domains/Queens/constants/constants";
+
+type BoardColor = keyof typeof ORIGINAL_BOARD_COLORS;
+
+export const BOARD_COLORS_OLD = {
+  pink: [214, 163, 188],
+  //brown/gray
+  brownGray: [183, 179, 161],
+  //red
+  red: [237, 131, 103],
+  //light orange
+  lightOrange: [246, 204, 153],
+  //yellow
+  yellow: [232, 243, 150],
+  //purple
+  purple: [183, 164, 221],
+  //teal
+  teal: [173, 209, 215],
+  //teal
+  cyan: [86, 237, 231],
+  //light blue
+  lightBlue: [139, 181, 254],
+  //light green
+  lightGreen: [188, 222, 166],
+  //gray section
+  gray: [223, 223, 223],
+  // below: added for 20x20
+  darkBlue: [0, 0, 139],
+
+  darkGreen: [1, 50, 32],
+
+  silver: [192, 192, 192],
+
+  darkPurple: [139, 0, 139],
+
+  darkOrange: [255, 140, 0],
+
+  darkRed: [139, 0, 0],
+
+  brown: [165, 42, 42],
+
+  deepPink: [170, 50, 106],
+
+  brightYellow: [255, 234, 0],
+};
+
 type Coords = { row: number; col: number };
 const range = (size: number) => {
   return Array.from({ length: size }, (x, i) => i);
@@ -18,7 +66,7 @@ class RNG {
   private mti = this.N + 1; /* mti==N+1 means mt[N] is not initialized */
 
   constructor(seed?: number) {
-    if (seed == undefined) {
+    if (seed === undefined) {
       seed = new Date().getTime();
     }
     this.init_genrand(seed);
@@ -70,6 +118,7 @@ class RNG {
       if (j >= key_length) j = 0;
     }
     for (k = this.N - 1; k; k--) {
+      // eslint-disable-next-line @typescript-eslint/no-redeclare
       var s = this.mt[i - 1] ^ (this.mt[i - 1] >>> 30);
       this.mt[i] =
         (this.mt[i] ^
@@ -97,7 +146,7 @@ class RNG {
       /* generate N words at one time */
       var kk;
 
-      if (this.mti == this.N + 1)
+      if (this.mti === this.N + 1)
         /* if init_genrand() has not been called, */
         this.init_genrand(5489); /* a default initial seed is used */
 
@@ -192,48 +241,6 @@ class RNG {
   /* These real versions are due to Isaku Wada, 2002/01/09 added */
 }
 
-type BoardColor = keyof typeof BOARD_COLORS;
-export const BOARD_COLORS = {
-  pink: [214, 163, 188],
-  //brown/gray
-  brownGray: [183, 179, 161],
-  //red
-  red: [237, 131, 103],
-  //light orange
-  lightOrange: [246, 204, 153],
-  //yellow
-  yellow: [232, 243, 150],
-  //purple
-  purple: [183, 164, 221],
-  //teal
-  teal: [173, 209, 215],
-  //teal
-  cyan: [86, 237, 231],
-  //light blue
-  lightBlue: [139, 181, 254],
-  //light green
-  lightGreen: [188, 222, 166],
-  //gray section
-  gray: [223, 223, 223],
-  // below: added for 20x20
-  darkBlue: [0, 0, 139],
-
-  darkGreen: [1, 50, 32],
-
-  silver: [192, 192, 192],
-
-  darkPurple: [139, 0, 139],
-
-  darkOrange: [255, 140, 0],
-
-  darkRed: [139, 0, 0],
-
-  brown: [165, 42, 42],
-
-  deepPink: [170, 50, 106],
-
-  brightYellow: [255, 234, 0],
-};
 type BoardTile = {
   token: Token;
   color: BoardColor;
@@ -291,7 +298,7 @@ const getColorSizes = (sideLength: number, rng: RNG): number[] => {
   return sizes;
 };
 
-const BOARD_COLOR_NAMES = Object.keys(BOARD_COLORS);
+const BOARD_COLOR_NAMES = Object.keys(ORIGINAL_BOARD_COLORS);
 const colorsToRegions = (board: Board): Board => {
   return board.map((row, i) =>
     row.map((tile, j) => ({
@@ -495,11 +502,6 @@ const generateRegionsV2 = ({
   const regionlessBoard = createBlankBoard(sideLength);
   placeStars(regionlessBoard, starPositions);
 
-  // console.log(
-  //   "Attempting to fill regions. will try " + MAX_ATTEMPTS + " times."
-  // );
-  const startTime = new Date().getTime();
-
   let board = regionlessBoard;
 
   while (!areBoardRegionsFilled(board) && attemptCounter < MAX_ATTEMPTS) {
@@ -508,10 +510,6 @@ const generateRegionsV2 = ({
     board = copyBoard(regionlessBoard);
     fillBoardRegionsV2({ board, regionSizes, starPositions, rng });
   }
-
-  const timeTaken = new Date().getTime() - startTime;
-  //console.log("Filled regions in  " + timeTaken / 1000 + " seconds");
-  // console.log("used " + attemptCounter + " attempts");
 
   return board;
 };

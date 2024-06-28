@@ -11,7 +11,6 @@ export const BoardSizeSelect = ({
 }) => {
   return (
     <Stack direction="column" gap={2}>
-      Select board size:
       <Select
         value={value}
         native={false}

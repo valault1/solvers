@@ -6,8 +6,11 @@ import {
   INSTRUCTIONS_WIDTH,
 } from "domains/Queens/components/Instructions";
 import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
-import { useNavigateBoards } from "domains/Queens/hooks/useNavigateBoards";
-import { SIDE_LENGTH_OPTIONS, getSeeds } from "domains/Queens/boards/seeds";
+import {
+  BOARD_SIZE_PARAM,
+  useNavigateBoards,
+} from "domains/Queens/hooks/useNavigateBoards";
+import { getSeeds } from "domains/Queens/boards/seeds";
 
 import * as React from "react";
 import { Timer } from "domains/Queens/components/Timer";
@@ -20,15 +23,12 @@ import {
   saveBoardProgress,
 } from "domains/Queens/helpers/localStorageHelper";
 import { Board } from "domains/Queens/sharedTypes";
-import {
-  addBordersToBoard,
-  generateBoardFromSeed,
-} from "domains/Queens/helpers/boardGenerators/generateNewBoard";
+import { addBordersToBoard } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import { placeQueen } from "domains/Queens/helpers/solver/solveBoard";
 import { PATHS } from "AppRoutes";
 import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { LevelsProgress } from "domains/Queens/components/LevelsProgress";
+import { useNavigate } from "react-router-dom";
+
 import { generateBoardFromSeedV2 } from "domains/Queens/helpers/boardGenerators/generateNewBoardV2-static";
 
 const DEFAULT_SEED_INDEX = 0;
@@ -38,19 +38,11 @@ const INITIAL_BOARD = generateBoardFromSeedV2(
   getSeeds(DEFAULT_SIDE_LENGTH)[DEFAULT_SEED_INDEX]
 );
 
-export const SEED_INDEX_PARAM = "seedIndex";
-export const BOARD_SIZE_PARAM = "boardSize";
-
 export const QueensPlayer = () => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
 
-  const startingBoardSize =
-    parseInt(searchParams.get(BOARD_SIZE_PARAM)) || undefined;
   const [board, setBoard] = React.useState<Board>(INITIAL_BOARD);
-  const [boardSize, setBoardSize] = React.useState(
-    startingBoardSize || SIDE_LENGTH_OPTIONS[0]
-  );
+
   const [startTime, setStartTime] = React.useState(new Date().getTime());
   const [hasWon, setHasWon] = React.useState(false);
   const [timeTaken, setTimeTaken] = React.useState(0);
@@ -62,14 +54,9 @@ export const QueensPlayer = () => {
     disableNext,
     currentBoardIndex,
     maxBoardIndex,
-  } = useNavigateBoards({ sideLength: boardSize });
-
-  React.useEffect(() => {
-    setSearchParams({
-      [BOARD_SIZE_PARAM]: boardSize.toString(),
-      [SEED_INDEX_PARAM]: currentBoardIndex.toString(),
-    });
-  }, [boardSize, currentBoardIndex, setSearchParams]);
+    boardSize,
+    setBoardSize,
+  } = useNavigateBoards();
 
   const saveBoard = React.useCallback(
     ({ board, didWin }: { board: Board; didWin: boolean }) => {
@@ -114,16 +101,14 @@ export const QueensPlayer = () => {
       setHasWon(true);
       setTimeTaken(time);
     } else {
-      console.log("resetting time");
       setStartTime(new Date().getTime());
       setHasWon(false);
     }
 
     addBordersToBoard(newBoard);
-    console.log("ADDED BORDERS");
-    console.log({ newBoard });
     setBoard(newBoard);
   }, [currentBoardIndex, boardSize]);
+  console.log({ board });
 
   return (
     <MainContainer
@@ -138,7 +123,7 @@ export const QueensPlayer = () => {
         These boards are procedurally generated. They are guaranteed to be
         solvable without guessing!
       </Card>
-      <LevelsProgress boardSize={boardSize} width={INSTRUCTIONS_WIDTH} />
+      {/* <LevelsProgress boardSize={boardSize} width={INSTRUCTIONS_WIDTH} /> */}
       <BoardSizeSelect onChange={setBoardSize} value={boardSize} />
       {!hasWon ? (
         <Timer startTime={startTime} />
@@ -163,7 +148,9 @@ export const QueensPlayer = () => {
       {true && (
         <PrimaryButton
           variant="text"
-          onClick={() => navigate(PATHS.levelSelect, { replace: false })}
+          onClick={() =>
+            navigate(`${PATHS.levelSelect}?${BOARD_SIZE_PARAM}=${boardSize}`)
+          }
         >
           Select level
         </PrimaryButton>

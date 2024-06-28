@@ -1,6 +1,5 @@
 import { checkForVictory } from "domains/Queens/hooks/useMakeMove";
 import { pollEventLoop } from "domains/Queens/constants/constants";
-import { generateBoardFromSeed } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import { RNG } from "domains/Queens/helpers/randomNum";
 import {
   boardsAreEqual,

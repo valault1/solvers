@@ -1,3 +1,4 @@
+import { getSeeds } from "domains/Queens/boards/seeds";
 import { Board, Coords, Token } from "domains/Queens/sharedTypes";
 
 const TIMES_STORAGE_KEY = "queensTimes";
@@ -95,7 +96,7 @@ export const getFirstUnfinishedBoard = ({
 }: {
   boardSize: number;
 }) => {
-  for (let i = 0; i < boardSize; i++) {
+  for (let i = 0; i < getSeeds(boardSize).length; i++) {
     const currentTimeObject = getStorageTimeObject({ seedIndex: i, boardSize });
     if (!currentTimeObject.isFinished) {
       return i;

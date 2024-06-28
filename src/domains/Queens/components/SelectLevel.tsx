@@ -2,48 +2,64 @@ import { CheckCircle, Circle } from "@mui/icons-material";
 import { Stack } from "@mui/material";
 import { PrimaryButton } from "components/Form.elements";
 import { MainContainer } from "components/MainPage.elements";
+import { DEFAULT_SIDE_LENGTH } from "domains/Queens/QueensPlayer";
 import { getSeeds } from "domains/Queens/boards/seeds";
 
 import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
 import { getStorageTimeObject } from "domains/Queens/helpers/localStorageHelper";
+import {
+  BOARD_SIZE_PARAM,
+  SEED_INDEX_PARAM,
+} from "domains/Queens/hooks/useNavigateBoards";
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
-
-const LEVELS_PER_ROW = 10;
-const sliceArrayIntoRows = (arr: any[], rowLength: number) => {
-  const rows = [];
-  for (let i = 0; i < arr.length; i += rowLength) {
-    rows.push(arr.slice(i, i + rowLength));
-  }
-  return rows;
-};
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export const SelectLevel = () => {
   const navigate = useNavigate();
-  const [boardSize, setBoardSize] = React.useState(8);
-  const seedsMatrix = React.useMemo(() => {
-    const seeds = getSeeds(boardSize);
-
-    return sliceArrayIntoRows(seeds, LEVELS_PER_ROW);
-  }, [boardSize]);
+  const [searchParams] = useSearchParams();
+  const [boardSize, setBoardSize] = React.useState(
+    parseInt(searchParams.get(BOARD_SIZE_PARAM)) || DEFAULT_SIDE_LENGTH
+  );
 
   const levelProgresses = React.useMemo(() => {
     return getSeeds(boardSize).map((seed, i) => {
       return getStorageTimeObject({ seedIndex: i, boardSize });
     });
   }, [boardSize]);
+
+  const seeds = getSeeds(boardSize);
   return (
     <MainContainer gap={12}>
       Level select <BoardSizeSelect onChange={setBoardSize} value={boardSize} />
       <Stack
-        direction="column"
+        direction="row"
         gap={2}
-        width="100%"
+        //maxWidth={"800px"}
         flexWrap={"wrap"}
         justifyContent={"center"}
         alignItems={"center"}
       >
-        {seedsMatrix.map((seed, i) => (
+        {seeds.map((seed, i) => {
+          const levelNum = i + 1;
+          const isFinished = levelProgresses[i]?.isFinished;
+          return (
+            <PrimaryButton
+              variant="text"
+              color={isFinished ? "success" : "info"}
+              onClick={() => {
+                const newPath = `/queensplayer?${SEED_INDEX_PARAM}=${i}&${BOARD_SIZE_PARAM}=${boardSize}`;
+                console.log({ newPath });
+                navigate(newPath);
+              }}
+            >
+              <Stack direction="column">
+                {levelNum}
+                {isFinished ? <CheckCircle /> : <Circle />}
+              </Stack>
+            </PrimaryButton>
+          );
+        })}
+        {/* {seedsMatrix.map((seed, i) => (
           <Stack
             direction="row"
             gap={0}
@@ -58,11 +74,11 @@ export const SelectLevel = () => {
                 <PrimaryButton
                   variant="text"
                   color={isFinished ? "success" : "info"}
-                  onClick={() =>
-                    navigate(
-                      `/queensplayer?seedIndex=${index}&boardSize=${boardSize}`
-                    )
-                  }
+                  onClick={() => {
+                    const newPath = `/queensplayer?${SEED_INDEX_PARAM}=${index}&${BOARD_SIZE_PARAM}=${boardSize}`;
+                    console.log({ newPath });
+                    navigate(newPath);
+                  }}
                 >
                   <Stack direction="column">
                     {index + 1}
@@ -72,7 +88,7 @@ export const SelectLevel = () => {
               );
             })}
           </Stack>
-        ))}
+        ))} */}
       </Stack>
     </MainContainer>
   );

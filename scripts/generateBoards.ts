@@ -3,7 +3,6 @@ import { Seeds } from "./Seeds";
 import { Stopwatch } from "./Stopwatch";
 import { getConfig } from "./getConfig";
 import { readSeedsFromFile } from "./saveSeeds";
-import fs from "fs";
 
 const generateBoardAndTestForDeterminism =
   //@ts-ignore
@@ -89,39 +88,40 @@ const generateDeterministicSeeds = async (numToGenerate = 1000000) => {
 // the main goal is to get the number of boards needed per deterministic seed to go down.
 // Although, if the generating takes longer, that's still not good... so we also want to see the time taken per seed.
 
-const testName = process.argv[2] || "UNNAMED_TEST";
-const resultsFilePath = "./_testResults.log";
-const boardSize = 13;
-const timeBoardGeneration = async () => {
-  const maxSeedsToFind = 10;
-  let numSeedsFound = 0;
-  let numBoardsGenerated = 0;
-  let totalTimeTaken = 0;
-  const attemptTimer = new Stopwatch();
-  for (let i = 0; i < maxSeedsToFind; i++) {
-    console.log(i);
-    attemptTimer.start();
-    const { isDeterministic, boardsGenerated } =
-      await generateBoardAndTestForDeterminism({
-        sideLength: boardSize,
-      });
-    attemptTimer.stop();
-    totalTimeTaken += attemptTimer.getTime();
-    numBoardsGenerated += boardsGenerated;
-    if (isDeterministic) {
-      numSeedsFound++;
-    }
-  }
-  let content = `test name: ${testName}\n`;
-  content += `time of test: ${new Date().toISOString()}\n`;
-  content += `Board size: ${boardSize}\n`;
-  content += `Found ${numSeedsFound} seeds in ${numBoardsGenerated} boards\n`;
-  content += `Average ms per seed:  ${totalTimeTaken / numSeedsFound}\n`;
-  content += `Average boards per seed: ${numBoardsGenerated / numSeedsFound}\n`;
-  content += "----------------------------------\n\n";
-  console.log(content);
-  fs.appendFileSync(resultsFilePath, content);
-};
+// import fs from "fs";
+// const testName = process.argv[2] || "UNNAMED_TEST";
+// const resultsFilePath = "./_testResults.log";
+// const boardSize = 13;
+// const timeBoardGeneration = async () => {
+//   const maxSeedsToFind = 10;
+//   let numSeedsFound = 0;
+//   let numBoardsGenerated = 0;
+//   let totalTimeTaken = 0;
+//   const attemptTimer = new Stopwatch();
+//   for (let i = 0; i < maxSeedsToFind; i++) {
+//     console.log(i);
+//     attemptTimer.start();
+//     const { isDeterministic, boardsGenerated } =
+//       await generateBoardAndTestForDeterminism({
+//         sideLength: boardSize,
+//       });
+//     attemptTimer.stop();
+//     totalTimeTaken += attemptTimer.getTime();
+//     numBoardsGenerated += boardsGenerated;
+//     if (isDeterministic) {
+//       numSeedsFound++;
+//     }
+//   }
+//   let content = `test name: ${testName}\n`;
+//   content += `time of test: ${new Date().toISOString()}\n`;
+//   content += `Board size: ${boardSize}\n`;
+//   content += `Found ${numSeedsFound} seeds in ${numBoardsGenerated} boards\n`;
+//   content += `Average ms per seed:  ${totalTimeTaken / numSeedsFound}\n`;
+//   content += `Average boards per seed: ${numBoardsGenerated / numSeedsFound}\n`;
+//   content += "----------------------------------\n\n";
+//   console.log(content);
+//   fs.appendFileSync(resultsFilePath, content);
+// };
 //timeBoardGeneration();
 generateDeterministicSeeds();
 

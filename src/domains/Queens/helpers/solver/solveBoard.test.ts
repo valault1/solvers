@@ -1,5 +1,4 @@
 import { getSeeds } from "domains/Queens/boards/seeds";
-import { generateBoardFromSeed } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import { solveBoardDeterministically } from "domains/Queens/helpers/boardGenerators/generateNewBoard.test";
 import { generateBoardFromSeedV1 } from "domains/Queens/helpers/boardGenerators/generateNewBoardV1-static";
 

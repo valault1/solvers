@@ -1,22 +1,9 @@
-import { CheckCircle, Circle } from "@mui/icons-material";
-import { Box, LinearProgress, Stack } from "@mui/material";
-import { PrimaryButton } from "components/Form.elements";
-import { MainContainer } from "components/MainPage.elements";
+import { Box, LinearProgress } from "@mui/material";
+
 import { getSeeds } from "domains/Queens/boards/seeds";
 
-import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
 import { getStorageTimeObject } from "domains/Queens/helpers/localStorageHelper";
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
-
-const LEVELS_PER_ROW = 10;
-const sliceArrayIntoRows = (arr: any[], rowLength: number) => {
-  const rows = [];
-  for (let i = 0; i < arr.length; i += rowLength) {
-    rows.push(arr.slice(i, i + rowLength));
-  }
-  return rows;
-};
 
 export const LevelsProgress = ({
   boardSize,

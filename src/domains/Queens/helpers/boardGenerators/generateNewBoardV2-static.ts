@@ -1,6 +1,57 @@
 // DO NOT EDIT
 // This is meant to be a static copy of the generateNewBoard function, so that it's functionality will never change, and we can always use these seeds.
 
+// for now, I am importing board colors, since I don't think that will break the functionality of the board generation.
+// Just in case, I included here as BOARD_COLORS_OLD a copy of what BOARD_COLORS was at the time of making this
+import {
+  HEX_BOARD_COLORS,
+  ORIGINAL_BOARD_COLORS,
+} from "domains/Queens/constants/constants";
+
+type BoardColor = keyof typeof ORIGINAL_BOARD_COLORS;
+
+export const BOARD_COLORS_OLD = {
+  pink: [214, 163, 188],
+  //brown/gray
+  brownGray: [183, 179, 161],
+  //red
+  red: [237, 131, 103],
+  //light orange
+  lightOrange: [246, 204, 153],
+  //yellow
+  yellow: [232, 243, 150],
+  //purple
+  purple: [183, 164, 221],
+  //teal
+  teal: [173, 209, 215],
+  //teal
+  cyan: [86, 237, 231],
+  //light blue
+  lightBlue: [139, 181, 254],
+  //light green
+  lightGreen: [188, 222, 166],
+  //gray section
+  gray: [223, 223, 223],
+  // below: added for 20x20
+  darkBlue: [0, 0, 139],
+
+  darkGreen: [1, 50, 32],
+
+  silver: [192, 192, 192],
+
+  darkPurple: [139, 0, 139],
+
+  darkOrange: [255, 140, 0],
+
+  darkRed: [139, 0, 0],
+
+  brown: [165, 42, 42],
+
+  deepPink: [170, 50, 106],
+
+  brightYellow: [255, 234, 0],
+};
+
 type Coords = { row: number; col: number };
 const range = (size: number) => {
   return Array.from({ length: size }, (x, i) => i);
@@ -18,7 +69,7 @@ class RNG {
   private mti = this.N + 1; /* mti==N+1 means mt[N] is not initialized */
 
   constructor(seed?: number) {
-    if (seed == undefined) {
+    if (seed === undefined) {
       seed = new Date().getTime();
     }
     this.init_genrand(seed);
@@ -70,6 +121,7 @@ class RNG {
       if (j >= key_length) j = 0;
     }
     for (k = this.N - 1; k; k--) {
+      // eslint-disable-next-line @typescript-eslint/no-redeclare
       var s = this.mt[i - 1] ^ (this.mt[i - 1] >>> 30);
       this.mt[i] =
         (this.mt[i] ^
@@ -97,7 +149,7 @@ class RNG {
       /* generate N words at one time */
       var kk;
 
-      if (this.mti == this.N + 1)
+      if (this.mti === this.N + 1)
         /* if init_genrand() has not been called, */
         this.init_genrand(5489); /* a default initial seed is used */
 
@@ -192,48 +244,6 @@ class RNG {
   /* These real versions are due to Isaku Wada, 2002/01/09 added */
 }
 
-type BoardColor = keyof typeof BOARD_COLORS;
-export const BOARD_COLORS = {
-  pink: [214, 163, 188],
-  //brown/gray
-  brownGray: [183, 179, 161],
-  //red
-  red: [237, 131, 103],
-  //light orange
-  lightOrange: [246, 204, 153],
-  //yellow
-  yellow: [232, 243, 150],
-  //purple
-  purple: [183, 164, 221],
-  //teal
-  teal: [173, 209, 215],
-  //teal
-  cyan: [86, 237, 231],
-  //light blue
-  lightBlue: [139, 181, 254],
-  //light green
-  lightGreen: [188, 222, 166],
-  //gray section
-  gray: [223, 223, 223],
-  // below: added for 20x20
-  darkBlue: [0, 0, 139],
-
-  darkGreen: [1, 50, 32],
-
-  silver: [192, 192, 192],
-
-  darkPurple: [139, 0, 139],
-
-  darkOrange: [255, 140, 0],
-
-  darkRed: [139, 0, 0],
-
-  brown: [165, 42, 42],
-
-  deepPink: [170, 50, 106],
-
-  brightYellow: [255, 234, 0],
-};
 type BoardTile = {
   token: Token;
   color: BoardColor;
@@ -249,27 +259,7 @@ type BoardTile = {
 type Token = "Q" | "X" | "";
 
 type Board = BoardTile[][];
-const areValidRowPlacements = (
-  rowPlacements: number[],
-  colPlacements: number[]
-): boolean => {
-  let coords = range(rowPlacements.length).map((i) => {
-    return { row: rowPlacements[i], col: colPlacements[i] };
-  });
 
-  for (let i = 1; i < coords.length; i++) {
-    // check for conflict between this and the previous star
-    let currentStar = coords[i];
-    let prevStar = coords[i - 1];
-    if (
-      currentStar.col <= prevStar.col + 1 &&
-      currentStar.col >= prevStar.col - 1
-    ) {
-      return false;
-    }
-  }
-  return true;
-};
 const getStarPositions = (sideLength: number, rng: RNG): Coords[] => {
   let isValid = false;
   let counter = 0;
@@ -312,12 +302,11 @@ const getColorSizes = (sideLength: number, rng: RNG): number[] => {
   return sizes;
 };
 
-const BOARD_COLOR_NAMES = Object.keys(BOARD_COLORS);
 const colorsToRegions = (board: Board): Board => {
   return board.map((row, i) =>
     row.map((tile, j) => ({
       token: "",
-      color: BOARD_COLOR_NAMES[tile.region] as BoardColor,
+      color: HEX_BOARD_COLORS[tile.region] as BoardColor,
       region: tile.region,
     }))
   );
@@ -338,19 +327,6 @@ const placeStars = (board: Board, starPositions: Coords[]) => {
   for (let coords of starPositions) {
     board[coords.row][coords.col].token = "Q";
   }
-};
-
-const areBoardRegionsFilled = (board: Board): boolean => {
-  for (let row of board) {
-    for (let tile of row) {
-      if (tile.region === undefined) return false;
-    }
-  }
-  return true;
-};
-
-const copyBoard = (board: Board) => {
-  return board.map((row) => row.map((tile) => ({ ...tile })));
 };
 
 const getAdjacentRegionlessSquares = ({
