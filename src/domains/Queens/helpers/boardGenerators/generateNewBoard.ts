@@ -1,5 +1,7 @@
 import { BOARD_COLOR_NAMES } from "domains/Queens/constants/constants";
 import { generateRegionsV2 } from "domains/Queens/helpers/boardGenerators/generateBordersV2";
+import { generateBoardFromSeedV2 } from "domains/Queens/helpers/boardGenerators/generateNewBoardV2-static";
+import { generateBoardFromSeedV3 } from "domains/Queens/helpers/boardGenerators/generateNewBoardV3-static";
 import { range, RNG } from "domains/Queens/helpers/randomNum";
 import { Board, BoardColor, Coords } from "domains/Queens/sharedTypes";
 
@@ -137,4 +139,12 @@ export const generateBoardFromSeed = (
   const coloredBoard = shouldColorBoard ? colorsToRegions(board) : board;
 
   return coloredBoard;
+};
+
+export const generateBoardFromSeedStatic = (
+  sideLength: number,
+  seed: number,
+  shouldColorBoard = true
+): Board => {
+  return generateBoardFromSeedV2(sideLength, seed, shouldColorBoard);
 };

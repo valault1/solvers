@@ -1,31 +1,39 @@
-import { seeds as seeds7 } from "domains/Queens/boards/seeds7.v4";
-import { seeds as seeds8 } from "domains/Queens/boards/seeds8.v4";
-import { seeds as seeds9 } from "domains/Queens/boards/seeds9.v4";
-import { seeds as seeds10 } from "domains/Queens/boards/seeds10.v4";
-import { seeds as seeds11 } from "domains/Queens/boards/seeds11.v4";
-import { seeds as seeds12 } from "domains/Queens/boards/seeds12.v4";
-import { seeds as seeds13 } from "domains/Queens/boards/seeds13.v4";
-import { seeds as seeds14 } from "domains/Queens/boards/seeds14.v4";
-import { seeds as seeds15 } from "domains/Queens/boards/seeds15.v4";
-// import { seeds as seeds14 } from "domains/Queens/boards/seeds14.v2";
-// import { seeds as seeds15 } from "domains/Queens/boards/seeds15.v2";
-// import { seeds as seeds16 } from "domains/Queens/boards/seeds16.v2";
-// import { seeds as seeds17 } from "domains/Queens/boards/seeds17.v2";
-// import { seeds as seeds18 } from "domains/Queens/boards/seeds18.v2";
-// import { seeds as seeds19 } from "domains/Queens/boards/seeds19.v2";
-// import { seeds as seeds20 } from "domains/Queens/boards/seeds20.v2";
+import { seeds as seeds7_raw } from "domains/Queens/boards/seeds7.v4";
+import { seeds as seeds8_raw } from "domains/Queens/boards/seeds8.v4";
+import { seeds as seeds9_raw } from "domains/Queens/boards/seeds9.v4";
+import { seeds as seeds10_raw } from "domains/Queens/boards/seeds10.v4";
+import { seeds as seeds11_raw } from "domains/Queens/boards/seeds11.v4";
+import { seeds as seeds12_raw } from "domains/Queens/boards/seeds12.v4";
+import { seeds as seeds13_raw } from "domains/Queens/boards/seeds13.v4";
+import { seeds as seeds14_raw } from "domains/Queens/boards/seeds14.v4";
+import { seeds as seeds15_raw } from "domains/Queens/boards/seeds15.v4";
+import { seeds as seeds20_raw } from "domains/Queens/boards/seeds20.v4";
 
-export const SIDE_LENGTH_OPTIONS = [
-  7,
-  8,
-  9,
-  10,
-  11,
-  12, //13, 14, 15, 16, 17, 18, 19, 20,
-  13,
-  14,
-  15,
-];
+const limits = {
+  7: 1000,
+  8: 1000,
+  9: 500,
+  10: 500,
+  11: 500,
+  12: 500,
+  13: 250,
+  14: 250,
+  15: 100,
+  20: 1,
+};
+
+export const SIDE_LENGTH_OPTIONS = [7, 8, 9, 10, 11, 12, 13, 14, 15, 20];
+
+const seeds7 = seeds7_raw.slice(0, limits[7]);
+const seeds8 = seeds8_raw.slice(0, limits[8]);
+const seeds9 = seeds9_raw.slice(0, limits[9]);
+const seeds10 = seeds10_raw.slice(0, limits[10]);
+const seeds11 = seeds11_raw.slice(0, limits[11]);
+const seeds12 = seeds12_raw.slice(0, limits[12]);
+const seeds13 = seeds13_raw.slice(0, limits[13]);
+const seeds14 = seeds14_raw.slice(0, limits[14]);
+const seeds15 = seeds15_raw.slice(0, limits[15]);
+const seeds20 = seeds20_raw.slice(0, limits[20]);
 
 export const getSeeds = (sideLength: number) => {
   switch (sideLength) {
@@ -55,8 +63,8 @@ export const getSeeds = (sideLength: number) => {
     //   return seeds18;
     // case 19:
     //   return seeds19;
-    // case 20:
-    //   return seeds20;
+    case 20:
+      return seeds20;
     default:
       return [];
   }

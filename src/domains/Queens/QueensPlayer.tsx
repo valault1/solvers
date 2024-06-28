@@ -23,17 +23,18 @@ import {
   saveBoardProgress,
 } from "domains/Queens/helpers/localStorageHelper";
 import { Board } from "domains/Queens/sharedTypes";
-import { addBordersToBoard } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
+import {
+  addBordersToBoard,
+  generateBoardFromSeedStatic,
+} from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import { placeQueen } from "domains/Queens/helpers/solver/solveBoard";
-import { PATHS } from "AppRoutes";
 import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
 import { useNavigate } from "react-router-dom";
-
-import { generateBoardFromSeedV2 } from "domains/Queens/helpers/boardGenerators/generateNewBoardV2-static";
+import { PATHS } from "shared/helpers/paths";
 
 const DEFAULT_SEED_INDEX = 0;
 export const DEFAULT_SIDE_LENGTH = 8;
-const INITIAL_BOARD = generateBoardFromSeedV2(
+const INITIAL_BOARD = generateBoardFromSeedStatic(
   DEFAULT_SIDE_LENGTH,
   getSeeds(DEFAULT_SIDE_LENGTH)[DEFAULT_SEED_INDEX]
 );
@@ -86,7 +87,7 @@ export const QueensPlayer = () => {
 
   React.useEffect(() => {
     const seeds = getSeeds(boardSize);
-    const newBoard = generateBoardFromSeedV2(
+    const newBoard = generateBoardFromSeedStatic(
       boardSize,
       seeds[currentBoardIndex]
     );

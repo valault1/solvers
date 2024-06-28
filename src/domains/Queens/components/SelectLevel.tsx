@@ -1,7 +1,9 @@
+import styled from "@emotion/styled";
 import { CheckCircle, Circle } from "@mui/icons-material";
 import { Stack } from "@mui/material";
 import { PrimaryButton } from "components/Form.elements";
 import { MainContainer } from "components/MainPage.elements";
+import { theme } from "components/theme/theme";
 import { DEFAULT_SIDE_LENGTH } from "domains/Queens/QueensPlayer";
 import { getSeeds } from "domains/Queens/boards/seeds";
 
@@ -13,6 +15,18 @@ import {
 } from "domains/Queens/hooks/useNavigateBoards";
 import * as React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+
+export const Level = styled.div<{ isFinished?: boolean }>(({ isFinished }) => ({
+  color: isFinished ? "green" : theme.colors.secondary,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  width: "50px",
+  cursor: "pointer",
+  "&:hover": { backgroundColor: "darkgray" },
+  paddingBottom: "10px",
+}));
 
 export const SelectLevel = () => {
   const navigate = useNavigate();
@@ -34,7 +48,6 @@ export const SelectLevel = () => {
       <Stack
         direction="row"
         gap={2}
-        //maxWidth={"800px"}
         flexWrap={"wrap"}
         justifyContent={"center"}
         alignItems={"center"}

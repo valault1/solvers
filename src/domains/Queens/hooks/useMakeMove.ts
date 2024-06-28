@@ -1,5 +1,5 @@
 import { OnClickTile } from "domains/Queens/components/BoardDisplay";
-import { ORIGINAL_BOARD_COLORS } from "domains/Queens/constants/constants";
+import { BOARD_COLORS_HEX } from "domains/Queens/constants/constants";
 import { range } from "domains/Queens/helpers/randomNum";
 import {
   copyBoard,
@@ -49,9 +49,10 @@ const markConflictingRows = (board: Board) => {
 };
 
 const markConflictingColors = (board: Board) => {
-  const BOARD_COLOR_NAMES = Object.keys(ORIGINAL_BOARD_COLORS);
+  const BOARD_COLOR_NAMES = BOARD_COLORS_HEX;
   //@ts-ignore
   const dict: Record<BoardColor, { row: number; column: number }[]> =
+    //@ts-ignore
     BOARD_COLOR_NAMES.reduce((accum, name) => {
       //@ts-ignore
       accum[name] = [];
@@ -175,6 +176,17 @@ export const useMakeMove = ({
     setMovesPlayed((prev) => prev.slice(0, prev.length - 1));
   }, [movesPlayed, board, validateBoard, setBoard]);
 
+  // only add x's. This is for ease of dragging.
+  const onDragTouchOntoTile: OnClickTile = (i, j) => {
+    if (board[i][j].token === "") {
+      const newBoard = copyBoard(board);
+      newBoard[i][j].token = "X";
+      recordMove(newBoard);
+      validateBoard(newBoard);
+      setBoard(newBoard);
+    }
+  };
+
   const onClickTile: OnClickTile = (i, j) => {
     const newBoard = copyBoard(board);
     const currentTile = newBoard[i][j].token;
@@ -212,5 +224,5 @@ export const useMakeMove = ({
     setBoard(newBoard);
   };
 
-  return { undoLastMove, onClickTile };
+  return { undoLastMove, onClickTile, onDragTouchOntoTile };
 };

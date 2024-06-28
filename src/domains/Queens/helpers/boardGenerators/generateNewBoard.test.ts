@@ -8,7 +8,7 @@ import {
 } from "domains/Queens/helpers/solver/solveBoard";
 import { Board } from "domains/Queens/sharedTypes";
 import { clearAllTokens } from "domains/Queens/components/PlayableBoard";
-import { generateBoardFromSeedV2 } from "domains/Queens/helpers/boardGenerators/generateNewBoardV2-static";
+import { generateBoardFromSeedStatic } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 
 let timerTime = new Date().getTime();
 const setTimerTime = (newTime: number) => {
@@ -44,7 +44,7 @@ export const generateBoardAndTestForDeterminism = async ({
     await pollEventLoop(timerTime, setTimerTime);
     counter++;
     boardSeed = rng.getRandomNewSeed();
-    board = generateBoardFromSeedV2(sideLength ?? 10, boardSeed);
+    board = generateBoardFromSeedStatic(sideLength ?? 10, boardSeed);
     isDeterministic = solveBoardDeterministically(board);
     hasFoundDeterministicBoard = isDeterministic;
   }

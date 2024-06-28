@@ -18,10 +18,7 @@ import { Wordcounter } from "domains/Wordcounter/Wordcounter";
 import { WordleController } from "domains/Wordle/WordleController";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-
-export const PATHS = {
-  levelSelect: "/queens-level-select",
-};
+import { PATHS } from "shared/helpers/paths";
 
 type NavbarPage = {
   label: string;
