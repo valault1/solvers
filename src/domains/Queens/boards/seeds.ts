@@ -10,8 +10,8 @@ import { seeds as seeds15_raw } from "domains/Queens/boards/seeds15.v4";
 import { seeds as seeds20_raw } from "domains/Queens/boards/seeds20.v4";
 
 const limits = {
-  7: 1000,
-  8: 1000,
+  7: 500,
+  8: 500,
   9: 500,
   10: 500,
   11: 500,
@@ -109,3 +109,12 @@ export const SEEDS_10 = [
 ];
 
 export const DETERMINISTIC_SEEDS = SEEDS_10;
+
+export const getDuplicateSeeds = () => {
+  const duplicates: number[] = [];
+  for (let size of SIDE_LENGTH_OPTIONS) {
+    const seeds = getSeeds(size);
+    duplicates.push(seeds.length - new Set(seeds).size);
+  }
+  return duplicates;
+};

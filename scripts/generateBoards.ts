@@ -123,8 +123,8 @@ const timeBoardGeneration = async () => {
   console.log(content);
   fs.appendFileSync(resultsFilePath, content);
 };
-timeBoardGeneration();
-//generateDeterministicSeeds();
+//timeBoardGeneration();
+generateDeterministicSeeds();
 
 /*
   RESULTS

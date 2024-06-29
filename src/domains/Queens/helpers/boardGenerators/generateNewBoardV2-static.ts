@@ -526,8 +526,7 @@ export const generateBoardFromSeedV2 = (
   const rng = new RNG(seed);
 
   const starPositions = getStarPositions(sideLength, rng);
-  console.log("Generator - star positions:");
-  console.log({ starPositions });
+
   // These color sizes are no longer used in this version,
   // but we still need to run it to keep the seed with the same number of calls
   getColorSizes(sideLength, rng);

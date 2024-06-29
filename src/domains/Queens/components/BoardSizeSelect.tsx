@@ -22,7 +22,7 @@ export const BoardSizeSelect = ({
         fullWidth
       >
         {SIDE_LENGTH_OPTIONS.map((length) => (
-          <MenuItem value={length}>
+          <MenuItem value={length} key={length}>
             {length}x{length}
           </MenuItem>
         ))}

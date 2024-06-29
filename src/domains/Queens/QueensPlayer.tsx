@@ -10,7 +10,7 @@ import {
   BOARD_SIZE_PARAM,
   useNavigateBoards,
 } from "domains/Queens/hooks/useNavigateBoards";
-import { getSeeds } from "domains/Queens/boards/seeds";
+import { getDuplicateSeeds, getSeeds } from "domains/Queens/boards/seeds";
 
 import * as React from "react";
 import { Timer } from "domains/Queens/components/Timer";
@@ -38,6 +38,7 @@ const INITIAL_BOARD = generateBoardFromSeedStatic(
   DEFAULT_SIDE_LENGTH,
   getSeeds(DEFAULT_SIDE_LENGTH)[DEFAULT_SEED_INDEX]
 );
+console.log(getDuplicateSeeds());
 
 export const QueensPlayer = () => {
   const navigate = useNavigate();

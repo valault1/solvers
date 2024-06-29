@@ -1,10 +1,7 @@
 import { Close, Star } from "@mui/icons-material";
 import { Stack } from "@mui/material";
 import { BoardTileDisplay } from "domains/Queens/components/BoardTileDisplay";
-import {
-  COLORS_LIST,
-  colorArrToString,
-} from "domains/Queens/constants/constants";
+
 import { Board, Token } from "domains/Queens/sharedTypes";
 import * as React from "react";
 
@@ -14,8 +11,7 @@ const TokenDisplay = ({ token }: { token: Token }) => {
   return <></>;
 };
 
-//const MAX_SQUARE_SIZE = 38;
-const MAX_SQUARE_SIZE = 80;
+const MAX_SQUARE_SIZE = 38;
 
 export type OnClickTile = (i: number, j: number) => void;
 export const BoardDisplay = ({
@@ -66,8 +62,6 @@ export const BoardDisplay = ({
       Math.floor((screenWidth - 5) / board.length)
     );
   }, [screenWidth, board.length]);
-
-  console.log({ isTouchScreenDevice });
 
   return (
     <Stack direction="column">

@@ -154,7 +154,7 @@ class MersenneTwister {
   /* generates a random number on [0,0xffffffff]-interval */
   genrand_int32() {
     var y;
-    var mag01 = new Array(0x0, this.MATRIX_A);
+    var mag01 = [0x0, this.MATRIX_A];
     /* mag01[x] = x * MATRIX_A  for x=0,1 */
 
     if (this.mti >= this.N) {
