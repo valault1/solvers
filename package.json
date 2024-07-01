@@ -24,7 +24,8 @@
     "react-scripts": "5.0.0",
     "ts-combinatorics": "^1.0.0",
     "ts-loader": "^9.5.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zlib": "^1.0.5"
   },
   "scripts": {
     "start": "PORT=3007 react-scripts start",

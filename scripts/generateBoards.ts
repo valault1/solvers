@@ -12,6 +12,8 @@ import { readSeedsFromFile } from "./saveSeeds";
 
 import fs from "fs";
 
+import zlib from "zlib";
+
 const generateBoardAndTestForDeterminism =
   //@ts-ignore
   boardGenerator.generateBoardAndTestForDeterminism;
@@ -123,9 +125,24 @@ const timeBoardGeneration = async () => {
   console.log(content);
   fs.appendFileSync(resultsFilePath, content);
 };
+
 //timeBoardGeneration();
 generateDeterministicSeeds();
 
+// const t = new Stopwatch();
+// var deflated = zlib.deflateSync(SEEDS[0].seeds.toString()).toString("base64");
+
+// console.log(t.getSeconds());
+// var inflated = zlib.inflateSync(Buffer.from(deflated, "base64")).toString();
+// console.log(t.getSeconds());
+
+// console.log({
+//   inflated: inflated.length,
+//   deflated: deflated.length,
+// });
+// console.log(`Max seed: ${Math.max(...SEEDS[0].seeds)}`);
+// compress the seeds
+// technically I could store these as 24 bit numbers - each of them is
 /*
   RESULTS
   - space to leave = 4 made a big difference! for size 7,  ~100 boards per seed to 66 boards per seed.
