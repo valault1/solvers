@@ -1,4 +1,5 @@
 import { getSeeds } from "domains/Queens/boards/seeds";
+import { runClearOldLevelsMigration } from "domains/Queens/helpers/localStorageMigrations";
 import { Board, Coords, Token } from "domains/Queens/sharedTypes";
 
 const TIMES_STORAGE_KEY = "queensTimes";
@@ -104,3 +105,6 @@ export const getFirstUnfinishedBoard = ({
   }
   return 0;
 };
+
+// runs the migrations
+runClearOldLevelsMigration();

@@ -220,6 +220,10 @@ class RNG {
   getRandomElementFromArray(arr: any[]) {
     return arr[this.getRandomIndexFromArray(arr)];
   }
+  getAllElementsInRandomOrder(arr: any[]) {
+    const newOrder = this.getNumbersInRangeInRandomOrder(arr.length);
+    return newOrder.map((i) => arr[i]);
+  }
 
   getRandomNumInRangeInclusive(a: number, b: number) {
     const num = this.random();
@@ -323,11 +327,6 @@ const createBlankBoard = (sideLength: number) => {
   }
   return result;
 };
-const placeStars = (board: Board, starPositions: Coords[]) => {
-  for (let coords of starPositions) {
-    board[coords.row][coords.col].token = "Q";
-  }
-};
 
 const getAdjacentRegionlessSquares = ({
   pos,
@@ -407,16 +406,22 @@ const getAdjacentSquaresWithRegions = ({
   return result;
 };
 
-const fillBoardRegionsV2 = ({
-  board,
-  starPositions,
-  rng,
+const fillBoardRegions = ({
+  sideLength,
+  seed,
 }: {
-  board: Board;
-  starPositions: Coords[];
-  rng: RNG;
+  sideLength: number;
+  seed?: number;
 }) => {
-  const sideLength = board.length;
+  const rng = new RNG(seed);
+
+  const board = createBlankBoard(sideLength);
+  const starPositions = getStarPositions(sideLength, rng);
+
+  // These color sizes are no longer used in this version,
+  // but we still need to run it to keep the seed with the same number of calls
+  getColorSizes(sideLength, rng);
+
   // regions is 0-9 for a 10 board
   const regions = range(sideLength);
 
@@ -429,29 +434,8 @@ const fillBoardRegionsV2 = ({
     starPositions[region],
   ]);
 
-  // let didMakeChange = true;
-  // // if we ever don't make any change going through all regions, skip to the next part
-  // while (didMakeChange) {
-  //   didMakeChange = false;
-  //   let regionsInRandomOrder = rng.getNumbersInRangeInRandomOrder(
-  //     regions.length
-  //   );
-  //   for (let region of regionsInRandomOrder) {
-  //     if (regionSquares[region].length >= regionSizes[region]) continue;
-  //     const possibleSquares = getEmptySquaresAdjacentToRegion({
-  //       board,
-  //       thisRegionSquares: regionSquares[region],
-  //     });
-  //     if (possibleSquares.length) {
-  //       let { row, col } = rng.getRandomElementFromArray(possibleSquares);
-  //       board[row][col].region = region;
-  //       regionSquares[region].push({ row, col });
-  //       didMakeChange = true;
-  //     }
-  //   }
-  // }
-
   // fill in at least one square for each region
+  // this makes a minimum region size of 2
   for (let region of regions) {
     const possibleSquares = getEmptySquaresAdjacentToRegion({
       board,
@@ -460,12 +444,35 @@ const fillBoardRegionsV2 = ({
     if (possibleSquares.length) {
       let { row, col } = rng.getRandomElementFromArray(possibleSquares);
       board[row][col].region = region;
-      //regionSquares[region].push({ row, col });
+      regionSquares[region].push({ row, col });
     }
   }
 
-  const emptySquares = findRegionlessBoardCoords(board);
+  // v3 - it seems like larger boards work better if you make one region bigger than the rest.
+  // maybe if I just seed a region slightly bigger, then more of the random squares will go to it?
+  const SKIP_LARGE_REGION = false;
+  const largeRegion = rng.getRandomElementFromArray(regions);
+  const TARGET_LARGE_REGION_PERCENTAGE = 0.1;
+  const targetSquares = sideLength;
+  const largeRegionSquares = regionSquares[largeRegion];
+
+  for (let i = 2; i < (SKIP_LARGE_REGION ? 0 : targetSquares); i++) {
+    //console.log("filling large region");
+    const possibleSquares = getEmptySquaresAdjacentToRegion({
+      board,
+      thisRegionSquares: largeRegionSquares,
+    });
+    if (possibleSquares.length) {
+      let { row, col } = rng.getRandomElementFromArray(possibleSquares);
+      board[row][col].region = largeRegion;
+      largeRegionSquares.push({ row, col });
+    }
+  }
+
+  let emptySquares = findRegionlessBoardCoords(board);
+  //emptySquares = rng.getAllElementsInRandomOrder(emptySquares);
   // fill in empty squares from the ones around them
+
   while (emptySquares.length) {
     for (let i = emptySquares.length - 1; i >= 0; i--) {
       let { row, col } = emptySquares[i];
@@ -482,9 +489,11 @@ const fillBoardRegionsV2 = ({
           board[regionTileCoords.row][regionTileCoords.col].region;
         board[row][col].region = newRegion;
         emptySquares.splice(i, 1);
+        regionSquares[newRegion].push({ row, col });
       }
     }
   }
+  return board;
   // // How often do these colors match the numbers in regionSizes?
   // const finalRegionCounts = [];
   // for (let region of regions) {
@@ -502,38 +511,14 @@ const fillBoardRegionsV2 = ({
   // }
 };
 
-const generateRegionsV2 = ({
-  starPositions,
-  rng,
-}: {
-  starPositions: Coords[];
-  rng: RNG;
-}): Board => {
-  const sideLength = starPositions.length;
-
-  const board = createBlankBoard(sideLength);
-  placeStars(board, starPositions);
-  fillBoardRegionsV2({ board, starPositions, rng });
-
-  return board;
-};
-
-export const generateBoardFromSeedV2 = (
+export const generateBoardFromSeedV3 = (
   sideLength: number,
   seed: number,
   shouldColorBoard = true
 ): Board => {
-  const rng = new RNG(seed);
-
-  const starPositions = getStarPositions(sideLength, rng);
-
-  // These color sizes are no longer used in this version,
-  // but we still need to run it to keep the seed with the same number of calls
-  getColorSizes(sideLength, rng);
-
-  const board = generateRegionsV2({
-    starPositions,
-    rng,
+  const board = fillBoardRegions({
+    sideLength,
+    seed,
   });
 
   const coloredBoard = shouldColorBoard ? colorsToRegions(board) : board;

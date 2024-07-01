@@ -38,7 +38,7 @@ export const PlayableBoard = ({
     setBoard(initialBoard ?? []);
   }, [initialBoard]);
 
-  const { undoLastMove, onClickTile } = useMakeMove({
+  const { undoLastMove, onClickTile, onDragTouchOntoTile } = useMakeMove({
     board,
     setBoard,
     onWin,
@@ -72,12 +72,17 @@ export const PlayableBoard = ({
       <PrimaryButton onClick={clearBoard} disabled={hasWon}>
         Clear board
       </PrimaryButton>
-      <BoardDisplay board={board} onClickTile={onClickTile} hasWon={hasWon} />
+      <BoardDisplay
+        board={board}
+        onClickTile={onClickTile}
+        hasWon={hasWon}
+        onDragTouchOntoTile={onDragTouchOntoTile}
+      />
       <Stack gap={2}>
         <PrimaryButton onClick={undoLastMove} disabled={hasWon}>
           Undo last move
         </PrimaryButton>
-        {true && (
+        {false && (
           <PrimaryButton onClick={solveBoard}>
             Solve some of the board
           </PrimaryButton>

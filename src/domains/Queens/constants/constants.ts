@@ -9,7 +9,7 @@ function hexToRgb(hex: string) {
     : null;
 }
 
-export const BOARD_COLORS_HEX = {
+export const BOARD_COLORS_HEX_OBJECT = {
   // 1
   pink: "#d6a3bc",
   // 2
@@ -52,7 +52,7 @@ export const BOARD_COLORS_HEX = {
   brightYellow: "#ffea00",
 };
 
-export const HEX_BOARD_COLORS = [
+export const BOARD_COLORS_HEX = [
   "#FFADAD",
   "#FFD6A5",
   "#FDFFB6",
@@ -68,10 +68,10 @@ export const HEX_BOARD_COLORS = [
   "#eae4e9",
   "#b2f7ef",
   "#99c1de",
-  ...Object.values(BOARD_COLORS_HEX),
+  ...Object.values(BOARD_COLORS_HEX_OBJECT),
 ]; //Object.values(BOARD_COLORS_HEX);
 
-export const BOARD_COLORS = HEX_BOARD_COLORS.reduce((acc, color) => {
+export const BOARD_COLORS = BOARD_COLORS_HEX.reduce((acc, color) => {
   acc[color] = color;
   return acc;
 }, {} as Record<string, string>);

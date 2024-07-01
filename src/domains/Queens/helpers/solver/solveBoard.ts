@@ -3,7 +3,6 @@ import {
   CONSTANT_BLANK_ARRAY,
   pollEventLoop,
   BOARD_COLORS_HEX,
-  HEX_BOARD_COLORS,
 } from "domains/Queens/constants/constants";
 
 import {
@@ -118,7 +117,7 @@ const markColors = (board: Board) => {
     }
   > = {};
 
-  HEX_BOARD_COLORS.forEach((colorName) => {
+  BOARD_COLORS_HEX.forEach((colorName) => {
     colorCounts[colorName] = {
       xCount: 0,
       blankCount: 0,

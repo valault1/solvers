@@ -1,11 +1,13 @@
-import { SIDE_LENGTH_OPTIONS, getSeeds } from "domains/Queens/boards/seeds";
+import { getSeeds } from "domains/Queens/boards/seeds";
 import { getFirstUnfinishedBoard } from "domains/Queens/helpers/localStorageHelper";
 
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 
+export const DEFAULT_SIDE_LENGTH = 8;
+
 const DEFAULT_SEED_INDEX = getFirstUnfinishedBoard({
-  boardSize: 8,
+  boardSize: DEFAULT_SIDE_LENGTH,
 });
 
 export const SEED_INDEX_PARAM = "seedIndex";
@@ -20,7 +22,7 @@ export const useNavigateBoards = () => {
     parseInt(searchParams.get(BOARD_SIZE_PARAM)) || undefined;
 
   const [boardSize, setBoardSize] = React.useState(
-    startingBoardSize || SIDE_LENGTH_OPTIONS[0]
+    startingBoardSize || DEFAULT_SIDE_LENGTH
   );
 
   const seeds = React.useMemo(() => {

@@ -1,9 +1,7 @@
 import { Close, Star } from "@mui/icons-material";
 import { Stack } from "@mui/material";
-import {
-  COLORS_LIST,
-  colorArrToString,
-} from "domains/Queens/constants/constants";
+import { BoardTileDisplay } from "domains/Queens/components/BoardTileDisplay";
+
 import { Board, Token } from "domains/Queens/sharedTypes";
 import * as React from "react";
 
@@ -15,20 +13,19 @@ const TokenDisplay = ({ token }: { token: Token }) => {
 
 const MAX_SQUARE_SIZE = 38;
 
-// this is the gap between the click zone and the border; currently, I am trying 0
-const CLICK_ZONE_GAP = 0;
-const BORDER_COLOR = "black";
-const BORDER_CSS = `solid ${BORDER_COLOR}`;
 export type OnClickTile = (i: number, j: number) => void;
 export const BoardDisplay = ({
   board,
   onClickTile,
+  onDragTouchOntoTile,
   hasWon,
 }: {
   board: Board;
   onClickTile?: OnClickTile;
+  onDragTouchOntoTile?: OnClickTile;
   hasWon?: boolean;
 }) => {
+  const [log, setLog] = React.useState([] as string[]);
   const isTouchScreenDevice = React.useMemo(() => {
     try {
       document.createEvent("TouchEvent");
@@ -52,6 +49,13 @@ export const BoardDisplay = ({
     };
   }, []);
 
+  const addToLog = React.useCallback(
+    (m: string) => {
+      setLog((prev) => [...prev, JSON.stringify(m)]);
+    },
+    [setLog]
+  );
+
   const SQUARE_SIZE = React.useMemo(() => {
     return Math.min(
       MAX_SQUARE_SIZE,
@@ -63,58 +67,24 @@ export const BoardDisplay = ({
     <Stack direction="column">
       {board.map((row, i) => (
         <Stack key={i} direction="row">
-          {row.map(({ token, color: colorName, isConflicting, ...tile }, j) => {
+          {row.map((tile, j) => {
             return (
-              <div
+              <BoardTileDisplay
+                tile={tile}
+                onClickTile={hasWon ? undefined : () => onClickTile?.(i, j)}
+                onDragTouchOntoTile={
+                  hasWon ? undefined : () => onDragTouchOntoTile?.(i, j)
+                }
+                squareSize={SQUARE_SIZE}
+                isTouchScreenDevice={isTouchScreenDevice}
                 key={j}
-                style={{
-                  boxSizing: "border-box",
-                  width: SQUARE_SIZE,
-                  height: SQUARE_SIZE,
-                  backgroundColor: `${colorName}`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: hasWon ? undefined : "pointer",
-                  borderBottom: `${
-                    tile.bottom ? "medium" : "thin"
-                  } ${BORDER_CSS}`,
-                  borderTop: `${tile.top ? "medium" : "thin"} ${BORDER_CSS}`,
-                  borderRight: `${
-                    tile.right ? "medium" : "thin"
-                  } ${BORDER_CSS}`,
-                  borderLeft: `${tile.left ? "medium" : "thin"} ${BORDER_CSS}`,
-                }}
-              >
-                {/* This inner div is the one that takes a click*/}
-                <div
-                  {...(isTouchScreenDevice
-                    ? {
-                        onTouchEnd: hasWon
-                          ? undefined
-                          : () => onClickTile?.(i, j),
-                      }
-                    : {
-                        onClick: hasWon ? undefined : () => onClickTile?.(i, j),
-                      })}
-                  style={{
-                    width: SQUARE_SIZE - CLICK_ZONE_GAP,
-                    height: SQUARE_SIZE - CLICK_ZONE_GAP,
-                    color: isConflicting ? "red" : "black",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    // these remove the strange highlight that happens when I tap on mobile
-                    WebkitTapHighlightColor: "transparent",
-                    outline: "none",
-                  }}
-                >
-                  {<TokenDisplay token={token} />}
-                </div>
-              </div>
+              />
             );
           })}
         </Stack>
+      ))}
+      {log.map((m, i) => (
+        <div>{m}</div>
       ))}
     </Stack>
   );

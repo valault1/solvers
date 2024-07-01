@@ -4,6 +4,16 @@ import { Stopwatch } from "./Stopwatch";
 import { getConfig } from "./getConfig";
 import { readSeedsFromFile } from "./saveSeeds";
 
+//generateDeterministicSeeds();
+
+// this section is for testing the board generation.
+// the main goal is to get the number of boards needed per deterministic seed to go down.
+// Although, if the generating takes longer, that's still not good... so we also want to see the time taken per seed.
+
+import fs from "fs";
+
+import zlib from "zlib";
+
 const generateBoardAndTestForDeterminism =
   //@ts-ignore
   boardGenerator.generateBoardAndTestForDeterminism;
@@ -82,49 +92,57 @@ const generateDeterministicSeeds = async (numToGenerate = 1000000) => {
   return newSeedsFound;
 };
 
-//generateDeterministicSeeds();
+const testName = process.argv[2] || "UNNAMED_TEST";
+const resultsFilePath = "./_testResults.v2.log";
+const boardSize = 20;
+const timeBoardGeneration = async () => {
+  const maxSeedsToFind = 10;
+  let numSeedsFound = 0;
+  let numBoardsGenerated = 0;
+  let totalTimeTaken = 0;
+  const attemptTimer = new Stopwatch();
+  for (let i = 0; i < maxSeedsToFind; i++) {
+    console.log(i);
+    attemptTimer.start();
+    const { isDeterministic, boardsGenerated } =
+      await generateBoardAndTestForDeterminism({
+        sideLength: boardSize,
+      });
+    attemptTimer.stop();
+    totalTimeTaken += attemptTimer.getTime();
+    numBoardsGenerated += boardsGenerated;
+    if (isDeterministic) {
+      numSeedsFound++;
+    }
+  }
+  let content = `test name: ${testName}\n`;
+  content += `time of test: ${new Date().toISOString()}\n`;
+  content += `Board size: ${boardSize}\n`;
+  content += `Found ${numSeedsFound} seeds in ${numBoardsGenerated} boards\n`;
+  content += `Average ms per seed:  ${totalTimeTaken / numSeedsFound}\n`;
+  content += `Average boards per seed: ${numBoardsGenerated / numSeedsFound}\n`;
+  content += "----------------------------------\n\n";
+  console.log(content);
+  fs.appendFileSync(resultsFilePath, content);
+};
 
-// this section is for testing the board generation.
-// the main goal is to get the number of boards needed per deterministic seed to go down.
-// Although, if the generating takes longer, that's still not good... so we also want to see the time taken per seed.
-
-// import fs from "fs";
-// const testName = process.argv[2] || "UNNAMED_TEST";
-// const resultsFilePath = "./_testResults.log";
-// const boardSize = 13;
-// const timeBoardGeneration = async () => {
-//   const maxSeedsToFind = 10;
-//   let numSeedsFound = 0;
-//   let numBoardsGenerated = 0;
-//   let totalTimeTaken = 0;
-//   const attemptTimer = new Stopwatch();
-//   for (let i = 0; i < maxSeedsToFind; i++) {
-//     console.log(i);
-//     attemptTimer.start();
-//     const { isDeterministic, boardsGenerated } =
-//       await generateBoardAndTestForDeterminism({
-//         sideLength: boardSize,
-//       });
-//     attemptTimer.stop();
-//     totalTimeTaken += attemptTimer.getTime();
-//     numBoardsGenerated += boardsGenerated;
-//     if (isDeterministic) {
-//       numSeedsFound++;
-//     }
-//   }
-//   let content = `test name: ${testName}\n`;
-//   content += `time of test: ${new Date().toISOString()}\n`;
-//   content += `Board size: ${boardSize}\n`;
-//   content += `Found ${numSeedsFound} seeds in ${numBoardsGenerated} boards\n`;
-//   content += `Average ms per seed:  ${totalTimeTaken / numSeedsFound}\n`;
-//   content += `Average boards per seed: ${numBoardsGenerated / numSeedsFound}\n`;
-//   content += "----------------------------------\n\n";
-//   console.log(content);
-//   fs.appendFileSync(resultsFilePath, content);
-// };
 //timeBoardGeneration();
 generateDeterministicSeeds();
 
+// const t = new Stopwatch();
+// var deflated = zlib.deflateSync(SEEDS[0].seeds.toString()).toString("base64");
+
+// console.log(t.getSeconds());
+// var inflated = zlib.inflateSync(Buffer.from(deflated, "base64")).toString();
+// console.log(t.getSeconds());
+
+// console.log({
+//   inflated: inflated.length,
+//   deflated: deflated.length,
+// });
+// console.log(`Max seed: ${Math.max(...SEEDS[0].seeds)}`);
+// compress the seeds
+// technically I could store these as 24 bit numbers - each of them is
 /*
   RESULTS
   - space to leave = 4 made a big difference! for size 7,  ~100 boards per seed to 66 boards per seed.
