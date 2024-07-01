@@ -1,11 +1,11 @@
 // @ts-nocheck
 export const boardSize = 20;
-export const seeds = [318529];
-export const timesTakenSeconds = [5398.274000000001, 28673.401000000005];
-export const boardsGenerated = [289798, 820000];
-export const numSeeds = 1;
-export const totalTimeTaken = 34071.675;
-export const totalBoardsGenerated = 1109798;
-export const averageTimeTakenPerSeed = 34071.675;
-export const averageBoardsGeneratedPerSeed = 1109798;
-export const averageTimePerAttemptMs = 30.700789693259495;
+export const seeds = [7378533,7378533,7378533,1479658,3162153,7378533,1479658,3162153,3162153];
+export const timesTakenSeconds = [38333.21000000001,55655.85400000001,12964.586999999998,70300.96900000003,18794.57600000001,28012.34100000001,44577.237,5526.427999999999,11213.698000000002,2597.6730000000002];
+export const boardsGenerated = [1033509,1500228,349114,1897147,504964,755433,1204103,149233,301856,70000];
+export const numSeeds = 9;
+export const totalTimeTaken = 287976.5730000001;
+export const totalBoardsGenerated = 7765587;
+export const averageTimeTakenPerSeed = 31997.39700000001;
+export const averageBoardsGeneratedPerSeed = 862843;
+export const averageTimePerAttemptMs = 37.08368382196994;
