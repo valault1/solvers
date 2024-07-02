@@ -10,8 +10,8 @@ import { seeds as seeds15_raw } from "domains/Queens/boards/seeds15.v4";
 import { seeds as seeds20_raw } from "domains/Queens/boards/seeds20.v4";
 
 const limits = {
-  7: 500,
-  8: 10000,
+  7: 1000,
+  8: 5000,
   9: 500,
   10: 500,
   11: 500,

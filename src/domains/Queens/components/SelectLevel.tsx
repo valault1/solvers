@@ -16,35 +16,88 @@ import {
 import * as React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
+const successGreen = "#66bb6a";
 export const Level = styled.div<{ isFinished?: boolean }>(({ isFinished }) => ({
-  color: isFinished ? "green" : theme.colors.secondary,
+  color: isFinished ? successGreen : theme.colors.secondary,
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
   width: "50px",
   cursor: "pointer",
-  "&:hover": { backgroundColor: "darkgray" },
+  //"&:hover": { backgroundColor: "rgba(102,187,106,.1)" },
+
+  "&:hover": {
+    backgroundColor:
+      // add an opacity of 20 (out of FF) to the green
+      `${successGreen}20`,
+  },
   paddingBottom: "10px",
+  borderRadius: "5px",
 }));
 
+const PAGE_SIZE = 100;
 export const SelectLevel = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [boardSize, setBoardSize] = React.useState(
     parseInt(searchParams.get(BOARD_SIZE_PARAM)) || DEFAULT_SIDE_LENGTH
   );
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const totalOffset = React.useMemo(() => {
+    return PAGE_SIZE * pageIndex;
+  }, [pageIndex]);
+
+  const seeds = React.useMemo(() => getSeeds(boardSize), [boardSize]);
 
   const levelProgresses = React.useMemo(() => {
-    return getSeeds(boardSize).map((seed, i) => {
+    return seeds.map((seed, i) => {
       return getStorageTimeObject({ seedIndex: i, boardSize });
     });
-  }, [boardSize]);
+  }, [seeds, boardSize]);
 
-  const seeds = getSeeds(boardSize);
+  const paginatedSeeds = React.useMemo(() => {
+    return seeds.slice(totalOffset, totalOffset + PAGE_SIZE);
+  }, [seeds]);
+
+  const { disableNextPage, disablePrevPage, numPages } = React.useMemo(() => {
+    const numPages = Math.ceil(seeds.length / PAGE_SIZE);
+    return {
+      numPages,
+      disableNextPage: pageIndex >= numPages - 1,
+      disablePrevPage: pageIndex <= 0,
+    };
+  }, [pageIndex, seeds]);
+
   return (
     <MainContainer gap={12}>
       Level select <BoardSizeSelect onChange={setBoardSize} value={boardSize} />
+      <Stack
+        gap={2}
+        direction="row"
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        <PrimaryButton
+          variant={"outlined"}
+          onClick={() => {
+            setPageIndex((prev) => prev - 1);
+          }}
+          disabled={disablePrevPage}
+        >
+          Prev
+        </PrimaryButton>
+        Page {pageIndex + 1} of {numPages}
+        <PrimaryButton
+          variant={"outlined"}
+          onClick={() => {
+            setPageIndex((prev) => prev + 1);
+          }}
+          disabled={disableNextPage}
+        >
+          Next
+        </PrimaryButton>
+      </Stack>
       <Stack
         direction="row"
         gap={2}
@@ -52,25 +105,40 @@ export const SelectLevel = () => {
         justifyContent={"center"}
         alignItems={"center"}
       >
-        {seeds.map((seed, i) => {
-          const levelNum = i + 1;
-          const isFinished = levelProgresses[i]?.isFinished;
+        {paginatedSeeds.map((seed, i) => {
+          const levelIndex = i + totalOffset;
+          const isFinished = levelProgresses[levelIndex]?.isFinished;
           return (
-            <PrimaryButton
-              variant="text"
-              color={isFinished ? "success" : "info"}
-              onClick={() => {
-                const newPath = `/queensplayer?${SEED_INDEX_PARAM}=${i}&${BOARD_SIZE_PARAM}=${boardSize}`;
-                console.log({ newPath });
-                navigate(newPath);
-              }}
-              key={i}
-            >
-              <Stack direction="column">
-                {levelNum}
-                {isFinished ? <CheckCircle /> : <Circle />}
-              </Stack>
-            </PrimaryButton>
+            <>
+              {/* <Level
+                onClick={() => {
+                  const newPath = `/queensplayer?${SEED_INDEX_PARAM}=${i}&${BOARD_SIZE_PARAM}=${boardSize}`;
+                  console.log({ newPath });
+                  navigate(newPath);
+                }}
+                isFinished={isFinished}
+              >
+                <Stack direction="column">
+                  {levelNum}
+                  {isFinished ? <CheckCircle /> : <Circle />}
+                </Stack>
+              </Level> */}
+              <PrimaryButton
+                variant="text"
+                color={isFinished ? "success" : "info"}
+                onClick={() => {
+                  const newPath = `/queensplayer?${SEED_INDEX_PARAM}=${i}&${BOARD_SIZE_PARAM}=${boardSize}`;
+                  console.log({ newPath });
+                  navigate(newPath);
+                }}
+                key={i}
+              >
+                <Stack direction="column">
+                  {levelIndex + 1}
+                  {isFinished ? <CheckCircle /> : <Circle />}
+                </Stack>
+              </PrimaryButton>
+            </>
           );
         })}
       </Stack>

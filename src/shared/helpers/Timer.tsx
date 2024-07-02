@@ -1,6 +1,10 @@
 export class Stopwatch {
   private startTime: number;
   private endTime: number | undefined;
+  constructor() {
+    this.startTime = Date.now();
+  }
+
   resetStartTime = () => {
     this.startTime = Date.now();
     this.endTime = undefined;
