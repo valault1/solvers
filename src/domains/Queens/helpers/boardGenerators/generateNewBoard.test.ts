@@ -28,13 +28,13 @@ export const solveBoardDeterministically = (board: Board) => {
 };
 
 export const generateBoardAndTestForDeterminism = async ({
-  seed,
+  startingSeed,
   sideLength,
 }: {
-  seed?: number;
+  startingSeed?: number;
   sideLength?: number;
 } = {}) => {
-  const rng = new RNG(seed);
+  const rng = new RNG();
   let hasFoundDeterministicBoard = false;
   const MAX_ATTEMPTS = 10000;
   let isDeterministic, board, boardSeed;
@@ -42,11 +42,15 @@ export const generateBoardAndTestForDeterminism = async ({
 
   while (!hasFoundDeterministicBoard && counter < MAX_ATTEMPTS) {
     await pollEventLoop(timerTime, setTimerTime);
-    counter++;
-    boardSeed = rng.getRandomNewSeed();
+
+    boardSeed =
+      startingSeed !== undefined
+        ? counter + startingSeed
+        : rng.getRandomNewSeed();
     board = generateBoardFromSeedStatic(sideLength ?? 10, boardSeed);
     isDeterministic = solveBoardDeterministically(board);
     hasFoundDeterministicBoard = isDeterministic;
+    counter++;
   }
   clearAllTokens(board);
   return { board, isDeterministic, seed: boardSeed, boardsGenerated: counter };
