@@ -11,7 +11,7 @@ const TokenDisplay = ({ token }: { token: Token }) => {
   return <></>;
 };
 
-const MAX_SQUARE_SIZE = 38;
+const MAX_SQUARE_SIZE = 80;
 
 export type OnClickTile = (i: number, j: number) => void;
 export const BoardDisplay = ({

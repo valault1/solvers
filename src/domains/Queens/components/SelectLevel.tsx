@@ -127,7 +127,7 @@ export const SelectLevel = () => {
                 variant="text"
                 color={isFinished ? "success" : "info"}
                 onClick={() => {
-                  const newPath = `/queensplayer?${SEED_INDEX_PARAM}=${i}&${BOARD_SIZE_PARAM}=${boardSize}`;
+                  const newPath = `/queensplayer?${SEED_INDEX_PARAM}=${levelIndex}&${BOARD_SIZE_PARAM}=${boardSize}`;
                   console.log({ newPath });
                   navigate(newPath);
                 }}
