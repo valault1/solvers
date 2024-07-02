@@ -30,25 +30,10 @@ export const BoardTileDisplay = ({
   isTouchScreenDevice: boolean;
   squareSize: number;
 }) => {
-  const [hasEnteredAlready, setHasEnteredAlready] = React.useState(false);
   const [tokenOnEnter, setTokenOnEnter] = React.useState<Token | undefined>(
     undefined
   );
-  const [isTouching, setIsTouching] = React.useState(false);
 
-  const onPointerEnter = React.useCallback(() => {
-    if (hasEnteredAlready) return;
-
-    setHasEnteredAlready(true);
-    setTokenOnEnter(tile.token);
-    onDragTouchOntoTile();
-  }, [
-    setHasEnteredAlready,
-    hasEnteredAlready,
-    onDragTouchOntoTile,
-    setTokenOnEnter,
-    tile.token,
-  ]);
   return (
     <div
       style={{
@@ -70,49 +55,35 @@ export const BoardTileDisplay = ({
       <div
         {...(isTouchScreenDevice
           ? {
-              // onTouchStart: () => {
-              //   log("touch start");
-              //   setIsTouching(true);
-              //   return;
-              // },
-              onPointerDown: (e) => {
-                // @ts-ignore
-                e.target.releasePointerCapture(e.pointerId);
+              onPointerEnter: (e) => {
+                // onPointerEnter triggers before onTouchStart.
+                // On enter, we want to add the X if it the tile is empty.
+                // But, we don't want the onTouchStart to also trigger. So we set the tokenOnEnter,
+                // and then onTouchStart checks it before triggering.
+                setTokenOnEnter(tile.token);
+                if (e.buttons === 1) {
+                  onDragTouchOntoTile();
+                }
               },
-              onTouchStart: (e) => {
+              onTouchStart: () => {
                 if (tokenOnEnter !== "") {
                   onClickTile();
                 }
               },
-              onPointerEnter,
-              onPointerLeave: () => {
-                setHasEnteredAlready(false);
-                setTokenOnEnter(undefined);
+              onPointerDown: (e) => {
+                // we need to release the pointer so that the onPointerEnter can trigger again for other squares
+                // @ts-ignore
+                e.target.releasePointerCapture(e.pointerId);
               },
-              // onTouchMove: (e) => {
-              //   if (hasMovedAlready) return;
-              //   log("touch move");
-              //   setHasMovedAlready(true);
-              // },
-              // onTouchEnd: () => {
-              //   log("touch end");
-              //   setIsTouching(false);
-              //   setHasMovedAlready(false);
-              // },
             }
           : {
-              onClick: () => {
-                onClickTile();
+              onMouseDown: onClickTile,
+              onPointerEnter: (e) => {
+                if (e.buttons === 1) {
+                  onDragTouchOntoTile();
+                }
               },
             })}
-        // onPointerEnter={(e) => {
-        //   console.log("Mouse enter");
-        //   //console.log({ e });
-        //   setTimesRunPointerEnter((prev) => prev + 1);
-        //   onClickTile?.(i, j);
-        //   //return hasWon ? undefined : onClickTile?.(i, j);
-        // }}
-
         style={{
           width: squareSize,
           height: squareSize,

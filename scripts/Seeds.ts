@@ -9,6 +9,7 @@ export class Seeds {
   public boardSize: number;
   public numSeeds: number;
   public originalNumSeeds: number;
+  public lastSeedTried = 0;
 
   constructor({
     seeds,
@@ -16,18 +17,21 @@ export class Seeds {
     boardsGenerated,
     filePath,
     boardSize,
+    lastSeedTried,
   }: {
     seeds?: number[];
     timesTakenSeconds?: number[];
     boardsGenerated?: number[];
     filePath: string;
     boardSize: number;
+    lastSeedTried: number;
   }) {
     this.seeds = seeds || [];
     this.timesTakenSeconds = timesTakenSeconds || [];
     this.boardsGenerated = boardsGenerated || [];
     this.filePath = filePath;
     this.boardSize = boardSize;
+    this.lastSeedTried = lastSeedTried;
     this.numSeeds = this.seeds.length;
     this.originalNumSeeds = this.seeds.length;
   }
@@ -38,6 +42,11 @@ export class Seeds {
 
   newSeeds() {
     return this.seeds.length - this.originalNumSeeds;
+  }
+
+  getNextSeed() {
+    this.lastSeedTried++;
+    return this.lastSeedTried;
   }
 
   addSeedAttemp({

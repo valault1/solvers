@@ -38,7 +38,6 @@ const INITIAL_BOARD = generateBoardFromSeedStatic(
   DEFAULT_SIDE_LENGTH,
   getSeeds(DEFAULT_SIDE_LENGTH)[DEFAULT_SEED_INDEX]
 );
-console.log(getDuplicateSeeds());
 
 export const QueensPlayer = () => {
   const navigate = useNavigate();
@@ -110,7 +109,6 @@ export const QueensPlayer = () => {
     addBordersToBoard(newBoard);
     setBoard(newBoard);
   }, [currentBoardIndex, boardSize]);
-  console.log({ board });
 
   return (
     <MainContainer

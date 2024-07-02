@@ -1,10 +1,13 @@
 import { getSeeds } from "domains/Queens/boards/seeds";
-import { runClearOldLevelsMigration } from "domains/Queens/helpers/localStorageMigrations";
+import {
+  runClearOldLevelsMigration,
+  runFixSavedStarsMigration,
+} from "domains/Queens/helpers/localStorageMigrations";
 import { Board, Coords, Token } from "domains/Queens/sharedTypes";
 
 const TIMES_STORAGE_KEY = "queensTimes";
 
-const getStorageKey = ({
+export const getStorageKey = ({
   seedIndex,
   boardSize,
 }: {
@@ -108,3 +111,4 @@ export const getFirstUnfinishedBoard = ({
 
 // runs the migrations
 runClearOldLevelsMigration();
+runFixSavedStarsMigration();

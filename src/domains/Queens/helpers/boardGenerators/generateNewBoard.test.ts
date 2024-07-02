@@ -36,7 +36,7 @@ export const generateBoardAndTestForDeterminism = async ({
 } = {}) => {
   const rng = new RNG(seed);
   let hasFoundDeterministicBoard = false;
-  const MAX_ATTEMPTS = 10000;
+  const MAX_ATTEMPTS = 100;
   let isDeterministic, board, boardSeed;
   let counter = 0;
 
