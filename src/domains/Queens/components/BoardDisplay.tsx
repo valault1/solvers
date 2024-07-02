@@ -64,7 +64,15 @@ export const BoardDisplay = ({
   }, [screenWidth, board.length]);
 
   return (
-    <Stack direction="column">
+    <Stack
+      direction="column"
+      style={{
+        // these remove the strange highlight that happens when I tap on mobile
+        WebkitTapHighlightColor: "transparent",
+        outline: "none",
+        touchAction: "none",
+      }}
+    >
       {board.map((row, i) => (
         <Stack key={i} direction="row">
           {row.map((tile, j) => {

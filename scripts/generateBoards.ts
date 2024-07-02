@@ -59,6 +59,7 @@ const generateDeterministicSeeds = async (numToGenerate = 1000000) => {
       const { seed, isDeterministic, boardsGenerated } =
         await generateBoardAndTestForDeterminism({
           sideLength: length,
+          startingSeed: seeds.getNextSeed(),
         });
       seedAttemptTimer.stopTimer();
       seeds.addSeedAttemp({
@@ -66,6 +67,7 @@ const generateDeterministicSeeds = async (numToGenerate = 1000000) => {
         timeTakenSeconds: seedAttemptTimer.getSeconds(),
         boardsGenerated,
       });
+      seeds.lastSeedTried = seed;
 
       if (!isDeterministic) {
         console.log(

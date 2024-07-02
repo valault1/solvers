@@ -1,5 +1,5 @@
 import { seeds as seeds7_raw } from "domains/Queens/boards/seeds7.v4";
-import { seeds as seeds8_raw } from "domains/Queens/boards/seeds8.v4";
+import { seeds as seeds8_raw } from "domains/Queens/boards/seeds8.v5";
 import { seeds as seeds9_raw } from "domains/Queens/boards/seeds9.v4";
 import { seeds as seeds10_raw } from "domains/Queens/boards/seeds10.v4";
 import { seeds as seeds11_raw } from "domains/Queens/boards/seeds11.v4";
@@ -11,7 +11,7 @@ import { seeds as seeds20_raw } from "domains/Queens/boards/seeds20.v4";
 
 const limits = {
   7: 500,
-  8: 500,
+  8: 10000,
   9: 500,
   10: 500,
   11: 500,

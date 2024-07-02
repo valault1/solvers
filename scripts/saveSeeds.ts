@@ -40,22 +40,40 @@ const readVariableFromFileContent = ({
     console.log(`no file content; returnign default value: ${defaultValue}`);
   }
   try {
-    const lines = fileContent.split("\n");
+    const lines = fileContent
+      .replace(/\n/g, "")
+      //.replace(/\s/g, "")
+      .split("export const ");
+
+    console.log({ lines });
     const lineWithVariable = lines.find((line) =>
-      line.includes(`export const ${variableName} = `)
+      line.includes(`${variableName} = `)
     );
     const variableValueWithSemicolon = lineWithVariable.split(
-      `export const ${variableName} = `
+      `${variableName} = `
     )[1];
-    const variableValue = variableValueWithSemicolon.slice(
+    let variableValue = variableValueWithSemicolon.slice(
       0,
       variableValueWithSemicolon.length - 1
     );
-    return JSON.parse(variableValue);
+    if (variableValue.charAt(variableValue.length - 2) === ",") {
+      console.log("found comma");
+      variableValue = variableValue.slice(0, variableValue.length - 2) + "]";
+    }
+    console.log({ variableName, variableValue });
+
+    const val = JSON.parse(variableValue);
+    if (val.length) {
+      // dedup existing seeds
+
+      return Array.from(new Set(val));
+    }
+    return val;
   } catch (e) {
     console.log(
       `Couldn't find variable ${variableName} in file content; returning default value: ${defaultValue}`
     );
+    console.log(e);
     return defaultValue;
   }
 };
@@ -95,7 +113,7 @@ export const writeSeedsToFile = (seedObject: SeedInfo, newSeeds: number[]) => {
 };
 
 export const readSeedsFromFile = (boardSize: number) => {
-  const filePath = `../src/domains/Queens/boards/seeds${boardSize}.v4.ts`;
+  const filePath = `../src/domains/Queens/boards/seeds${boardSize}.v5.ts`;
   let fileContent = "";
   try {
     fileContent = fs.readFileSync(filePath, "utf8");
@@ -119,6 +137,11 @@ export const readSeedsFromFile = (boardSize: number) => {
     variableName: "boardsGenerated",
     defaultValue: [],
   });
+  const lastSeedTried = readVariableFromFileContent({
+    fileContent,
+    variableName: "lastSeedTried",
+    defaultValue: 0,
+  });
 
   return new Seeds({
     seeds,
@@ -126,6 +149,7 @@ export const readSeedsFromFile = (boardSize: number) => {
     boardsGenerated,
     filePath,
     boardSize,
+    lastSeedTried,
   });
 };
 
@@ -138,6 +162,7 @@ export const writeSeedsObjectToFile = (seeds: Seeds) => {
     timesTakenSeconds: seeds.timesTakenSeconds,
     boardsGenerated: seeds.boardsGenerated,
     numSeeds: seeds.seeds.length,
+    lastSeedTried: seeds.lastSeedTried,
     totalTimeTaken: sum(seeds.timesTakenSeconds),
     totalBoardsGenerated: sum(seeds.boardsGenerated),
     averageTimeTakenPerSeed:

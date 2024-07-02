@@ -64,6 +64,7 @@ export const SelectLevel = () => {
                 console.log({ newPath });
                 navigate(newPath);
               }}
+              key={i}
             >
               <Stack direction="column">
                 {levelNum}
@@ -72,36 +73,6 @@ export const SelectLevel = () => {
             </PrimaryButton>
           );
         })}
-        {/* {seedsMatrix.map((seed, i) => (
-          <Stack
-            direction="row"
-            gap={0}
-            justifyContent={"start"}
-            // paddingLeft={12}
-            // paddingRight={12}
-          >
-            {seed.map((s, j) => {
-              const index = i * LEVELS_PER_ROW + j;
-              const isFinished = levelProgresses[index]?.isFinished;
-              return (
-                <PrimaryButton
-                  variant="text"
-                  color={isFinished ? "success" : "info"}
-                  onClick={() => {
-                    const newPath = `/queensplayer?${SEED_INDEX_PARAM}=${index}&${BOARD_SIZE_PARAM}=${boardSize}`;
-                    console.log({ newPath });
-                    navigate(newPath);
-                  }}
-                >
-                  <Stack direction="column">
-                    {index + 1}
-                    {isFinished ? <CheckCircle /> : <Circle />}
-                  </Stack>
-                </PrimaryButton>
-              );
-            })}
-          </Stack>
-        ))} */}
       </Stack>
     </MainContainer>
   );
