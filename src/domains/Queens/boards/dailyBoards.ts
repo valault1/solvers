@@ -44,15 +44,16 @@ export const hasFinishedDailyBoard = () => {
   const obj = getDailyBoardProgress();
   return obj?.isFinished;
 };
-
-export const DEFAULT_DAILY_BOARD_SIZE = 10;
+//12x12: 8390994, 4376997, 6512049, 8451710, 4227743,4971802, 3733057,
+//10x10: 7593202, 2149748, 3686519, 2109389, 4478942, 7957770, 4575896,
+export const DEFAULT_DAILY_BOARD_SIZE = 12;
 export type DailyBoard = { seed: number; size?: number };
 export const DAILY_BOARDS: DailyBoard[] = [
-  { seed: 7593202 },
-  { seed: 2149748 },
-  { seed: 3686519 },
-  { seed: 2109389 },
-  { seed: 4478942 },
-  { seed: 7957770 },
-  { seed: 4575896 },
+  { seed: 8390994 },
+  { seed: 4376997 },
+  { seed: 6512049 },
+  { seed: 8451710 },
+  { seed: 4227743 },
+  { seed: 4971802 },
+  { seed: 3733057 },
 ];

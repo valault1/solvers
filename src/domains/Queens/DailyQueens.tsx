@@ -20,7 +20,7 @@ import * as React from "react";
 import { PATHS } from "shared/helpers/paths";
 
 const GAME_NAME = "Queens";
-const SHARE_URL = `solvers.valault.com${PATHS.dailyQueens}`;
+const SHARE_URL = `valault.com`;
 
 // load this now, just in case they continue playing after midnight
 const dayIndex = getDayIndex();
