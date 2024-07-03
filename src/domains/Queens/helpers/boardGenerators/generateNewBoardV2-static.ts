@@ -7,6 +7,7 @@ import {
   BOARD_COLORS_HEX,
   ORIGINAL_BOARD_COLORS,
 } from "domains/Queens/constants/constants";
+import { addBordersToBoard } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 
 type BoardColor = keyof typeof ORIGINAL_BOARD_COLORS;
 
@@ -521,7 +522,8 @@ const generateRegionsV2 = ({
 export const generateBoardFromSeedV2 = (
   sideLength: number,
   seed: number,
-  shouldColorBoard = true
+  shouldColorBoard = true,
+  shouldAddBorders = true
 ): Board => {
   const rng = new RNG(seed);
 
@@ -537,6 +539,7 @@ export const generateBoardFromSeedV2 = (
   });
 
   const coloredBoard = shouldColorBoard ? colorsToRegions(board) : board;
+  if (shouldAddBorders) addBordersToBoard(coloredBoard);
 
   return coloredBoard;
 };

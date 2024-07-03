@@ -81,14 +81,14 @@ const markColumns = (board: Board) => {
   }
 };
 
-const safeCheckBoard = (board: Board, row: number, col: number) => {
+export const safeCheckBoard = (board: Board, row: number, col: number) => {
   if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
     return undefined;
   }
   return board[row][col];
 };
 
-const squareHasNoQueenConflict = (
+export const squareHasNoQueenConflict = (
   board: Board,
   row: number,
   col: number

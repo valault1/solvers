@@ -1,6 +1,22 @@
-import { Stack } from "@mui/material";
+import {
+  HourglassBottomRounded,
+  HourglassEmpty,
+  HourglassFull,
+  HourglassFullOutlined,
+  LockClock,
+  PunchClock,
+  Timer3,
+  Watch,
+} from "@mui/icons-material";
+import { Badge, Card, Paper, Stack } from "@mui/material";
 
 import * as React from "react";
+
+export const millisecondsToTimeFormat = (ms: number) => {
+  return `${twoDigits(Math.floor(ms / 1000 / 60))}:${twoDigits(
+    Math.floor(ms / 1000) % 60
+  )}`;
+};
 
 const TIMER_UPDATE_INTERVAL_MS = 200;
 
@@ -30,7 +46,26 @@ export const Timer = ({ startTime }: { startTime: number }) => {
 
   return (
     <Stack direction="column">
-      {minutes}:{seconds}
+      <Card
+        style={{
+          borderRadius: "15px",
+          padding: "8px",
+          width: "70px",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Paper
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <HourglassEmpty />
+          {millisecondsToTimeFormat(timeTaken)}
+        </Paper>
+      </Card>
     </Stack>
   );
 };

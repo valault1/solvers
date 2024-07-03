@@ -5,6 +5,8 @@ import { DysonSphereCalculator } from "domains/DysonSphere/DysonSphereCalculator
 import { ThirdWorldFarmerController } from "domains/FarmGame/ThirdWorldFarmerController";
 import { MancalaController } from "domains/Mancala/MancalaController";
 import { PhysicsCalculatorController } from "domains/Physics/PhysicsCalculatorsController";
+import { DailyQueens } from "domains/Queens/DailyQueens";
+import { MultiplayerQueens } from "domains/Queens/MultiplayerQueens";
 import { QueensPlayer } from "domains/Queens/QueensPlayer";
 import { QueensSolver } from "domains/Queens/QueensSolver";
 import { SelectLevel } from "domains/Queens/components/SelectLevel";
@@ -18,7 +20,7 @@ import { Wordcounter } from "domains/Wordcounter/Wordcounter";
 import { WordleController } from "domains/Wordle/WordleController";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { PATHS } from "shared/helpers/paths";
+import { PATHS, PATHS_WITHOUT_SLASHES } from "shared/helpers/paths";
 
 type NavbarPage = {
   label: string;
@@ -33,6 +35,12 @@ export function getRoute(label: string) {
 
 export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Queens Player", element: <QueensPlayer />, isHidden: false },
+  {
+    label: "Daily Queens",
+    route: PATHS_WITHOUT_SLASHES.dailyQueens,
+    element: <DailyQueens />,
+    isHidden: false,
+  },
   { label: "Wordle Solver", element: <WordleController /> },
   { label: "Queens Solver", element: <QueensSolver />, isHidden: false },
   { label: "Trap The Cat", element: <TrapTheCat /> },
@@ -88,8 +96,9 @@ export const AppRoutes: React.FC = () => {
         const path = page.route || getRoute(page.label);
         return <Route path={path} element={page.element} key={path} />;
       })}
-      <Route path={"/"} element={<QueensPlayer />} />
+      <Route path={"/"} element={<DailyQueens />} />
       <Route path={PATHS.levelSelect} element={<SelectLevel />} />
+      <Route path={PATHS.multiplayerQueens} element={<MultiplayerQueens />} />
     </Routes>
   );
 };

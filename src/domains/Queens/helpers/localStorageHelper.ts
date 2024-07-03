@@ -3,9 +3,10 @@ import {
   runClearOldLevelsMigration,
   runFixSavedStarsMigration,
 } from "domains/Queens/helpers/localStorageMigrations";
-import { Board, Coords, Token } from "domains/Queens/sharedTypes";
+import { Board, BoardType, Coords, Token } from "domains/Queens/sharedTypes";
 
 const TIMES_STORAGE_KEY = "queensTimes";
+const DAILY_STORAGE_KEY = "dailyQueens";
 
 export const getStorageKey = ({
   seedIndex,
@@ -41,6 +42,23 @@ export type TimeStorageObject =
       boardState?: Token[][];
     }
   | undefined;
+
+export const saveDailyBoardProgress = ({
+  newTimeStorageObject,
+  dayIndex,
+}: {
+  newTimeStorageObject: TimeStorageObject;
+  dayIndex: number;
+}) => {
+  const key = getDailyBoardKey({ dayIndex });
+  localStorage.setItem(
+    key,
+    JSON.stringify({
+      ...(newTimeStorageObject || {}),
+    })
+  );
+};
+
 export const saveBoardProgress = ({
   newTimeStorageObject,
   seedIndex,
@@ -70,6 +88,20 @@ export const getStorageTimeObject = ({
   boardSize: number;
 }): TimeStorageObject => {
   const key = getStorageKey({ seedIndex, boardSize });
+  const currentTimeObject = JSON.parse(localStorage.getItem(key) || "{}");
+  return currentTimeObject;
+};
+
+export const getDailyBoardKey = ({ dayIndex }: { dayIndex: number }) => {
+  return `${DAILY_STORAGE_KEY}-${dayIndex}`;
+};
+
+export const getDailyBoardProgressFromIndex = ({
+  dayIndex,
+}: {
+  dayIndex: number;
+}): TimeStorageObject => {
+  const key = getDailyBoardKey({ dayIndex });
   const currentTimeObject = JSON.parse(localStorage.getItem(key) || "{}");
   return currentTimeObject;
 };
