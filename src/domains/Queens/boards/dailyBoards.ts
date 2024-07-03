@@ -5,7 +5,7 @@ import {
 } from "domains/Queens/helpers/localStorageHelper";
 import { placeQueen } from "domains/Queens/helpers/solver/solveBoard";
 
-export const START_DATE = "07/02/24";
+export const START_DATE = "07/03/24";
 
 export const getDayIndex = () => {
   const daysSinceStart = Math.floor(
