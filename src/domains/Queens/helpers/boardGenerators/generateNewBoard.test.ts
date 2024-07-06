@@ -5,10 +5,12 @@ import {
   checkForVictory,
   copyBoard,
   narrowDownBoard,
+  solveBoardAndReportDifficulty,
 } from "domains/Queens/helpers/solver/solveBoard";
 import { Board } from "domains/Queens/sharedTypes";
 import { clearAllTokens } from "domains/Queens/components/PlayableBoard";
 import { generateBoardFromSeedStatic } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
+import { SIDE_LENGTH_OPTIONS, getSeeds } from "domains/Queens/boards/seeds";
 
 let timerTime = new Date().getTime();
 const setTimerTime = (newTime: number) => {
@@ -76,5 +78,12 @@ export const generateDeterministicSeeds = async (numToGenerate = 100000) => {
   }
   return result;
 };
+
+export const allSeeds = SIDE_LENGTH_OPTIONS.reduce((accum, sideLength) => {
+  accum[sideLength] = getSeeds(sideLength);
+  return accum;
+}, {} as any);
+
+export const getBoardDifficulty = solveBoardAndReportDifficulty;
 
 export default generateBoardAndTestForDeterminism;

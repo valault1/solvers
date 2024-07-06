@@ -52,8 +52,16 @@ export const DAILY_BOARDS: DailyBoard[] = [
   { seed: 8390994 },
   { seed: 4376997 },
   { seed: 6512049 },
-  { seed: 8451710 },
-  { seed: 4227743 },
-  { seed: 4971802 },
-  { seed: 3733057 },
+  // these ones below are from the 12x12s, ranked hardest
+  { seed: 1534501 },
+  { seed: 5573928 },
+  // Mon 7-8
+  { seed: 7793051 },
+  { seed: 7666922 },
+  { seed: 5054487 },
+  { seed: 8285092 },
+  { seed: 7549850 },
+  { seed: 9213069 },
+  { seed: 2373100 },
+  // Mon 7-15
 ];
