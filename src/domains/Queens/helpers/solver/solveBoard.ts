@@ -81,6 +81,16 @@ const markColumns = (board: Board) => {
   }
 };
 
+export const getStarPositions = (board: Board) => {
+  let starPositions: Coords[] = [];
+  board.forEach((row, i) =>
+    row.forEach((tile, j) => {
+      if (tile.token === "Q") starPositions.push({ row: i, col: j });
+    })
+  );
+  return starPositions;
+};
+
 export const checkForVictory = (board: Board): boolean => {
   const targetNumQueens = board.length;
   let numQueens = 0;
@@ -314,7 +324,7 @@ const markXsAfterQueen = (board: Board, row: number, col: number) => {
 
 // the strategy is to place all queens in a color, and see what x's are common to that color.
 // for example: The top left 3 squares are the same color. Place a queen in all 3 squares; if any of the same squares get turned to x's, mark those as x's.
-export const eliminateSquares = (board: Board, color = "") => {
+export const eliminateSquares = (board: Board) => {
   const colorCoordsInOrder = getGuessesLeftV2(board);
   if (!colorCoordsInOrder?.length) return;
   let tilesByColor: Record<BoardColor, Coords[]> = colorCoordsInOrder.reduce(
@@ -330,7 +340,6 @@ export const eliminateSquares = (board: Board, color = "") => {
     if (!allCoordsOfColor?.length) continue;
     // place a queen on the tileCoords. See what x's are placed.
     let tile = board[allCoordsOfColor[0].row][allCoordsOfColor[0].col];
-    if (!!color && tile.color !== color) continue;
     let commonSquares = [
       ...getXCoordsToMarkAfterQueen(
         board,
@@ -426,9 +435,11 @@ export const boardsAreEqual = (board1: Board, board2: Board) => {
 const eliminateSquaresInRowColGroup = ({
   board,
   group,
+  returnAfterFirstElimination = false,
 }: {
   board: Board;
   group: RowOrColGroup;
+  returnAfterFirstElimination?: boolean;
 }) => {
   const colorsInGroup = new Set(
     group.squares.map((square) => square.tile.color)
@@ -452,6 +463,7 @@ const eliminateSquaresInRowColGroup = ({
         board[square.row][square.col].token = "X";
       }
     });
+    if (returnAfterFirstElimination) return;
   }
 
   // rule 2: check for a group that contains only n colors
@@ -462,6 +474,7 @@ const eliminateSquaresInRowColGroup = ({
       if (colorsInGroup.has(square.tile.color)) {
         board[square.row][square.col].token = "X";
       }
+      if (returnAfterFirstElimination) return;
     });
   }
 };
@@ -525,12 +538,18 @@ const getColGroups = (board: Board): RowOrColGroup[] => {
   return groups;
 };
 
-export const eliminateRowColGroups = (board: Board) => {
+export const eliminateRowColGroups = ({
+  board,
+  returnAfterFirstElimination,
+}: {
+  board: Board;
+  returnAfterFirstElimination?: boolean;
+}) => {
   const rowGroups = getRowGroups(board);
   const colGroups: RowOrColGroup[] = getColGroups(board);
 
   [...rowGroups, ...colGroups].forEach((group) =>
-    eliminateSquaresInRowColGroup({ board, group })
+    eliminateSquaresInRowColGroup({ board, group, returnAfterFirstElimination })
   );
   //const colGroups = getColGroups(board);
 };
@@ -538,7 +557,40 @@ export const eliminateRowColGroups = (board: Board) => {
 export const runSolveRules = (board: Board) => {
   markGuaranteedPlacements(board);
   eliminateSquares(board);
-  eliminateRowColGroups(board);
+  eliminateRowColGroups({ board });
+};
+
+export const solveBoardAndReportDifficulty = (board: Board) => {
+  let difficulty = 0;
+  const DIFFICULTY_POINTS_GUARANTEED_PLACEMENTS = 1;
+  const DIFFICULTY_POINTS_ELIMINATE_SQUARES = 2;
+  const DIFFICULTY_POINTS_ROW_COL_GROUPS = 3;
+  let boardCopy = copyBoard(board);
+  let boardsAreNotEqual = true;
+
+  while (boardsAreNotEqual) {
+    //console.log("Boards still not equal, try again");
+    boardCopy = copyBoard(board);
+    markGuaranteedPlacements(board);
+    boardsAreNotEqual = !boardsAreEqual(board, boardCopy);
+    if (boardsAreNotEqual) continue;
+    else {
+      const numStarsPlaced =
+        getStarPositions(board).length - getStarPositions(boardCopy).length;
+      difficulty += numStarsPlaced + DIFFICULTY_POINTS_GUARANTEED_PLACEMENTS;
+    }
+
+    eliminateSquares(board);
+    boardsAreNotEqual = !boardsAreEqual(board, boardCopy);
+    if (boardsAreNotEqual) continue;
+    else difficulty += DIFFICULTY_POINTS_ELIMINATE_SQUARES;
+
+    eliminateRowColGroups({ board, returnAfterFirstElimination: true });
+    boardsAreNotEqual = !boardsAreEqual(board, boardCopy);
+    if (boardsAreNotEqual) continue;
+    else difficulty += DIFFICULTY_POINTS_ROW_COL_GROUPS;
+  }
+  return difficulty;
 };
 
 export const narrowDownBoard = (board: Board) => {
@@ -555,7 +607,7 @@ export const narrowDownBoard = (board: Board) => {
     }
     boardsAreNotEqual = !boardsAreEqual(board, boardCopy);
     if (!boardsAreNotEqual) {
-      eliminateRowColGroups(board);
+      eliminateRowColGroups({ board });
     }
     boardsAreNotEqual = !boardsAreEqual(board, boardCopy);
   }
