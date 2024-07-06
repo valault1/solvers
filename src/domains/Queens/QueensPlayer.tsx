@@ -18,7 +18,6 @@ import { WinTime } from "domains/Queens/components/Time";
 import {
   TimeStorageObject,
   boardToTokens,
-  getStarPositions,
   getStorageTimeObject,
   saveBoardProgress,
 } from "domains/Queens/helpers/localStorageHelper";
@@ -27,11 +26,14 @@ import {
   addBordersToBoard,
   generateBoardFromSeedStatic,
 } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
-import { placeQueen } from "domains/Queens/helpers/solver/solveBoard";
+import {
+  checkForVictory,
+  getStarPositions,
+  placeQueen,
+} from "domains/Queens/helpers/solver/solveBoard";
 import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
 import { useNavigate } from "react-router-dom";
 import { PATHS } from "shared/helpers/paths";
-import { checkForVictory } from "domains/Queens/hooks/useMakeMove";
 
 const DEFAULT_SEED_INDEX = 0;
 export const DEFAULT_SIDE_LENGTH = 8;

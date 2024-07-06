@@ -1,8 +1,8 @@
-import { checkForVictory } from "domains/Queens/hooks/useMakeMove";
 import { pollEventLoop } from "domains/Queens/constants/constants";
 import { RNG } from "domains/Queens/helpers/randomNum";
 import {
   boardsAreEqual,
+  checkForVictory,
   copyBoard,
   narrowDownBoard,
 } from "domains/Queens/helpers/solver/solveBoard";

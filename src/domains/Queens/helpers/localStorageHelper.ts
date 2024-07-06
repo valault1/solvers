@@ -117,16 +117,6 @@ export const getTime = ({
   return currentTimeObject.time;
 };
 
-export const getStarPositions = (board: Board) => {
-  let starPositions: Coords[] = [];
-  board.forEach((row, i) =>
-    row.forEach((tile, j) => {
-      if (tile.token === "Q") starPositions.push({ row: i, col: j });
-    })
-  );
-  return starPositions;
-};
-
 export const getFirstUnfinishedBoard = ({
   boardSize,
 }: {
@@ -142,5 +132,7 @@ export const getFirstUnfinishedBoard = ({
 };
 
 // runs the migrations
-runClearOldLevelsMigration();
-runFixSavedStarsMigration();
+if (!!localStorage) {
+  runClearOldLevelsMigration();
+  runFixSavedStarsMigration();
+}

@@ -10,10 +10,8 @@ import {
 import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
 import { TimedBoard } from "domains/Queens/components/TimedBoard";
 import { millisecondsToTimeFormat } from "domains/Queens/components/Timer";
-import {
-  getStarPositions,
-  saveDailyBoardProgress,
-} from "domains/Queens/helpers/localStorageHelper";
+import { saveDailyBoardProgress } from "domains/Queens/helpers/localStorageHelper";
+import { getStarPositions } from "domains/Queens/helpers/solver/solveBoard";
 import { Board } from "domains/Queens/sharedTypes";
 
 import * as React from "react";

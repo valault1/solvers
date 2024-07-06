@@ -1,9 +1,10 @@
 import { OnClickTile } from "domains/Queens/components/BoardDisplay";
 import { BOARD_COLORS_HEX } from "domains/Queens/constants/constants";
-import { getStarPositions } from "domains/Queens/helpers/localStorageHelper";
 import { range } from "domains/Queens/helpers/randomNum";
 import {
+  checkForVictory,
   copyBoard,
+  getStarPositions,
   placeQueen,
   safeCheckBoard,
 } from "domains/Queens/helpers/solver/solveBoard";
@@ -80,19 +81,6 @@ const markConflictingColors = (board: Board) => {
   }
 };
 
-export const checkForVictory = (board: Board): boolean => {
-  const targetNumQueens = board.length;
-  let numQueens = 0;
-  for (let row of board) {
-    for (let tile of row) {
-      if (tile.token === "Q") {
-        numQueens++;
-        if (numQueens > targetNumQueens || tile.isConflicting) return false;
-      }
-    }
-  }
-  return numQueens === targetNumQueens;
-};
 const clearAllConflicts = (board: Board) => {
   for (let row of board) {
     for (let tile of row) {

@@ -81,6 +81,20 @@ const markColumns = (board: Board) => {
   }
 };
 
+export const checkForVictory = (board: Board): boolean => {
+  const targetNumQueens = board.length;
+  let numQueens = 0;
+  for (let row of board) {
+    for (let tile of row) {
+      if (tile.token === "Q") {
+        numQueens++;
+        if (numQueens > targetNumQueens || tile.isConflicting) return false;
+      }
+    }
+  }
+  return numQueens === targetNumQueens;
+};
+
 export const safeCheckBoard = (board: Board, row: number, col: number) => {
   if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
     return undefined;
