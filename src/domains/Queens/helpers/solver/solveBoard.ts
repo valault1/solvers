@@ -81,6 +81,16 @@ const markColumns = (board: Board) => {
   }
 };
 
+export const getStarPositions = (board: Board) => {
+  let starPositions: Coords[] = [];
+  board.forEach((row, i) =>
+    row.forEach((tile, j) => {
+      if (tile.token === "Q") starPositions.push({ row: i, col: j });
+    })
+  );
+  return starPositions;
+};
+
 export const checkForVictory = (board: Board): boolean => {
   const targetNumQueens = board.length;
   let numQueens = 0;
