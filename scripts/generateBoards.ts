@@ -12,8 +12,6 @@ import { readSeedsFromFile } from "./saveSeeds";
 
 import fs from "fs";
 
-import zlib from "zlib";
-
 const generateBoardAndTestForDeterminism =
   //@ts-ignore
   boardGenerator.generateBoardAndTestForDeterminism;

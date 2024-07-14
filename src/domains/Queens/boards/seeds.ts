@@ -3,7 +3,7 @@ import { seeds as seeds8_raw } from "domains/Queens/boards/seeds8.v5";
 import { seeds as seeds9_raw } from "domains/Queens/boards/seeds9.v4";
 import { seeds as seeds10_raw } from "domains/Queens/boards/seeds10.v4";
 import { seeds as seeds11_raw } from "domains/Queens/boards/seeds11.v4";
-import { seeds as seeds12_raw } from "domains/Queens/boards/seeds12.v4";
+import { seeds as seeds12_raw } from "domains/Queens/boards/seeds12.v5";
 import { seeds as seeds13_raw } from "domains/Queens/boards/seeds13.v4";
 import { seeds as seeds14_raw } from "domains/Queens/boards/seeds14.v4";
 import { seeds as seeds15_raw } from "domains/Queens/boards/seeds15.v4";
@@ -15,11 +15,11 @@ const limits = {
   9: 500,
   10: 500,
   11: 500,
-  12: 500,
+  12: 100000,
   13: 250,
   14: 250,
   15: 100,
-  20: 1,
+  20: 10,
 };
 
 export const SIDE_LENGTH_OPTIONS = [7, 8, 9, 10, 11, 12, 13, 14, 15, 20];
