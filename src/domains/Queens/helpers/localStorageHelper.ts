@@ -3,9 +3,10 @@ import {
   runClearOldLevelsMigration,
   runFixSavedStarsMigration,
 } from "domains/Queens/helpers/localStorageMigrations";
-import { Board, Coords, Token } from "domains/Queens/sharedTypes";
+import { Board, BoardType, Coords, Token } from "domains/Queens/sharedTypes";
 
 const TIMES_STORAGE_KEY = "queensTimes";
+const DAILY_STORAGE_KEY = "dailyQueens";
 
 export const getStorageKey = ({
   seedIndex,
@@ -41,6 +42,23 @@ export type TimeStorageObject =
       boardState?: Token[][];
     }
   | undefined;
+
+export const saveDailyBoardProgress = ({
+  newTimeStorageObject,
+  dayIndex,
+}: {
+  newTimeStorageObject: TimeStorageObject;
+  dayIndex: number;
+}) => {
+  const key = getDailyBoardKey({ dayIndex });
+  localStorage.setItem(
+    key,
+    JSON.stringify({
+      ...(newTimeStorageObject || {}),
+    })
+  );
+};
+
 export const saveBoardProgress = ({
   newTimeStorageObject,
   seedIndex,
@@ -74,6 +92,20 @@ export const getStorageTimeObject = ({
   return currentTimeObject;
 };
 
+export const getDailyBoardKey = ({ dayIndex }: { dayIndex: number }) => {
+  return `${DAILY_STORAGE_KEY}-${dayIndex}`;
+};
+
+export const getDailyBoardProgressFromIndex = ({
+  dayIndex,
+}: {
+  dayIndex: number;
+}): TimeStorageObject => {
+  const key = getDailyBoardKey({ dayIndex });
+  const currentTimeObject = JSON.parse(localStorage.getItem(key) || "{}");
+  return currentTimeObject;
+};
+
 export const getTime = ({
   seedIndex,
   boardSize,
@@ -83,16 +115,6 @@ export const getTime = ({
 }): number | undefined => {
   const currentTimeObject = getStorageTimeObject({ seedIndex, boardSize });
   return currentTimeObject.time;
-};
-
-export const getStarPositions = (board: Board) => {
-  let starPositions: Coords[] = [];
-  board.forEach((row, i) =>
-    row.forEach((tile, j) => {
-      if (tile.token === "Q") starPositions.push({ row: i, col: j });
-    })
-  );
-  return starPositions;
 };
 
 export const getFirstUnfinishedBoard = ({
@@ -110,5 +132,7 @@ export const getFirstUnfinishedBoard = ({
 };
 
 // runs the migrations
-runClearOldLevelsMigration();
-runFixSavedStarsMigration();
+if (!!localStorage) {
+  runClearOldLevelsMigration();
+  runFixSavedStarsMigration();
+}

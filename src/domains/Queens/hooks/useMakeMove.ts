@@ -2,8 +2,11 @@ import { OnClickTile } from "domains/Queens/components/BoardDisplay";
 import { BOARD_COLORS_HEX } from "domains/Queens/constants/constants";
 import { range } from "domains/Queens/helpers/randomNum";
 import {
+  checkForVictory,
   copyBoard,
+  getStarPositions,
   placeQueen,
+  safeCheckBoard,
 } from "domains/Queens/helpers/solver/solveBoard";
 import { Board, Token, BoardColor, Move } from "domains/Queens/sharedTypes";
 import React from "react";
@@ -78,25 +81,35 @@ const markConflictingColors = (board: Board) => {
   }
 };
 
-export const checkForVictory = (board: Board): boolean => {
-  const targetNumQueens = board.length;
-  let numQueens = 0;
-  for (let row of board) {
-    for (let tile of row) {
-      if (tile.token === "Q") {
-        numQueens++;
-        if (numQueens > targetNumQueens || tile.isConflicting) return false;
-      }
-    }
-  }
-  return numQueens === targetNumQueens;
-};
 const clearAllConflicts = (board: Board) => {
   for (let row of board) {
     for (let tile of row) {
       tile.isConflicting = false;
     }
   }
+};
+
+const markConflictingDiagonals = (board: Board) => {
+  const starPositions = getStarPositions(board);
+  starPositions.forEach(({ row, col }) => {
+    const tile = board[row][col];
+    if (safeCheckBoard(board, row + 1, col + 1)?.token === "Q") {
+      tile.isConflicting = true;
+      board[row + 1][col + 1].isConflicting = true;
+    }
+    if (safeCheckBoard(board, row + 1, col - 1)?.token === "Q") {
+      tile.isConflicting = true;
+      board[row + 1][col - 1].isConflicting = true;
+    }
+    if (safeCheckBoard(board, row - 1, col + 1)?.token === "Q") {
+      tile.isConflicting = true;
+      board[row - 1][col + 1].isConflicting = true;
+    }
+    if (safeCheckBoard(board, row - 1, col - 1)?.token === "Q") {
+      tile.isConflicting = true;
+      board[row - 1][col - 1].isConflicting = true;
+    }
+  });
 };
 
 // after they've clicked a board, validate it.
@@ -107,6 +120,7 @@ const markConflicts = (board: Board) => {
   markConflictingColumns(board);
   markConflictingRows(board);
   markConflictingColors(board);
+  markConflictingDiagonals(board);
 };
 
 export const undoMove = (board: Board, move: Move) => {
@@ -119,12 +133,10 @@ export const useMakeMove = ({
   board,
   setBoard,
   onWin,
-  saveBoard,
 }: {
   board: Board;
   setBoard: (b: Board) => void;
   onWin?: (board: Board) => void;
-  saveBoard?: ({ board, didWin }: { board: Board; didWin: boolean }) => void;
 }) => {
   const [movesPlayed, setMovesPlayed] = React.useState<Move[]>([]);
 
@@ -135,12 +147,8 @@ export const useMakeMove = ({
       if (hasWon) {
         onWin?.(newBoard);
       }
-      saveBoard?.({
-        board: newBoard,
-        didWin: hasWon,
-      });
     },
-    [onWin, saveBoard]
+    [onWin]
   );
 
   const recordMove = React.useCallback(

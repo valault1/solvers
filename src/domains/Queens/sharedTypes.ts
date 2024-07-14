@@ -78,3 +78,5 @@ export type Guess = {
   guessesTried: Coords[];
   lastGuess: Coords;
 };
+
+export type BoardType = "normal" | "daily";

@@ -24,12 +24,10 @@ export const clearAllTokens = (board: Board) => {
 export const PlayableBoard = ({
   initialBoard,
   onWin,
-  saveBoard,
   hasWon,
 }: {
   initialBoard?: Board;
   onWin?: (board: Board) => void;
-  saveBoard?: ({ board, didWin }: { board: Board; didWin: boolean }) => void;
   hasWon?: boolean;
 }) => {
   const [board, setBoard] = React.useState(initialBoard ?? []);
@@ -42,7 +40,6 @@ export const PlayableBoard = ({
     board,
     setBoard,
     onWin,
-    saveBoard,
   });
 
   const clearBoard = React.useCallback(() => {

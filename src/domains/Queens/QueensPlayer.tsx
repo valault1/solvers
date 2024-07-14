@@ -18,7 +18,6 @@ import { WinTime } from "domains/Queens/components/Time";
 import {
   TimeStorageObject,
   boardToTokens,
-  getStarPositions,
   getStorageTimeObject,
   saveBoardProgress,
 } from "domains/Queens/helpers/localStorageHelper";
@@ -27,7 +26,11 @@ import {
   addBordersToBoard,
   generateBoardFromSeedStatic,
 } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
-import { placeQueen } from "domains/Queens/helpers/solver/solveBoard";
+import {
+  checkForVictory,
+  getStarPositions,
+  placeQueen,
+} from "domains/Queens/helpers/solver/solveBoard";
 import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
 import { useNavigate } from "react-router-dom";
 import { PATHS } from "shared/helpers/paths";
@@ -60,7 +63,8 @@ export const QueensPlayer = () => {
   } = useNavigateBoards();
 
   const saveBoard = React.useCallback(
-    ({ board, didWin }: { board: Board; didWin: boolean }) => {
+    (board: Board) => {
+      const didWin = checkForVictory(board);
       saveBoardProgress({
         newTimeStorageObject: {
           time: new Date().getTime() - startTime,
@@ -79,10 +83,11 @@ export const QueensPlayer = () => {
     (board: Board) => {
       const timeTaken = new Date().getTime() - startTime;
       setHasWon(true);
+      saveBoard(board);
 
       setTimeTaken(timeTaken);
     },
-    [setHasWon, startTime]
+    [setHasWon, startTime, saveBoard]
   );
 
   React.useEffect(() => {
@@ -106,7 +111,6 @@ export const QueensPlayer = () => {
       setHasWon(false);
     }
 
-    addBordersToBoard(newBoard);
     setBoard(newBoard);
   }, [currentBoardIndex, boardSize]);
 
@@ -130,12 +134,7 @@ export const QueensPlayer = () => {
       ) : (
         <WinTime timeTaken={timeTaken} />
       )}
-      <PlayableBoard
-        initialBoard={board}
-        onWin={onWin}
-        saveBoard={saveBoard}
-        hasWon={hasWon}
-      />
+      <PlayableBoard initialBoard={board} onWin={onWin} hasWon={hasWon} />
       <Stack gap={2} direction="row">
         <PrimaryButton fullWidth onClick={prevBoard} disabled={disablePrev}>
           Previous board
@@ -145,14 +144,20 @@ export const QueensPlayer = () => {
         </PrimaryButton>
       </Stack>
       board {currentBoardIndex + 1} of {maxBoardIndex}
-      {true && (
+      <PrimaryButton
+        variant="text"
+        onClick={() =>
+          navigate(`${PATHS.levelSelect}?${BOARD_SIZE_PARAM}=${boardSize}`)
+        }
+      >
+        Select level
+      </PrimaryButton>
+      {false && (
         <PrimaryButton
           variant="text"
-          onClick={() =>
-            navigate(`${PATHS.levelSelect}?${BOARD_SIZE_PARAM}=${boardSize}`)
-          }
+          onClick={() => navigate(`${PATHS.multiplayerQueens}`)}
         >
-          Select level
+          Multiplayer
         </PrimaryButton>
       )}
     </MainContainer>

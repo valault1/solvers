@@ -4,10 +4,10 @@ import { SIDE_LENGTH_OPTIONS, getSeeds } from "domains/Queens/boards/seeds";
 import { generateBoardFromSeedStatic } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import { solveBoardDeterministically } from "domains/Queens/helpers/boardGenerators/generateNewBoard.test";
 import {
-  getStarPositions,
   getStorageTimeObject,
   saveBoardProgress,
 } from "domains/Queens/helpers/localStorageHelper";
+import { getStarPositions } from "domains/Queens/helpers/solver/solveBoard";
 import { Stopwatch } from "shared/helpers/Timer";
 
 // This cleared all currently saved levels and times.
