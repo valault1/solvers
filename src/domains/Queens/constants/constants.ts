@@ -44,7 +44,7 @@ export const BOARD_COLORS_HEX_OBJECT = {
   darkOrange: "#ff8c00",
   // 17
   darkRed: "#8b0000",
-  // 18
+  // 18 d
   brown: "#a52a2a",
   // 19
   deepPink: "#aa326a",

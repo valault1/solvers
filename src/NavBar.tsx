@@ -11,13 +11,21 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { Link, useLocation } from "react-router-dom";
-import { Calculate } from "@mui/icons-material";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AccountCircle, Calculate, Settings } from "@mui/icons-material";
 import { theme } from "./components/theme/theme";
 import { getRoute, NAVBAR_PAGES } from "./AppRoutes";
 import { HEX_BOARD_MIN_WIDTH } from "domains/TrapTheCat/TrapTheCat";
+import styled from "@emotion/styled";
+import { PATHS } from "shared/helpers/paths";
+import { useAuth } from "domains/Auth/useAuth";
+import { Stack } from "@mui/material";
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
+const SettingsIconButton = styled(IconButton)<{}>({
+  color: theme.colors.background,
+  //backgroundColor: theme.colors.primary,
+  ":hover": {},
+});
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -44,7 +52,9 @@ const ResponsiveAppBar = () => {
   // Makes hex board width the same as the app bar, in case they're on trap the cat
   const location = useLocation();
   const isPlayingTrapTheCat = location.pathname === "/trapthecat";
+  const navigate = useNavigate();
 
+  const { session } = useAuth();
   return (
     <AppBar
       position="static"
@@ -146,6 +156,18 @@ const ResponsiveAppBar = () => {
                 </Link>
               );
             })}
+          </Box>
+          <Box sx={{ flexGrow: 0 }}>
+            {/* <Tooltip title="Open profile"> */}
+            <SettingsIconButton onClick={() => navigate(PATHS.login)}>
+              <Stack direction="column">
+                <AccountCircle fontSize="large" />
+                <div style={{ fontSize: "10px" }}>{`${
+                  session?.user?.email ? "Logged in!" : "Log in"
+                }`}</div>
+              </Stack>
+            </SettingsIconButton>
+            {/* </Tooltip> */}
           </Box>
           {/* not showing settings for now */}
           {false && (

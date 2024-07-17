@@ -2,6 +2,7 @@ export const PATHS = {
   levelSelect: "/queens-level-select",
   multiplayerQueens: "/queens-multiplayer",
   dailyQueens: "/queens-daily",
+  login: "/login",
 };
 
 // @ts-ignore

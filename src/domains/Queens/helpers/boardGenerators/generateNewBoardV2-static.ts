@@ -474,7 +474,6 @@ const fillBoardRegionsV2 = ({
         pos: { row, col },
         board,
       });
-
       if (adjacentColoredSquares.length) {
         const regionTileCoords = rng.getRandomElementFromArray(
           adjacentColoredSquares

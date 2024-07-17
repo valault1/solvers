@@ -1,3 +1,4 @@
+import { Login } from "domains/Auth/Login";
 import { Battleship } from "domains/Battleship/Battleship";
 import { GameController } from "domains/BuildALot/features/GameController/GameController";
 import { CalculatorsView } from "domains/Calculators/CalculatorsView";
@@ -9,7 +10,9 @@ import { DailyQueens } from "domains/Queens/DailyQueens";
 import { MultiplayerQueens } from "domains/Queens/MultiplayerQueens";
 import { QueensPlayer } from "domains/Queens/QueensPlayer";
 import { QueensSolver } from "domains/Queens/QueensSolver";
+
 import { SelectLevel } from "domains/Queens/components/SelectLevel";
+import { QueensTestCenter } from "domains/QueensTests/QueensTestCenter";
 import { RemoteController } from "domains/Remote/RemoteController";
 import { ReviewsController } from "domains/Reviews/ReviewsController";
 import { RummikubController } from "domains/Rummikub/RummikubController";
@@ -35,12 +38,15 @@ export function getRoute(label: string) {
 
 export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Queens Player", element: <QueensPlayer />, isHidden: false },
+  { label: "Test", element: <QueensTestCenter />, isHidden: false },
   {
     label: "Daily Queens",
     route: PATHS_WITHOUT_SLASHES.dailyQueens,
     element: <DailyQueens />,
     isHidden: false,
   },
+  { label: "login", element: <Login />, isHidden: false },
+
   { label: "Wordle Solver", element: <WordleController /> },
   { label: "Queens Solver", element: <QueensSolver />, isHidden: false },
   { label: "Trap The Cat", element: <TrapTheCat /> },
@@ -99,6 +105,7 @@ export const AppRoutes: React.FC = () => {
       <Route path={"/"} element={<DailyQueens />} />
       <Route path={PATHS.levelSelect} element={<SelectLevel />} />
       <Route path={PATHS.multiplayerQueens} element={<MultiplayerQueens />} />
+      <Route path={PATHS.login} element={<Login />} />
     </Routes>
   );
 };
