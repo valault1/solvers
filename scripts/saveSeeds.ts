@@ -45,7 +45,6 @@ const readVariableFromFileContent = ({
       //.replace(/\s/g, "")
       .split("export const ");
 
-    console.log({ lines });
     const lineWithVariable = lines.find((line) =>
       line.includes(`${variableName} = `)
     );
@@ -60,13 +59,14 @@ const readVariableFromFileContent = ({
       console.log("found comma");
       variableValue = variableValue.slice(0, variableValue.length - 2) + "]";
     }
-    console.log({ variableName, variableValue });
 
     const val = JSON.parse(variableValue);
-    if (val.length) {
+    if (val.length && variableName === "seeds") {
       // dedup existing seeds
-
-      return Array.from(new Set(val));
+      const sorted: number[] = Array.from(new Set(val)) as number[];
+      sorted.sort((a, b) => a - b);
+      console.log(sorted);
+      return sorted;
     }
     return val;
   } catch (e) {

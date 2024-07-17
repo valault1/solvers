@@ -10,7 +10,7 @@ import {
   BOARD_SIZE_PARAM,
   useNavigateBoards,
 } from "domains/Queens/hooks/useNavigateBoards";
-import { getDuplicateSeeds, getSeeds } from "domains/Queens/boards/seeds";
+import { getSeeds } from "domains/Queens/boards/seeds";
 
 import * as React from "react";
 import { Timer } from "domains/Queens/components/Timer";
