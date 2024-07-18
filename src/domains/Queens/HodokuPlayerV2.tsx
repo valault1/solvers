@@ -42,7 +42,7 @@ const INITIAL_BOARD = generateBoardFromSeedStatic(
   getSeeds(DEFAULT_SIDE_LENGTH)[DEFAULT_SEED_INDEX]
 );
 
-export const QueensPlayer = () => {
+export const HodokuPlayerV2 = () => {
   const navigate = useNavigate();
 
   const [board, setBoard] = React.useState<Board>(INITIAL_BOARD);

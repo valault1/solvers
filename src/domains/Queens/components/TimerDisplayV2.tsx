@@ -9,32 +9,19 @@ import {
   Watch,
 } from "@mui/icons-material";
 import { Badge, Card, Paper, Stack } from "@mui/material";
+import { useBoardTimer } from "domains/Queens/hooks/useBoardTimer";
 
 import * as React from "react";
 
 export const millisecondsToTimeFormat = (ms: number) => {
+  return ms.toString();
   return `${twoDigits(Math.floor(ms / 1000 / 60))}:${twoDigits(
     Math.floor(ms / 1000) % 60
   )}`;
 };
 
-const TIMER_UPDATE_INTERVAL_MS = 200;
-
-export const Timer = ({ startTime }: { startTime: number }) => {
-  React.useEffect(() => {
-    setTimeTaken(0);
-    const interval = setInterval(
-      () => setTimeTaken(new Date().getTime() - startTime),
-      TIMER_UPDATE_INTERVAL_MS
-    );
-
-    return () => clearInterval(interval);
-  }, [startTime]);
-
-  const [timeTaken, setTimeTaken] = React.useState<number>(
-    new Date().getTime() - startTime
-  );
-
+export const TimerDisplayV2 = () => {
+  const { timeTaken } = useBoardTimer();
   const seconds = React.useMemo(
     () => twoDigits(Math.floor(timeTaken / 1000) % 60),
     [timeTaken]

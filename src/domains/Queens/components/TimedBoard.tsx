@@ -7,12 +7,14 @@ import {
 import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
 
 import * as React from "react";
-import { Timer } from "domains/Queens/components/Timer";
+import { TimerDisplay } from "domains/Queens/components/TimerDisplay";
 import { WinTime } from "domains/Queens/components/Time";
 
 import { Board } from "domains/Queens/sharedTypes";
 
 import { useNavigate } from "react-router-dom";
+import { TimerDisplayV2 } from "domains/Queens/components/TimerDisplayV2";
+import usePageVisibility from "domains/Queens/hooks/usePageVisibility";
 
 export const TimedBoard = ({
   initialBoard,
@@ -31,6 +33,7 @@ export const TimedBoard = ({
   }) => void;
   onWin: (timeTaken: number) => void;
 }) => {
+  const { isVisible, isFocused } = usePageVisibility({});
   console.log({ finishTime, initialBoard });
   const [startTime] = React.useState(new Date().getTime());
   const [hasWon, setHasWon] = React.useState(finishTime !== undefined);
@@ -49,16 +52,14 @@ export const TimedBoard = ({
 
   return (
     <Stack justifyContent="center" alignItems={"center"} gap={1}>
-      {!hasWon ? (
-        <Timer startTime={startTime} />
-      ) : (
-        <WinTime timeTaken={timeTaken} />
+      {!hasWon || true ? <TimerDisplayV2 /> : <WinTime timeTaken={timeTaken} />}
+      {isFocused && (
+        <PlayableBoard
+          initialBoard={initialBoard}
+          onWin={handleWin}
+          hasWon={hasWon}
+        />
       )}
-      <PlayableBoard
-        initialBoard={initialBoard}
-        onWin={handleWin}
-        hasWon={hasWon}
-      />
     </Stack>
   );
 };
