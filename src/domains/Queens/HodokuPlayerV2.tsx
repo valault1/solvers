@@ -134,7 +134,7 @@ export const HodokuPlayerV2 = () => {
       ) : (
         <WinTime timeTaken={timeTaken} />
       )}
-      <PlayableBoard initialBoard={board} onWin={onWin} hasWon={hasWon} />
+      {/* <PlayableBoard initialBoard={board} onWin={onWin} hasWon={hasWon} /> */}
       <Stack gap={2} direction="row">
         <PrimaryButton fullWidth onClick={prevBoard} disabled={disablePrev}>
           Previous board

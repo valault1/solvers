@@ -3,9 +3,8 @@ import * as React from "react";
 import { Timer } from "shared/helpers/Timer";
 
 const TIMER_UPDATE_INTERVAL_MS = 200;
-export const useBoardTimer = () => {
+export const useBoardTimerDisplay = ({ timer }: { timer: Timer }) => {
   const [timeTaken, setTimeTaken] = React.useState(0);
-  const { current: timer } = React.useRef(new Timer());
 
   React.useEffect(() => {
     const interval = setInterval(

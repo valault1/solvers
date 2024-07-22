@@ -196,6 +196,7 @@ export const useMakeMove = ({
   };
 
   const onClickTile: OnClickTile = (i, j) => {
+    console.log("clicked tile");
     const newBoard = copyBoard(board);
     const currentTile = newBoard[i][j].token;
     const newToken = getNewTileOnClick(currentTile);

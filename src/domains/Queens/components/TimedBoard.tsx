@@ -1,20 +1,15 @@
-import { Card, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 
-import {
-  INSTRUCTIONS_PADDING,
-  INSTRUCTIONS_WIDTH,
-} from "domains/Queens/components/Instructions";
 import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
 
 import * as React from "react";
-import { TimerDisplay } from "domains/Queens/components/TimerDisplay";
 import { WinTime } from "domains/Queens/components/Time";
 
 import { Board } from "domains/Queens/sharedTypes";
 
-import { useNavigate } from "react-router-dom";
 import { TimerDisplayV2 } from "domains/Queens/components/TimerDisplayV2";
 import usePageVisibility from "domains/Queens/hooks/usePageVisibility";
+import { Timer } from "shared/helpers/Timer";
 
 export const TimedBoard = ({
   initialBoard,
@@ -33,29 +28,39 @@ export const TimedBoard = ({
   }) => void;
   onWin: (timeTaken: number) => void;
 }) => {
-  const { isVisible, isFocused } = usePageVisibility({});
+  const { current: timer } = React.useRef(new Timer());
+  const [board, setBoard] = React.useState(initialBoard ?? []);
+
+  React.useEffect(() => {
+    setBoard(initialBoard ?? []);
+  }, [initialBoard]);
+  const { isFocused } = usePageVisibility({});
   console.log({ finishTime, initialBoard });
   const [startTime] = React.useState(new Date().getTime());
-  const [hasWon, setHasWon] = React.useState(finishTime !== undefined);
-  const [timeTaken, setTimeTaken] = React.useState(finishTime ?? 0);
+  const [hasWon, setHasWon] = React.useState(!!finishTime);
 
   const handleWin = React.useCallback(
     (board: Board) => {
       const newTimeTaken = new Date().getTime() - startTime;
       setHasWon(true);
       saveBoard?.({ board, timeTaken: newTimeTaken });
-      setTimeTaken(newTimeTaken);
       onWin?.(newTimeTaken);
     },
-    [setHasWon, startTime, saveBoard]
+    [setHasWon, startTime, saveBoard, onWin]
   );
 
   return (
     <Stack justifyContent="center" alignItems={"center"} gap={1}>
-      {!hasWon || true ? <TimerDisplayV2 /> : <WinTime timeTaken={timeTaken} />}
+      {!hasWon || true ? (
+        <TimerDisplayV2 hasWon={hasWon} timer={timer} />
+      ) : (
+        <WinTime timeTaken={10} />
+      )}
+
       {isFocused && (
         <PlayableBoard
-          initialBoard={initialBoard}
+          board={board}
+          setBoard={setBoard}
           onWin={handleWin}
           hasWon={hasWon}
         />
