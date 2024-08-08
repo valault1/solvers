@@ -40,9 +40,10 @@ export const QueensTestCenter = () => {
           }) => {
             console.log(result);
             setBoard(result?.board || []);
-            return result?.board?.length ? (
-              <PlayableBoard initialBoard={colorsToRegions(result.board)} />
-            ) : null;
+            return <></>;
+            // return result?.board?.length ? (
+            //   <PlayableBoard initialBoard={colorsToRegions(result.board)} />
+            // ) : null;
           },
         },
         {
@@ -53,9 +54,10 @@ export const QueensTestCenter = () => {
           resultDisplayComponent: (result: Board) => {
             console.log({ board });
             setBoard(board);
-            return result?.length ? (
-              <PlayableBoard initialBoard={colorsToRegions(result)} />
-            ) : null;
+            return <></>;
+            // return result?.length ? (
+            //   <PlayableBoard initialBoard={colorsToRegions(result)} />
+            // ) : null;
           },
         },
       ]}

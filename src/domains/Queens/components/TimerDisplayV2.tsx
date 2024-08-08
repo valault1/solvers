@@ -9,8 +9,11 @@ import {
   Watch,
 } from "@mui/icons-material";
 import { Badge, Card, Paper, Stack } from "@mui/material";
+import { WinTime } from "domains/Queens/components/Time";
+import { useBoardTimerDisplay } from "domains/Queens/hooks/useBoardTimer";
 
 import * as React from "react";
+import { Timer } from "shared/helpers/Timer";
 
 export const millisecondsToTimeFormat = (ms: number) => {
   return `${twoDigits(Math.floor(ms / 1000 / 60))}:${twoDigits(
@@ -18,23 +21,14 @@ export const millisecondsToTimeFormat = (ms: number) => {
   )}`;
 };
 
-const TIMER_UPDATE_INTERVAL_MS = 200;
-
-export const Timer = ({ startTime }: { startTime: number }) => {
-  React.useEffect(() => {
-    setTimeTaken(0);
-    const interval = setInterval(
-      () => setTimeTaken(new Date().getTime() - startTime),
-      TIMER_UPDATE_INTERVAL_MS
-    );
-
-    return () => clearInterval(interval);
-  }, [startTime]);
-
-  const [timeTaken, setTimeTaken] = React.useState<number>(
-    new Date().getTime() - startTime
-  );
-
+export const TimerDisplayV2 = ({
+  hasWon,
+  timer,
+}: {
+  hasWon: boolean;
+  timer: Timer;
+}) => {
+  const { timeTaken } = useBoardTimerDisplay({ timer });
   const seconds = React.useMemo(
     () => twoDigits(Math.floor(timeTaken / 1000) % 60),
     [timeTaken]
@@ -43,6 +37,8 @@ export const Timer = ({ startTime }: { startTime: number }) => {
     () => twoDigits(Math.floor(timeTaken / 1000 / 60)),
     [timeTaken]
   );
+
+  if (hasWon) return <WinTime timeTaken={timeTaken} />;
 
   return (
     <Stack direction="column">

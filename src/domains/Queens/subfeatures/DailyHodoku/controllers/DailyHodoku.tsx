@@ -7,17 +7,17 @@ import {
   getDailyBoardProgress,
   getDayIndex,
 } from "domains/Queens/boards/dailyBoards";
-import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
 import { TimedBoard } from "domains/Queens/components/TimedBoard";
-import { millisecondsToTimeFormat } from "domains/Queens/components/Timer";
+import { millisecondsToTimeFormat } from "domains/Queens/components/TimerDisplay";
 import { saveDailyBoardProgress } from "domains/Queens/helpers/localStorageHelper";
 import { getStarPositions } from "domains/Queens/helpers/solver/solveBoard";
+
 import { Board } from "domains/Queens/sharedTypes";
+import { DailyHodokuDialog } from "domains/Queens/subfeatures/DailyHodoku/controllers/DailyHodokuDialog";
 
 import * as React from "react";
-import { PATHS } from "shared/helpers/paths";
 
-const GAME_NAME = "Queens";
+const GAME_NAME = "Hodoku";
 const SHARE_URL = `valault.com`;
 
 // load this now, just in case they continue playing after midnight
@@ -25,20 +25,14 @@ const dayIndex = getDayIndex();
 const DAILY_BOARD = getDailyBoard();
 console.log({ DAILY_BOARD });
 
-export const DailyQueens = () => {
+export const DailyHodoku = () => {
+  const timeTaken = 0;
   const initialTimeTaken = React.useMemo(() => {
     const progress = getDailyBoardProgress();
     return progress.isFinished ? progress.time : undefined;
   }, []);
 
-  const [timeTaken, setTimeTaken] = React.useState(initialTimeTaken);
-
-  const onWin = React.useCallback(
-    (timeTaken: number) => {
-      setTimeTaken(timeTaken);
-    },
-    [setTimeTaken]
-  );
+  const onWin = React.useCallback((timeTaken: number) => {}, []);
 
   const browserSupportsSharing = !!navigator.share;
 
@@ -83,6 +77,7 @@ export const DailyQueens = () => {
 
   return (
     <MainContainer gap="24px">
+      <DailyHodokuDialog />
       Daily Queens #{dayIndex + 1}
       <Stack
         direction="row"
