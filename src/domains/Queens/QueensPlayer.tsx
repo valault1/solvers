@@ -10,10 +10,10 @@ import {
   BOARD_SIZE_PARAM,
   useNavigateBoards,
 } from "domains/Queens/hooks/useNavigateBoards";
-import { getDuplicateSeeds, getSeeds } from "domains/Queens/boards/seeds";
+import { getSeeds } from "domains/Queens/boards/seeds";
 
 import * as React from "react";
-import { Timer } from "domains/Queens/components/Timer";
+import { TimerDisplay } from "domains/Queens/components/TimerDisplay";
 import { WinTime } from "domains/Queens/components/Time";
 import {
   TimeStorageObject,
@@ -130,11 +130,11 @@ export const QueensPlayer = () => {
       {/* <LevelsProgress boardSize={boardSize} width={INSTRUCTIONS_WIDTH} /> */}
       <BoardSizeSelect onChange={setBoardSize} value={boardSize} />
       {!hasWon ? (
-        <Timer startTime={startTime} />
+        <TimerDisplay startTime={startTime} />
       ) : (
         <WinTime timeTaken={timeTaken} />
       )}
-      <PlayableBoard initialBoard={board} onWin={onWin} hasWon={hasWon} />
+      {/* <PlayableBoard initialBoard={board} onWin={onWin} hasWon={hasWon} /> */}
       <Stack gap={2} direction="row">
         <PrimaryButton fullWidth onClick={prevBoard} disabled={disablePrev}>
           Previous board
@@ -155,7 +155,7 @@ export const QueensPlayer = () => {
       {false && (
         <PrimaryButton
           variant="text"
-          onClick={() => navigate(`${PATHS.multiplayerQueens}`)}
+          onClick={() => navigate(`${PATHS.multiplayerHodoku}`)}
         >
           Multiplayer
         </PrimaryButton>

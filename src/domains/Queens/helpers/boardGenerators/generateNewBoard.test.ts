@@ -32,9 +32,12 @@ export const solveBoardDeterministically = (board: Board) => {
 export const generateBoardAndTestForDeterminism = async ({
   startingSeed,
   sideLength,
+  generatorFunction,
 }: {
   startingSeed?: number;
   sideLength?: number;
+  // if passed in, we use this generator function. Otherwise, we use  generateBoardFromSeedStatic
+  generatorFunction?: (sideLength: number, seed: number) => Board;
 } = {}) => {
   const rng = new RNG();
   let hasFoundDeterministicBoard = false;
@@ -49,7 +52,9 @@ export const generateBoardAndTestForDeterminism = async ({
       startingSeed !== undefined
         ? counter + startingSeed
         : rng.getRandomNewSeed();
-    board = generateBoardFromSeedStatic(sideLength ?? 10, boardSeed);
+    board = generatorFunction
+      ? generatorFunction(sideLength ?? 10, boardSeed)
+      : generateBoardFromSeedStatic(sideLength ?? 10, boardSeed);
     isDeterministic = solveBoardDeterministically(board);
     hasFoundDeterministicBoard = isDeterministic;
     counter++;

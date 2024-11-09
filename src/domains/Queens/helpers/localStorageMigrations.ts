@@ -8,7 +8,7 @@ import {
   saveBoardProgress,
 } from "domains/Queens/helpers/localStorageHelper";
 import { getStarPositions } from "domains/Queens/helpers/solver/solveBoard";
-import { Stopwatch } from "shared/helpers/Timer";
+import { Timer } from "shared/helpers/Timer";
 
 // This cleared all currently saved levels and times.
 const clearOldLevelsMigrationKey = "hasRunClearOldLevelsMigration";
@@ -36,7 +36,7 @@ export const runFixSavedStarsMigration = () => {
     return;
   }
   console.log("RUNNING MIGRATION: fixSavedStarsMigration");
-  const timer = new Stopwatch();
+  const timer = new Timer();
 
   for (let size of SIDE_LENGTH_OPTIONS) {
     const seeds = getSeeds(size);

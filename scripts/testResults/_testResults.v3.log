@@ -1,0 +1,24 @@
+test name: v2 test - benchmark
+time of test: 2024-07-12T17:36:56.642Z
+Board size: 8
+Found 500 seeds in 31989 boards
+Average ms per seed:  40.32
+Average boards per seed: 63.978
+----------------------------------
+
+test name: v3 test - should be same as v2
+time of test: 2024-07-12T17:38:40.398Z
+Board size: 8
+Found 10 seeds in 809 boards
+Average ms per seed:  59.7
+Average boards per seed: 80.9
+----------------------------------
+
+test name: v3 test - should be same as v2
+time of test: 2024-07-12T17:38:48.287Z
+Board size: 8
+Found 10 seeds in 495 boards
+Average ms per seed:  34.4
+Average boards per seed: 49.5
+----------------------------------
+

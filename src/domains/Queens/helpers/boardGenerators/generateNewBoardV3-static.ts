@@ -336,6 +336,7 @@ const getAdjacentRegionlessSquares = ({
   board: Board;
 }): Coords[] => {
   const result: Coords[] = [];
+  // Ok. Imagine pos is row: 6, col: 7. we would need row + 1
   if (pos.row > 0 && board[pos.row - 1][pos.col].region === undefined)
     result.push({ row: pos.row - 1, col: pos.col });
   if (
@@ -406,21 +407,15 @@ const getAdjacentSquaresWithRegions = ({
   return result;
 };
 
-const fillBoardRegions = ({
+export const getInitialBoardWithSeedRegions = ({
   sideLength,
-  seed,
+  rng,
 }: {
   sideLength: number;
-  seed?: number;
+  rng: RNG;
 }) => {
-  const rng = new RNG(seed);
-
   const board = createBlankBoard(sideLength);
   const starPositions = getStarPositions(sideLength, rng);
-
-  // These color sizes are no longer used in this version,
-  // but we still need to run it to keep the seed with the same number of calls
-  getColorSizes(sideLength, rng);
 
   // regions is 0-9 for a 10 board
   const regions = range(sideLength);
@@ -435,7 +430,6 @@ const fillBoardRegions = ({
   ]);
 
   // fill in at least one square for each region
-  // this makes a minimum region size of 2
   for (let region of regions) {
     const possibleSquares = getEmptySquaresAdjacentToRegion({
       board,
@@ -444,35 +438,61 @@ const fillBoardRegions = ({
     if (possibleSquares.length) {
       let { row, col } = rng.getRandomElementFromArray(possibleSquares);
       board[row][col].region = region;
-      regionSquares[region].push({ row, col });
+      //regionSquares[region].push({ row, col });
     }
   }
+  return { board, regionSquares };
+};
 
-  // v3 - it seems like larger boards work better if you make one region bigger than the rest.
-  // maybe if I just seed a region slightly bigger, then more of the random squares will go to it?
-  const SKIP_LARGE_REGION = false;
-  const largeRegion = rng.getRandomElementFromArray(regions);
-  const TARGET_LARGE_REGION_PERCENTAGE = 0.1;
-  const targetSquares = sideLength;
-  const largeRegionSquares = regionSquares[largeRegion];
+const fillBoardRegions = ({
+  sideLength,
+  seed,
+}: {
+  sideLength: number;
+  seed?: number;
+}) => {
+  const rng = new RNG(seed);
 
-  for (let i = 2; i < (SKIP_LARGE_REGION ? 0 : targetSquares); i++) {
-    //console.log("filling large region");
-    const possibleSquares = getEmptySquaresAdjacentToRegion({
-      board,
-      thisRegionSquares: largeRegionSquares,
-    });
-    if (possibleSquares.length) {
-      let { row, col } = rng.getRandomElementFromArray(possibleSquares);
-      board[row][col].region = largeRegion;
-      largeRegionSquares.push({ row, col });
+  const { board, regionSquares } = getInitialBoardWithSeedRegions({
+    sideLength,
+    rng,
+  });
+  const regions = range(sideLength);
+
+  const numSquaresToFill = sideLength * sideLength - regions.length * 2;
+
+  let validRegions = range(sideLength);
+
+  for (let i = 0; i < numSquaresToFill && validRegions.length; i++) {
+    let possibleSquares: Coords[] = [];
+    let regionToFill = validRegions[0];
+    while (possibleSquares.length === 0) {
+      const emptySquares = findRegionlessBoardCoords(board);
+      regionToFill = rng.getRandomElementFromArray(validRegions);
+
+      possibleSquares = getEmptySquaresAdjacentToRegion({
+        board,
+        thisRegionSquares: regionSquares[regionToFill],
+      });
+
+      if (possibleSquares.length === 0) {
+        console.log("eliminating region " + regionToFill);
+
+        validRegions = validRegions.filter((r) => r !== regionToFill);
+        console.log({
+          validRegions,
+          regionToFill,
+          emptySquares,
+          regionSquares: regionSquares[regionToFill],
+        });
+      }
     }
+    let { row, col } = rng.getRandomElementFromArray(possibleSquares);
+    board[row][col].region = regionToFill;
+    regionSquares[regionToFill].push({ row, col });
   }
-
-  let emptySquares = findRegionlessBoardCoords(board);
-  //emptySquares = rng.getAllElementsInRandomOrder(emptySquares);
-  // fill in empty squares from the ones around them
-
+  const emptySquares = findRegionlessBoardCoords(board);
+  //fill in empty squares from the ones around them
   while (emptySquares.length) {
     for (let i = emptySquares.length - 1; i >= 0; i--) {
       let { row, col } = emptySquares[i];
@@ -480,7 +500,6 @@ const fillBoardRegions = ({
         pos: { row, col },
         board,
       });
-
       if (adjacentColoredSquares.length) {
         const regionTileCoords = rng.getRandomElementFromArray(
           adjacentColoredSquares
@@ -489,32 +508,60 @@ const fillBoardRegions = ({
           board[regionTileCoords.row][regionTileCoords.col].region;
         board[row][col].region = newRegion;
         emptySquares.splice(i, 1);
-        regionSquares[newRegion].push({ row, col });
       }
     }
   }
+
+  console.log("Finished making board!");
+  console.log(board);
+
+  if (emptySquares.length) {
+    console.log("ERROR");
+    console.log(board);
+    throw new Error("FAILED TO FILL ALL SQUARES WITH REGIONS");
+  }
   return board;
-  // // How often do these colors match the numbers in regionSizes?
-  // const finalRegionCounts = [];
-  // for (let region of regions) {
-  //   finalRegionCounts.push(regionSquares[region].length);
-  // }
-  // let areEqual = true;
-  // for (let region of regions) {
-  //   if (finalRegionCounts[region] !== regionSizes[region]) {
-  //     areEqual = false;
-  //     break;
-  //   }
-  // }
-  // if (areEqual) {
-  //   console.log("final region counts are equal to region sizes");
-  // }
+};
+
+const addBordersToTile = (board: Board, row: number, col: number) => {
+  const max = board.length - 1;
+  const currentRegion = board[row][col].region;
+
+  if (row > 0 && currentRegion !== board[row - 1][col].region) {
+    board[row][col].top = true;
+  } else {
+    board[row][col].top = false;
+  }
+  if (row < max && currentRegion !== board[row + 1][col].region) {
+    board[row][col].bottom = true;
+  } else {
+    board[row][col].bottom = false;
+  }
+  if (col > 0 && currentRegion !== board[row][col - 1].region) {
+    board[row][col].left = true;
+  } else {
+    board[row][col].left = false;
+  }
+  if (col < max && currentRegion !== board[row][col + 1].region) {
+    board[row][col].right = true;
+  } else {
+    board[row][col].right = false;
+  }
+};
+
+export const addBordersToBoard = (board: Board) => {
+  board.forEach((row, i) => {
+    row.forEach((tile, j) => {
+      addBordersToTile(board, i, j);
+    });
+  });
 };
 
 export const generateBoardFromSeedV3 = (
   sideLength: number,
   seed: number,
-  shouldColorBoard = true
+  shouldColorBoard = true,
+  shouldAddBorders = true
 ): Board => {
   const board = fillBoardRegions({
     sideLength,
@@ -522,6 +569,7 @@ export const generateBoardFromSeedV3 = (
   });
 
   const coloredBoard = shouldColorBoard ? colorsToRegions(board) : board;
+  if (shouldAddBorders) addBordersToBoard(coloredBoard);
 
   return coloredBoard;
 };

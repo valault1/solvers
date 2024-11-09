@@ -22,20 +22,16 @@ export const clearAllTokens = (board: Board) => {
 };
 
 export const PlayableBoard = ({
-  initialBoard,
+  board,
+  setBoard,
   onWin,
   hasWon,
 }: {
-  initialBoard?: Board;
+  board: Board;
+  setBoard: (newBoard: Board) => void;
   onWin?: (board: Board) => void;
   hasWon?: boolean;
 }) => {
-  const [board, setBoard] = React.useState(initialBoard ?? []);
-
-  React.useEffect(() => {
-    setBoard(initialBoard ?? []);
-  }, [initialBoard]);
-
   const { undoLastMove, onClickTile, onDragTouchOntoTile } = useMakeMove({
     board,
     setBoard,
@@ -43,6 +39,7 @@ export const PlayableBoard = ({
   });
 
   const clearBoard = React.useCallback(() => {
+    console.log("clearing");
     const newBoard = copyBoard(board);
     clearAllTokens(newBoard);
     setBoard(newBoard);

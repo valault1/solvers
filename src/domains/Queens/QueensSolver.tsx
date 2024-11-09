@@ -4,7 +4,6 @@ import ImageUpload from "components/ImageUpload";
 import { MainContainer } from "components/MainPage.elements";
 import { BoardDisplay } from "domains/Queens/components/BoardDisplay";
 import Instructions from "domains/Queens/components/Instructions";
-import SolveBoardPlayground from "domains/Queens/components/SolveBoardPlayground";
 import StepsDisplay, { Step } from "domains/Queens/components/StepsDisplay";
 import { CONSTANT_BLANK_ARRAY } from "domains/Queens/constants/constants";
 
@@ -15,6 +14,7 @@ import { useImageParsing } from "domains/Queens/hooks/useImageParsing";
 import { useMemoNonBlocking } from "domains/Queens/hooks/useMemoNonBlocking";
 
 import { Board } from "domains/Queens/sharedTypes";
+import SolveBoardPlayground from "domains/QueensTests/SolveBoardPlayground";
 
 import * as React from "react";
 
