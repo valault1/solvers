@@ -1,6 +1,7 @@
 import { Close, Star } from "@mui/icons-material";
 import { Stack } from "@mui/material";
 import { BoardTileDisplay } from "domains/Queens/components/BoardTileDisplay";
+import useWindowDimensions from "domains/Queens/hooks/useWindowDimensions";
 
 import { Board, Token } from "domains/Queens/sharedTypes";
 import * as React from "react";
@@ -11,7 +12,7 @@ const TokenDisplay = ({ token }: { token: Token }) => {
   return <></>;
 };
 
-const MAX_SQUARE_SIZE = 80;
+const MAX_SQUARE_SIZE = 60;
 
 export type OnClickTile = (i: number, j: number) => void;
 export const BoardDisplay = ({
@@ -35,19 +36,7 @@ export const BoardDisplay = ({
     }
   }, []);
 
-  const [screenWidth, setScreenWidth] = React.useState<number>(
-    window.innerWidth
-  );
-
-  function handleWindowSizeChange() {
-    setScreenWidth(window.innerWidth);
-  }
-  React.useEffect(() => {
-    window.addEventListener("resize", handleWindowSizeChange);
-    return () => {
-      window.removeEventListener("resize", handleWindowSizeChange);
-    };
-  }, []);
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   const addToLog = React.useCallback(
     (m: string) => {
@@ -59,9 +48,10 @@ export const BoardDisplay = ({
   const SQUARE_SIZE = React.useMemo(() => {
     return Math.min(
       MAX_SQUARE_SIZE,
-      Math.floor((screenWidth - 5) / board.length)
+      Math.floor((screenWidth - 5) / board.length),
+      Math.floor((screenHeight - 275) / board.length)
     );
-  }, [screenWidth, board.length]);
+  }, [screenWidth, board.length, screenHeight]);
 
   return (
     <Stack
@@ -71,6 +61,7 @@ export const BoardDisplay = ({
         WebkitTapHighlightColor: "transparent",
         outline: "none",
         touchAction: "none",
+        userSelect: "none",
       }}
     >
       {board.map((row, i) => (

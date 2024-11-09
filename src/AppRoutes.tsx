@@ -8,7 +8,6 @@ import { MancalaController } from "domains/Mancala/MancalaController";
 import { PhysicsCalculatorController } from "domains/Physics/PhysicsCalculatorsController";
 import { DailyQueens } from "domains/Queens/DailyQueens";
 import { MultiplayerQueens } from "domains/Queens/MultiplayerQueens";
-import { QueensPlayer } from "domains/Queens/QueensPlayer";
 import { QueensSolver } from "domains/Queens/QueensSolver";
 
 import { SelectLevel } from "domains/Queens/components/SelectLevel";
@@ -24,6 +23,7 @@ import { WordleController } from "domains/Wordle/WordleController";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { PATHS, PATHS_WITHOUT_SLASHES } from "shared/helpers/paths";
+import { QueensPlayerPage } from "domains/Queens/QueensPlayerPage";
 
 type NavbarPage = {
   label: string;
@@ -37,15 +37,15 @@ export function getRoute(label: string) {
 }
 
 export const NAVBAR_PAGES: NavbarPage[] = [
-  { label: "Queens Player", element: <QueensPlayer />, isHidden: false },
-  { label: "Test", element: <QueensTestCenter />, isHidden: false },
+  { label: "Queens Player", element: <QueensPlayerPage />, isHidden: false },
+  { label: "Test", element: <QueensTestCenter />, isHidden: true },
   {
     label: "Daily Queens",
     route: PATHS_WITHOUT_SLASHES.dailyQueens,
     element: <DailyQueens />,
     isHidden: false,
   },
-  { label: "login", element: <Login />, isHidden: false },
+  { label: "login", element: <Login />, isHidden: true },
 
   { label: "Wordle Solver", element: <WordleController /> },
   { label: "Queens Solver", element: <QueensSolver />, isHidden: false },
@@ -57,7 +57,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
     isHidden: true,
   },
 
-  { label: "Calculators", element: <CalculatorsView /> },
+  { label: "Calculators", element: <CalculatorsView />, isHidden: true },
   { label: "Tic Tac Toe", element: <TicTacToeController /> },
 
   {

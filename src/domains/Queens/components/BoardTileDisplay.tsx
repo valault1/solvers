@@ -10,7 +10,7 @@ import * as React from "react";
 const TokenDisplay = ({ token }: { token: Token }) => {
   if (token === "Q") return <Star fontSize="small" />;
   if (token === "X") return <Close fontSize="small" />;
-  return <></>;
+  return <div style={{ userSelect: "none" }}></div>;
 };
 
 const BORDER_COLOR = "black";
@@ -49,6 +49,8 @@ export const BoardTileDisplay = ({
         borderTop: `${tile.top ? "medium" : "thin"} ${BORDER_CSS}`,
         borderRight: `${tile.right ? "medium" : "thin"} ${BORDER_CSS}`,
         borderLeft: `${tile.left ? "medium" : "thin"} ${BORDER_CSS}`,
+        userSelect: "none",
+        WebkitUserSelect: "none",
       }}
     >
       {/* This inner div is the one that takes a click*/}
@@ -65,7 +67,7 @@ export const BoardTileDisplay = ({
                   onDragTouchOntoTile();
                 }
               },
-              onTouchStart: () => {
+              onTouchStart: (e) => {
                 if (tokenOnEnter !== "") {
                   onClickTile();
                 }
@@ -95,6 +97,7 @@ export const BoardTileDisplay = ({
           WebkitTapHighlightColor: "transparent",
           outline: "none",
           touchAction: "none",
+          userSelect: "none",
         }}
       >
         {<TokenDisplay token={tile.token} />}

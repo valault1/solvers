@@ -66,27 +66,37 @@ export const PlayableBoard = ({
 
   return (
     <Stack direction={"column"} gap={2}>
-      <PrimaryButton onClick={clearBoard} disabled={hasWon}>
-        Clear board
-      </PrimaryButton>
       <BoardDisplay
         board={board}
         onClickTile={onClickTile}
         hasWon={hasWon}
         onDragTouchOntoTile={onDragTouchOntoTile}
       />
-      <Stack gap={2}>
-        <PrimaryButton onClick={undoLastMove} disabled={hasWon}>
-          Undo last move
-        </PrimaryButton>
-        {false && (
-          <PrimaryButton onClick={solveBoard}>
-            Solve some of the board
+      <Stack direction="row" gap={2} width="100%" justifyContent="center">
+        <Stack direction="row" gap={2} width="95%">
+          <PrimaryButton
+            onClick={clearBoard}
+            disabled={hasWon}
+            style={{ flex: 1 }}
+          >
+            Clear board
           </PrimaryButton>
-        )}
-        {false && (
-          <PrimaryButton onClick={runRotateBoard}>rotate board</PrimaryButton>
-        )}
+          <PrimaryButton
+            onClick={undoLastMove}
+            disabled={hasWon}
+            style={{ flex: 1 }}
+          >
+            Undo last move
+          </PrimaryButton>
+          {false && (
+            <PrimaryButton onClick={solveBoard}>
+              Solve some of the board
+            </PrimaryButton>
+          )}
+          {false && (
+            <PrimaryButton onClick={runRotateBoard}>rotate board</PrimaryButton>
+          )}
+        </Stack>
       </Stack>
     </Stack>
   );

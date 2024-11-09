@@ -7,15 +7,12 @@ import {
   getDailyBoardProgress,
   getDayIndex,
 } from "domains/Queens/boards/dailyBoards";
-import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
 import { TimedBoard } from "domains/Queens/components/TimedBoard";
 import { millisecondsToTimeFormat } from "domains/Queens/components/Timer";
 import { saveDailyBoardProgress } from "domains/Queens/helpers/localStorageHelper";
 import { getStarPositions } from "domains/Queens/helpers/solver/solveBoard";
 import { Board } from "domains/Queens/sharedTypes";
-
 import * as React from "react";
-import { PATHS } from "shared/helpers/paths";
 
 const GAME_NAME = "Queens";
 const SHARE_URL = `valault.com`;
@@ -82,7 +79,7 @@ export const DailyQueens = () => {
   };
 
   return (
-    <MainContainer gap="24px">
+    <MainContainer gap="12px">
       Daily Queens #{dayIndex + 1}
       <Stack
         direction="row"

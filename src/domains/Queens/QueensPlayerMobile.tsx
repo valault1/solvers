@@ -1,15 +1,8 @@
-import { Card, Stack } from "@mui/material";
-import { PrimaryButton } from "components/Form.elements";
+import { Box, Stack } from "@mui/material";
 import { MainContainer } from "components/MainPage.elements";
-import {
-  INSTRUCTIONS_PADDING,
-  INSTRUCTIONS_WIDTH,
-} from "domains/Queens/components/Instructions";
+
 import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
-import {
-  BOARD_SIZE_PARAM,
-  useNavigateBoards,
-} from "domains/Queens/hooks/useNavigateBoards";
+import { useNavigateBoards } from "domains/Queens/hooks/useNavigateBoards";
 import { getSeeds } from "domains/Queens/boards/seeds";
 
 import * as React from "react";
@@ -22,18 +15,13 @@ import {
   saveBoardProgress,
 } from "domains/Queens/helpers/localStorageHelper";
 import { Board } from "domains/Queens/sharedTypes";
-import {
-  addBordersToBoard,
-  generateBoardFromSeedStatic,
-} from "domains/Queens/helpers/boardGenerators/generateNewBoard";
+import { generateBoardFromSeedStatic } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import {
   checkForVictory,
   getStarPositions,
   placeQueen,
 } from "domains/Queens/helpers/solver/solveBoard";
 import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
-import { useNavigate } from "react-router-dom";
-import { PATHS } from "shared/helpers/paths";
 import { LevelNavigation } from "domains/Queens/LevelNavigation";
 
 const DEFAULT_SEED_INDEX = 0;
@@ -43,9 +31,7 @@ const INITIAL_BOARD = generateBoardFromSeedStatic(
   getSeeds(DEFAULT_SIDE_LENGTH)[DEFAULT_SEED_INDEX]
 );
 
-export const QueensPlayer = () => {
-  const navigate = useNavigate();
-
+export const QueensPlayerMobile = () => {
   const [board, setBoard] = React.useState<Board>(INITIAL_BOARD);
 
   const [startTime, setStartTime] = React.useState(new Date().getTime());
@@ -115,26 +101,63 @@ export const QueensPlayer = () => {
     setBoard(newBoard);
   }, [currentBoardIndex, boardSize]);
 
+  React.useEffect(() => {
+    document.body.style.overflow = "hidden";
+    document.body.style.userSelect = "none";
+    document.body.style.webkitUserSelect = "none";
+
+    return () => {
+      // this is where I would put cleanup
+      // However, no matter what I did to try and undo these changes above,
+      // I couldn't get it to undo these changes.
+      // So there's just a bug where:
+      // if you load a queens page, then move to another solvers page,
+      // you can't scroll or highlight anything
+    };
+  }, []);
+
   return (
     <MainContainer
       gap="24px"
-      //This bottom padding stops mobile from cutting off right below the text
-      paddingBottom={40}
+      style={{
+        width: "100vw",
+        // height: `calc(100vh-${NAVBAR_HEIGHT_MOBILE})`,
+        //backgroundColor: "lightblue", // Optional: Just to see the div
+      }}
     >
-      <h1>Play Queens!</h1>
-      <Card
-        style={{ padding: INSTRUCTIONS_PADDING, maxWidth: INSTRUCTIONS_WIDTH }}
-      >
-        These boards are procedurally generated. They are guaranteed to be
-        solvable without guessing!
-      </Card>
-      {/* <LevelsProgress boardSize={boardSize} width={INSTRUCTIONS_WIDTH} /> */}
-      <BoardSizeSelect onChange={setBoardSize} value={boardSize} />
-      {!hasWon ? (
-        <Timer startTime={startTime} />
-      ) : (
-        <WinTime timeTaken={timeTaken} />
-      )}
+      <Stack width="100%" display="flex" alignItems="center">
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          width="95%"
+        >
+          <Box
+            flex={1}
+            display="flex"
+            justifyContent="start"
+            alignItems="center"
+          >
+            <b>Queens</b>
+          </Box>
+          <Box
+            flex={1}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            {!hasWon ? (
+              <Timer startTime={startTime} />
+            ) : (
+              <WinTime timeTaken={timeTaken} />
+            )}
+          </Box>
+
+          <Box flex={1} display="flex" justifyContent="end" alignItems="center">
+            <BoardSizeSelect onChange={setBoardSize} value={boardSize} />
+          </Box>
+        </Stack>
+      </Stack>
       <PlayableBoard initialBoard={board} onWin={onWin} hasWon={hasWon} />
       <LevelNavigation
         prevBoard={prevBoard}

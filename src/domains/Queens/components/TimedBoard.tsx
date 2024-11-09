@@ -1,18 +1,9 @@
-import { Card, Stack } from "@mui/material";
-
-import {
-  INSTRUCTIONS_PADDING,
-  INSTRUCTIONS_WIDTH,
-} from "domains/Queens/components/Instructions";
+import { Stack } from "@mui/material";
 import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
-
 import * as React from "react";
 import { Timer } from "domains/Queens/components/Timer";
 import { WinTime } from "domains/Queens/components/Time";
-
 import { Board } from "domains/Queens/sharedTypes";
-
-import { useNavigate } from "react-router-dom";
 
 export const TimedBoard = ({
   initialBoard,

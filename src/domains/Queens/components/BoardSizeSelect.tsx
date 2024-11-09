@@ -20,6 +20,7 @@ export const BoardSizeSelect = ({
           onChange(val);
         }}
         fullWidth
+        size="small"
       >
         {SIDE_LENGTH_OPTIONS.map((length) => (
           <MenuItem value={length} key={length}>
