@@ -57,8 +57,9 @@ export const SelectLevel = () => {
   }, [seeds, boardSize]);
 
   const paginatedSeeds = React.useMemo(() => {
-    return seeds.slice(totalOffset, totalOffset + PAGE_SIZE);
-  }, [seeds]);
+    const result = seeds.slice(totalOffset, totalOffset + PAGE_SIZE);
+    return result;
+  }, [seeds, totalOffset]);
 
   const { disableNextPage, disablePrevPage, numPages } = React.useMemo(() => {
     const numPages = Math.ceil(seeds.length / PAGE_SIZE);
