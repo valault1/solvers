@@ -25,10 +25,12 @@ export const PlayableBoard = ({
   initialBoard,
   onWin,
   hasWon,
+  showActionsOnTop,
 }: {
   initialBoard: Board;
   onWin?: (board: Board) => void;
   hasWon?: boolean;
+  showActionsOnTop?: boolean;
 }) => {
   const [board, setBoard] = React.useState(initialBoard ?? []);
   React.useEffect(() => {
@@ -61,25 +63,10 @@ export const PlayableBoard = ({
     setBoard(newBoard);
   }, [board, setBoard]);
 
-  if (!board?.length) return null;
-
-  return (
-    <Stack direction={"column"} gap={2}>
-      <BoardDisplay
-        board={board}
-        onClickTile={onClickTile}
-        hasWon={hasWon}
-        onDragTouchOntoTile={onDragTouchOntoTile}
-      />
+  const actions = React.useMemo(
+    () => (
       <Stack direction="row" gap={2} width="100%" justifyContent="center">
         <Stack direction="row" gap={2} width="95%">
-          <PrimaryButton
-            onClick={clearBoard}
-            disabled={hasWon}
-            style={{ flex: 1 }}
-          >
-            Clear board
-          </PrimaryButton>
           <PrimaryButton
             onClick={undoLastMove}
             disabled={hasWon}
@@ -87,6 +74,14 @@ export const PlayableBoard = ({
           >
             Undo last move
           </PrimaryButton>
+          <PrimaryButton
+            onClick={clearBoard}
+            disabled={hasWon}
+            style={{ flex: 1 }}
+          >
+            Clear board
+          </PrimaryButton>
+
           {false && (
             <PrimaryButton onClick={solveBoard}>
               Solve some of the board
@@ -97,6 +92,22 @@ export const PlayableBoard = ({
           )}
         </Stack>
       </Stack>
+    ),
+    [hasWon]
+  );
+
+  if (!board?.length) return null;
+
+  return (
+    <Stack direction={"column"} gap={2}>
+      {showActionsOnTop && actions}
+      <BoardDisplay
+        board={board}
+        onClickTile={onClickTile}
+        hasWon={hasWon}
+        onDragTouchOntoTile={onDragTouchOntoTile}
+      />
+      {!showActionsOnTop && actions}
     </Stack>
   );
 };

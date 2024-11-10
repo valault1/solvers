@@ -4,6 +4,7 @@ import { MainContainer } from "components/MainPage.elements";
 import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
 import { useNavigateBoards } from "domains/Queens/hooks/useNavigateBoards";
 import { getSeeds } from "domains/Queens/boards/seeds";
+import { Helmet } from "react-helmet";
 
 import * as React from "react";
 import { WinTime } from "domains/Queens/components/Time";
@@ -102,10 +103,9 @@ export const QueensPlayerMobile = () => {
   }, [currentBoardIndex, boardSize]);
 
   React.useEffect(() => {
-    document.body.style.overflow = "hidden";
-    document.body.style.userSelect = "none";
-    document.body.style.webkitUserSelect = "none";
-    document.head.style.webkitUserSelect = "none";
+    // document.body.style.overflow = "hidden";
+    // document.body.style.userSelect = "none";
+    // document.body.style.webkitUserSelect = "none";
 
     return () => {
       // this is where I would put cleanup
@@ -118,57 +118,85 @@ export const QueensPlayerMobile = () => {
   }, []);
 
   return (
-    <MainContainer
-      gap="24px"
-      style={{
-        width: "100vw",
-        // height: `calc(100vh-${NAVBAR_HEIGHT_MOBILE})`,
-        //backgroundColor: "lightblue", // Optional: Just to see the div
-      }}
-    >
-      <Stack width="100%" display="flex" alignItems="center">
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          width="95%"
-        >
-          <Box
-            flex={1}
-            display="flex"
-            justifyContent="start"
+    <>
+      <Helmet>
+        <style>
+          {/* reference: https://stackoverflow.com/questions/62508815/how-would-you-style-the-body-of-multiple-pages-in-a-reactjs-app-without-having */}
+          {`
+            body {
+              overflow: hidden;
+              user-select: none;
+              -webkit-user-select: none;
+            }
+          `}
+        </style>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+        ></meta>
+      </Helmet>
+      <MainContainer
+        gap="24px"
+        style={{
+          width: "100vw",
+          // height: `calc(100vh-${NAVBAR_HEIGHT_MOBILE})`,
+          //backgroundColor: "lightblue", // Optional: Just to see the div
+        }}
+      >
+        <Stack width="100%" display="flex" alignItems="center">
+          <Stack
+            direction="row"
+            justifyContent="space-between"
             alignItems="center"
+            width="95%"
           >
-            <b>Queens</b>
-          </Box>
-          <Box
-            flex={1}
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
-            {!hasWon ? (
-              <TimerDisplay startTime={startTime} />
-            ) : (
-              <WinTime timeTaken={timeTaken} />
-            )}
-          </Box>
+            <Box
+              flex={1}
+              display="flex"
+              justifyContent="start"
+              alignItems="center"
+            >
+              <b>Queens</b>
+            </Box>
+            <Box
+              flex={1}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              {!hasWon ? (
+                <TimerDisplay startTime={startTime} />
+              ) : (
+                <WinTime timeTaken={timeTaken} />
+              )}
+            </Box>
 
-          <Box flex={1} display="flex" justifyContent="end" alignItems="center">
-            <BoardSizeSelect onChange={setBoardSize} value={boardSize} />
-          </Box>
+            <Box
+              flex={1}
+              display="flex"
+              justifyContent="end"
+              alignItems="center"
+            >
+              <BoardSizeSelect onChange={setBoardSize} value={boardSize} />
+            </Box>
+          </Stack>
         </Stack>
-      </Stack>
-      <PlayableBoard initialBoard={board} onWin={onWin} hasWon={hasWon} />
-      <LevelNavigation
-        prevBoard={prevBoard}
-        disablePrev={disablePrev}
-        nextBoard={nextBoard}
-        disableNext={disableNext}
-        currentBoardIndex={currentBoardIndex}
-        maxBoardIndex={maxBoardIndex}
-        boardSize={boardSize}
-      />
-    </MainContainer>
+        <PlayableBoard
+          initialBoard={board}
+          onWin={onWin}
+          hasWon={hasWon}
+          showActionsOnTop
+        />
+        <LevelNavigation
+          prevBoard={prevBoard}
+          disablePrev={disablePrev}
+          nextBoard={nextBoard}
+          disableNext={disableNext}
+          currentBoardIndex={currentBoardIndex}
+          maxBoardIndex={maxBoardIndex}
+          boardSize={boardSize}
+        />
+      </MainContainer>
+    </>
   );
 };

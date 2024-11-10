@@ -40,7 +40,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Queens Player", element: <QueensPlayerPage />, isHidden: false },
   { label: "Test", element: <QueensTestCenter />, isHidden: true },
   {
-    label: "Daily Hodoku",
+    label: "Daily Queens",
     route: PATHS_WITHOUT_SLASHES.dailyHodoku,
     element: <DailyHodoku />,
     isHidden: false,

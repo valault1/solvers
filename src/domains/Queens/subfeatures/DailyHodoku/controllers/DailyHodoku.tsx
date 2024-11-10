@@ -17,7 +17,7 @@ import { DailyHodokuDialog } from "domains/Queens/subfeatures/DailyHodoku/contro
 
 import * as React from "react";
 
-const GAME_NAME = "Hodoku";
+const GAME_NAME = "Queens";
 const SHARE_URL = `valault.com`;
 
 // load this now, just in case they continue playing after midnight
