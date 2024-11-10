@@ -6,7 +6,6 @@ import { useNavigateBoards } from "domains/Queens/hooks/useNavigateBoards";
 import { getSeeds } from "domains/Queens/boards/seeds";
 
 import * as React from "react";
-import { Timer } from "domains/Queens/components/Timer";
 import { WinTime } from "domains/Queens/components/Time";
 import {
   TimeStorageObject,
@@ -23,6 +22,7 @@ import {
 } from "domains/Queens/helpers/solver/solveBoard";
 import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
 import { LevelNavigation } from "domains/Queens/LevelNavigation";
+import { TimerDisplay } from "domains/Queens/components/TimerDisplay";
 
 const DEFAULT_SEED_INDEX = 0;
 export const DEFAULT_SIDE_LENGTH = 8;
@@ -105,6 +105,7 @@ export const QueensPlayerMobile = () => {
     document.body.style.overflow = "hidden";
     document.body.style.userSelect = "none";
     document.body.style.webkitUserSelect = "none";
+    document.head.style.webkitUserSelect = "none";
 
     return () => {
       // this is where I would put cleanup
@@ -147,7 +148,7 @@ export const QueensPlayerMobile = () => {
             alignItems="center"
           >
             {!hasWon ? (
-              <Timer startTime={startTime} />
+              <TimerDisplay startTime={startTime} />
             ) : (
               <WinTime timeTaken={timeTaken} />
             )}

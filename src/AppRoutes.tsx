@@ -6,11 +6,11 @@ import { DysonSphereCalculator } from "domains/DysonSphere/DysonSphereCalculator
 import { ThirdWorldFarmerController } from "domains/FarmGame/ThirdWorldFarmerController";
 import { MancalaController } from "domains/Mancala/MancalaController";
 import { PhysicsCalculatorController } from "domains/Physics/PhysicsCalculatorsController";
-import { DailyQueens } from "domains/Queens/DailyQueens";
+import { HodokuPlayerV2 } from "domains/Queens/HodokuPlayerV2";
 import { MultiplayerQueens } from "domains/Queens/MultiplayerQueens";
 import { QueensSolver } from "domains/Queens/QueensSolver";
-
 import { SelectLevel } from "domains/Queens/components/SelectLevel";
+import { DailyHodoku } from "domains/Queens/subfeatures/DailyHodoku/controllers/DailyHodoku";
 import { QueensTestCenter } from "domains/QueensTests/QueensTestCenter";
 import { RemoteController } from "domains/Remote/RemoteController";
 import { ReviewsController } from "domains/Reviews/ReviewsController";
@@ -40,9 +40,9 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Queens Player", element: <QueensPlayerPage />, isHidden: false },
   { label: "Test", element: <QueensTestCenter />, isHidden: true },
   {
-    label: "Daily Queens",
-    route: PATHS_WITHOUT_SLASHES.dailyQueens,
-    element: <DailyQueens />,
+    label: "Daily Hodoku",
+    route: PATHS_WITHOUT_SLASHES.dailyHodoku,
+    element: <DailyHodoku />,
     isHidden: false,
   },
   { label: "login", element: <Login />, isHidden: true },
@@ -102,9 +102,9 @@ export const AppRoutes: React.FC = () => {
         const path = page.route || getRoute(page.label);
         return <Route path={path} element={page.element} key={path} />;
       })}
-      <Route path={"/"} element={<DailyQueens />} />
+      <Route path={"/"} element={<DailyHodoku />} />
       <Route path={PATHS.levelSelect} element={<SelectLevel />} />
-      <Route path={PATHS.multiplayerQueens} element={<MultiplayerQueens />} />
+      <Route path={PATHS.multiplayerHodoku} element={<MultiplayerQueens />} />
       <Route path={PATHS.login} element={<Login />} />
     </Routes>
   );

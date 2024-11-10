@@ -13,7 +13,7 @@ import {
 import { getSeeds } from "domains/Queens/boards/seeds";
 
 import * as React from "react";
-import { Timer } from "domains/Queens/components/Timer";
+import { TimerDisplay } from "domains/Queens/components/TimerDisplay";
 import { WinTime } from "domains/Queens/components/Time";
 import {
   TimeStorageObject,
@@ -131,7 +131,7 @@ export const QueensPlayer = () => {
       {/* <LevelsProgress boardSize={boardSize} width={INSTRUCTIONS_WIDTH} /> */}
       <BoardSizeSelect onChange={setBoardSize} value={boardSize} />
       {!hasWon ? (
-        <Timer startTime={startTime} />
+        <TimerDisplay startTime={startTime} />
       ) : (
         <WinTime timeTaken={timeTaken} />
       )}
