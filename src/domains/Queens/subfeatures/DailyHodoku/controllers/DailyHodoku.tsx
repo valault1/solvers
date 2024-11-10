@@ -11,11 +11,14 @@ import { TimedBoard } from "domains/Queens/components/TimedBoard";
 import { millisecondsToTimeFormat } from "domains/Queens/components/TimerDisplay";
 import { saveDailyBoardProgress } from "domains/Queens/helpers/localStorageHelper";
 import { getStarPositions } from "domains/Queens/helpers/solver/solveBoard";
+import useWindowDimensions from "domains/Queens/hooks/useWindowDimensions";
+import { QUEENS_MOBILE_WIDTH_THRESHOLD } from "domains/Queens/QueensPlayerPage";
 
 import { Board } from "domains/Queens/sharedTypes";
 import { DailyHodokuDialog } from "domains/Queens/subfeatures/DailyHodoku/controllers/DailyHodokuDialog";
 
 import * as React from "react";
+import { Helmet } from "react-helmet";
 
 const GAME_NAME = "Queens";
 const SHARE_URL = `valault.com`;
@@ -82,33 +85,56 @@ export const DailyHodoku = () => {
     }
   };
 
+  const { width } = useWindowDimensions();
+  const isMobile = width < QUEENS_MOBILE_WIDTH_THRESHOLD;
+
   return (
-    <MainContainer gap="24px">
-      <DailyHodokuDialog />
-      Daily Queens #{dayIndex + 1}
-      <Stack
-        direction="row"
-        gap={2}
-        justifyContent="center"
-        alignItems="center"
-      >
-        {!!timeTaken && (
-          <Stack direction="row" alignItems="center" gap={1}>
-            Share your time!
-            {browserSupportsSharing ? (
-              <Share style={{ cursor: "pointer" }} onClick={handleShare} />
-            ) : (
-              <CopyAll style={{ cursor: "pointer" }} onClick={handleShare} />
-            )}
-          </Stack>
-        )}
-      </Stack>
-      <TimedBoard
-        initialBoard={DAILY_BOARD}
-        finishTime={timeTaken}
-        saveBoard={saveBoard}
-        onWin={onWin}
-      />
-    </MainContainer>
+    <>
+      {isMobile && (
+        <Helmet>
+          <style>
+            {/* reference: https://stackoverflow.com/questions/62508815/how-would-you-style-the-body-of-multiple-pages-in-a-reactjs-app-without-having */}
+            {`
+            body {
+              overflow: hidden;
+              user-select: none;
+              -webkit-user-select: none;
+            }
+          `}
+          </style>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+          ></meta>
+        </Helmet>
+      )}
+      <MainContainer gap="24px">
+        <DailyHodokuDialog />
+        Daily Queens #{dayIndex + 1}
+        <Stack
+          direction="row"
+          gap={2}
+          justifyContent="center"
+          alignItems="center"
+        >
+          {!!timeTaken && (
+            <Stack direction="row" alignItems="center" gap={1}>
+              Share your time!
+              {browserSupportsSharing ? (
+                <Share style={{ cursor: "pointer" }} onClick={handleShare} />
+              ) : (
+                <CopyAll style={{ cursor: "pointer" }} onClick={handleShare} />
+              )}
+            </Stack>
+          )}
+        </Stack>
+        <TimedBoard
+          initialBoard={DAILY_BOARD}
+          finishTime={timeTaken}
+          saveBoard={saveBoard}
+          onWin={onWin}
+        />
+      </MainContainer>
+    </>
   );
 };
