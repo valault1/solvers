@@ -147,7 +147,7 @@ export const generateBoardFromSeedStatic = (
   shouldColorBoard = true,
   shouldAddBorders = true
 ): Board => {
-  return generateBoardFromSeedV3(
+  return generateBoardFromSeedV2(
     sideLength,
     seed,
     shouldColorBoard,

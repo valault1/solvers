@@ -48,10 +48,15 @@ export const TextInput = (props: TextFieldProps) => (
   <StyledTextInput variant="outlined" {...props} />
 );
 
-const StyledPrimaryButton = styled(Button)<{}>({});
-export const PrimaryButton = (props: ButtonProps) => (
-  <StyledPrimaryButton variant="contained" {...props} />
+const StyledPrimaryButton = styled(Button)<{ paddingHorizontal?: number }>(
+  ({ paddingHorizontal }) => ({
+    paddingLeft: paddingHorizontal,
+    paddingRight: paddingHorizontal,
+  })
 );
+export const PrimaryButton = (
+  props: ButtonProps & { paddingHorizontal?: number }
+) => <StyledPrimaryButton variant="contained" {...props} />;
 
 const StyledSecondaryButton = styled(Button)<{}>({});
 export const SecondaryButton = (props: ButtonProps) => (

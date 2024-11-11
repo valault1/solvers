@@ -8,13 +8,13 @@ export const WinTime = ({ timeTaken }: { timeTaken: number }) => {
     [timeTaken]
   );
   const minutes = React.useMemo(
-    () => twoDigits(Math.floor(timeTaken / 1000 / 60)),
+    () => Math.floor(timeTaken / 1000 / 60),
     [timeTaken]
   );
 
   return (
     <Stack direction="column">
-      You finished in {minutes}:{seconds}
+      Finished in {minutes}:{seconds}
     </Stack>
   );
 };

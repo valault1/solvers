@@ -25,17 +25,17 @@ export const PlayableBoard = ({
   initialBoard,
   onWin,
   hasWon,
+  showActionsOnTop,
 }: {
-  initialBoard?: Board;
+  initialBoard: Board;
   onWin?: (board: Board) => void;
   hasWon?: boolean;
+  showActionsOnTop?: boolean;
 }) => {
   const [board, setBoard] = React.useState(initialBoard ?? []);
-
   React.useEffect(() => {
     setBoard(initialBoard ?? []);
   }, [initialBoard]);
-
   const { undoLastMove, onClickTile, onDragTouchOntoTile } = useMakeMove({
     board,
     setBoard,
@@ -43,6 +43,7 @@ export const PlayableBoard = ({
   });
 
   const clearBoard = React.useCallback(() => {
+    console.log("clearing");
     const newBoard = copyBoard(board);
     clearAllTokens(newBoard);
     setBoard(newBoard);
@@ -62,32 +63,51 @@ export const PlayableBoard = ({
     setBoard(newBoard);
   }, [board, setBoard]);
 
+  const actions = React.useMemo(
+    () => (
+      <Stack direction="row" gap={2} width="100%" justifyContent="center">
+        <Stack direction="row" gap={2} width="95%">
+          <PrimaryButton
+            onClick={undoLastMove}
+            disabled={hasWon}
+            style={{ flex: 1 }}
+          >
+            Undo last move
+          </PrimaryButton>
+          <PrimaryButton
+            onClick={clearBoard}
+            disabled={hasWon}
+            style={{ flex: 1 }}
+          >
+            Clear board
+          </PrimaryButton>
+
+          {false && (
+            <PrimaryButton onClick={solveBoard}>
+              Solve some of the board
+            </PrimaryButton>
+          )}
+          {false && (
+            <PrimaryButton onClick={runRotateBoard}>rotate board</PrimaryButton>
+          )}
+        </Stack>
+      </Stack>
+    ),
+    [clearBoard, hasWon, runRotateBoard, solveBoard, undoLastMove]
+  );
+
   if (!board?.length) return null;
 
   return (
     <Stack direction={"column"} gap={2}>
-      <PrimaryButton onClick={clearBoard} disabled={hasWon}>
-        Clear board
-      </PrimaryButton>
+      {showActionsOnTop && actions}
       <BoardDisplay
         board={board}
         onClickTile={onClickTile}
         hasWon={hasWon}
         onDragTouchOntoTile={onDragTouchOntoTile}
       />
-      <Stack gap={2}>
-        <PrimaryButton onClick={undoLastMove} disabled={hasWon}>
-          Undo last move
-        </PrimaryButton>
-        {false && (
-          <PrimaryButton onClick={solveBoard}>
-            Solve some of the board
-          </PrimaryButton>
-        )}
-        {false && (
-          <PrimaryButton onClick={runRotateBoard}>rotate board</PrimaryButton>
-        )}
-      </Stack>
+      {!showActionsOnTop && actions}
     </Stack>
   );
 };

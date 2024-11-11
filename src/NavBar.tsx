@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AccountCircle, Calculate, Settings } from "@mui/icons-material";
+import { AccountCircle, Calculate } from "@mui/icons-material";
 import { theme } from "./components/theme/theme";
 import { getRoute, NAVBAR_PAGES } from "./AppRoutes";
 import { HEX_BOARD_MIN_WIDTH } from "domains/TrapTheCat/TrapTheCat";
@@ -26,6 +26,8 @@ const SettingsIconButton = styled(IconButton)<{}>({
   //backgroundColor: theme.colors.primary,
   ":hover": {},
 });
+
+export const NAVBAR_HEIGHT_MOBILE = "64px";
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -55,6 +57,9 @@ const ResponsiveAppBar = () => {
   const navigate = useNavigate();
 
   const { session } = useAuth();
+
+  const showLogin = false;
+  const showSettings = false;
   return (
     <AppBar
       position="static"
@@ -63,10 +68,92 @@ const ResponsiveAppBar = () => {
         backgroundColor: theme.colors.primary,
         color: theme.colors.background,
         minWidth: isPlayingTrapTheCat ? HEX_BOARD_MIN_WIDTH : undefined,
+        flexWrap: "nowrap",
       }}
     >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+      <Container maxWidth="xl" disableGutters>
+        {/** Mobile toolbar */}
+        <Toolbar
+          disableGutters
+          sx={{
+            display: { md: "none", xs: "flex" },
+            justifyContent: "space-between",
+            width: "100%",
+            height: NAVBAR_HEIGHT_MOBILE,
+          }}
+        >
+          <IconButton
+            size="large"
+            aria-label="navbar"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleOpenNavMenu}
+            color="inherit"
+          >
+            <MenuIcon />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorElNav}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            open={Boolean(anchorElNav)}
+            onClose={handleCloseNavMenu}
+            sx={{
+              display: "block",
+            }}
+          >
+            {NAVBAR_PAGES.map((page) => {
+              if (page.isHidden) return null;
+              const route = page.route || getRoute(page.label);
+              return (
+                <MenuItem key={route} onClick={handleCloseNavMenu}>
+                  <Link
+                    to={"/" + route}
+                    style={{
+                      textDecoration: "none",
+                      color: theme.colors.textPrimary,
+                    }}
+                  >
+                    <Typography textAlign="center">{page.label}</Typography>
+                  </Link>
+                </MenuItem>
+              );
+            })}
+          </Menu>
+          {/* <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ display: { xs: "flex", md: "none" } }}
+          >
+            <Calculate />
+          </Typography> */}
+
+          <Box>
+            <b>solvers</b>
+          </Box>
+
+          <IconButton
+            size="large"
+            aria-label="navbar"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            //onClick={handleOpenNavMenu}
+            color="inherit"
+          >
+            <Calculate />
+          </IconButton>
+        </Toolbar>
+        {/** Desktop toolbar */}
+        <Toolbar sx={{ display: { xs: "none", md: "flex" } }}>
           <Typography
             variant="h6"
             noWrap
@@ -76,62 +163,6 @@ const ResponsiveAppBar = () => {
             <Calculate />
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {NAVBAR_PAGES.map((page) => {
-                if (page.isHidden) return null;
-                const route = page.route || getRoute(page.label);
-                return (
-                  <MenuItem key={route} onClick={handleCloseNavMenu}>
-                    <Link
-                      to={"/" + route}
-                      style={{
-                        textDecoration: "none",
-                        color: theme.colors.textPrimary,
-                      }}
-                    >
-                      <Typography textAlign="center">{page.label}</Typography>
-                    </Link>
-                  </MenuItem>
-                );
-              })}
-            </Menu>
-          </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
-          >
-            <Calculate />
-          </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {NAVBAR_PAGES.map((page) => {
               if (page.isHidden) return null;
@@ -157,20 +188,23 @@ const ResponsiveAppBar = () => {
               );
             })}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            {/* <Tooltip title="Open profile"> */}
-            <SettingsIconButton onClick={() => navigate(PATHS.login)}>
-              <Stack direction="column">
-                <AccountCircle fontSize="large" />
-                <div style={{ fontSize: "10px" }}>{`${
-                  session?.user?.email ? "Logged in!" : "Log in"
-                }`}</div>
-              </Stack>
-            </SettingsIconButton>
-            {/* </Tooltip> */}
-          </Box>
+          {showLogin && (
+            //This is the profile button - not working yet
+            <Box sx={{ flexGrow: 0 }}>
+              {/* <Tooltip title="Open profile"> */}
+              <SettingsIconButton onClick={() => navigate(PATHS.login)}>
+                <Stack direction="column">
+                  <AccountCircle fontSize="large" />
+                  <div style={{ fontSize: "10px" }}>{`${
+                    session?.user?.email ? "Logged in!" : "Log in"
+                  }`}</div>
+                </Stack>
+              </SettingsIconButton>
+              {/* </Tooltip> */}
+            </Box>
+          )}
           {/* not showing settings for now */}
-          {false && (
+          {showSettings && (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

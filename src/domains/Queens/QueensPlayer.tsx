@@ -34,6 +34,7 @@ import {
 import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
 import { useNavigate } from "react-router-dom";
 import { PATHS } from "shared/helpers/paths";
+import { LevelNavigation } from "domains/Queens/LevelNavigation";
 
 const DEFAULT_SEED_INDEX = 0;
 export const DEFAULT_SIDE_LENGTH = 8;
@@ -135,31 +136,15 @@ export const QueensPlayer = () => {
         <WinTime timeTaken={timeTaken} />
       )}
       <PlayableBoard initialBoard={board} onWin={onWin} hasWon={hasWon} />
-      <Stack gap={2} direction="row">
-        <PrimaryButton fullWidth onClick={prevBoard} disabled={disablePrev}>
-          Previous board
-        </PrimaryButton>
-        <PrimaryButton fullWidth onClick={nextBoard} disabled={disableNext}>
-          Next board
-        </PrimaryButton>
-      </Stack>
-      board {currentBoardIndex + 1} of {maxBoardIndex}
-      <PrimaryButton
-        variant="text"
-        onClick={() =>
-          navigate(`${PATHS.levelSelect}?${BOARD_SIZE_PARAM}=${boardSize}`)
-        }
-      >
-        Select level
-      </PrimaryButton>
-      {false && (
-        <PrimaryButton
-          variant="text"
-          onClick={() => navigate(`${PATHS.multiplayerHodoku}`)}
-        >
-          Multiplayer
-        </PrimaryButton>
-      )}
+      <LevelNavigation
+        prevBoard={prevBoard}
+        disablePrev={disablePrev}
+        nextBoard={nextBoard}
+        disableNext={disableNext}
+        currentBoardIndex={currentBoardIndex}
+        maxBoardIndex={maxBoardIndex}
+        boardSize={boardSize}
+      />
     </MainContainer>
   );
 };
