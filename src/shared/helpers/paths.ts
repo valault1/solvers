@@ -1,7 +1,7 @@
 export const PATHS = {
   levelSelect: "/queens-level-select",
-  multiplayerHodoku: "/hodoku-multiplayer",
-  dailyHodoku: "/hodoku-daily",
+  multiplayerQueens: "/queens-multiplayer",
+  dailyQueens: "/queens-daily",
   login: "/login",
 };
 

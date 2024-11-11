@@ -15,7 +15,7 @@ import useWindowDimensions from "domains/Queens/hooks/useWindowDimensions";
 import { QUEENS_MOBILE_WIDTH_THRESHOLD } from "domains/Queens/QueensPlayerPage";
 
 import { Board } from "domains/Queens/sharedTypes";
-import { DailyHodokuDialog } from "domains/Queens/subfeatures/DailyHodoku/controllers/DailyHodokuDialog";
+import { DailyQueensDialog } from "domains/Queens/subfeatures/DailyQueens/controllers/DailyQueensDialog";
 
 import * as React from "react";
 import { Helmet } from "react-helmet";
@@ -28,7 +28,7 @@ const dayIndex = getDayIndex();
 const DAILY_BOARD = getDailyBoard();
 console.log({ DAILY_BOARD });
 
-export const DailyHodoku = () => {
+export const DailyQueens = () => {
   const initialTimeTaken = React.useMemo(() => {
     const progress = getDailyBoardProgress();
     return progress.isFinished ? progress.time : undefined;
@@ -109,7 +109,7 @@ export const DailyHodoku = () => {
         </Helmet>
       )}
       <MainContainer gap="24px">
-        <DailyHodokuDialog />
+        <DailyQueensDialog />
         Daily Queens #{dayIndex + 1}
         <Stack
           direction="row"

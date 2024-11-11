@@ -42,7 +42,7 @@ const INITIAL_BOARD = generateBoardFromSeedStatic(
   getSeeds(DEFAULT_SIDE_LENGTH)[DEFAULT_SEED_INDEX]
 );
 
-export const HodokuPlayerV2 = () => {
+export const QueensPlayerV2 = () => {
   const navigate = useNavigate();
 
   const [board, setBoard] = React.useState<Board>(INITIAL_BOARD);
@@ -155,7 +155,7 @@ export const HodokuPlayerV2 = () => {
       {false && (
         <PrimaryButton
           variant="text"
-          onClick={() => navigate(`${PATHS.multiplayerHodoku}`)}
+          onClick={() => navigate(`${PATHS.multiplayerQueens}`)}
         >
           Multiplayer
         </PrimaryButton>
