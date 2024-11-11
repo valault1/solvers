@@ -476,15 +476,7 @@ const fillBoardRegions = ({
       });
 
       if (possibleSquares.length === 0) {
-        console.log("eliminating region " + regionToFill);
-
         validRegions = validRegions.filter((r) => r !== regionToFill);
-        console.log({
-          validRegions,
-          regionToFill,
-          emptySquares,
-          regionSquares: regionSquares[regionToFill],
-        });
       }
     }
     let { row, col } = rng.getRandomElementFromArray(possibleSquares);
@@ -511,9 +503,6 @@ const fillBoardRegions = ({
       }
     }
   }
-
-  console.log("Finished making board!");
-  console.log(board);
 
   if (emptySquares.length) {
     console.log("ERROR");

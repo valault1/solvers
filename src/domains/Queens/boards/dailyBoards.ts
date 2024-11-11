@@ -48,6 +48,7 @@ export const hasFinishedDailyBoard = () => {
 //10x10: 7593202, 2149748, 3686519, 2109389, 4478942, 7957770, 4575896,
 export const DEFAULT_DAILY_BOARD_SIZE = 12;
 export type DailyBoard = { seed: number; size?: number };
+
 export const DAILY_BOARDS: DailyBoard[] = [
   { seed: 8390994 },
   { seed: 4376997 },

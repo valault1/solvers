@@ -23,7 +23,6 @@ const SHARE_URL = `valault.com`;
 // load this now, just in case they continue playing after midnight
 const dayIndex = getDayIndex();
 const DAILY_BOARD = getDailyBoard();
-console.log({ DAILY_BOARD });
 
 export const DailyHodoku = () => {
   const timeTaken = 0;

@@ -54,8 +54,8 @@ const config = {
   },
   resolve: {
     fallback: {
-      path: false,
-      stream: false,
+      // path: false,
+      // stream: false,
     },
     alias: {
       src: path.resolve(__dirname, "src/"), // added this
