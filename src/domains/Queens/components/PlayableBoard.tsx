@@ -93,7 +93,7 @@ export const PlayableBoard = ({
         </Stack>
       </Stack>
     ),
-    [hasWon]
+    [clearBoard, hasWon, runRotateBoard, solveBoard, undoLastMove]
   );
 
   if (!board?.length) return null;
