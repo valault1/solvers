@@ -21,15 +21,17 @@ type KinematicsCalculatorData = {
   time: number;
 };
 
-const RowWrapper = styled.div(() => ({
+const RowWrapper = styled.div({
   display: "flex",
   flexDirection: "row",
-}));
+});
 
 export const KinematicsCalculator: React.VFC = () => {
   const { control, getValues } = useForm<KinematicsCalculatorData>({
     defaultValues: {},
   });
+
+  /* @ts-ignore */
   const values = useWatch({ control });
   const numValuesKnown = React.useMemo(() => {
     let result = 0;
@@ -77,14 +79,14 @@ export const KinematicsCalculator: React.VFC = () => {
           disabled={isDisabled("knowsAcceleration")}
         />
       </RowWrapper>
-      {values.knowsVelocityInitial && (
+      {/* {values.knowsVelocityInitial && (
         <FormsTextInput
           control={control}
           label="Initial Velocity"
           name={"velocityInitial"}
           type="number"
         />
-      )}
+      )} */}
       {values.knowsVelocityFinal && (
         <FormsTextInput
           control={control}

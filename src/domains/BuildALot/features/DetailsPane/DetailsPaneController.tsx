@@ -11,12 +11,12 @@ import {
 } from "domains/BuildALot/sharedTypes";
 import * as React from "react";
 
-export const MainWrapper = styled.div(() => ({
+export const MainWrapper = styled.div({
   display: "flex",
   flexDirection: "column",
   width: "100%",
   height: "100%",
-}));
+});
 
 export const ActionDescriptionContainer = styled.div(() => ({
   flex: 1,
@@ -28,20 +28,20 @@ export const ActionsBarContainer = styled.div(() => ({
   padding: 12,
 }));
 
-export const TopBarWrapper = styled.div(() => ({
+export const TopBarWrapper = styled.div({
   display: "flex",
   flexDirection: "row",
   padding: 4,
   gap: "8px",
   borderBottom: "2px solid",
-}));
+});
 
-export const ContentWrapper = styled.div(() => ({
+export const ContentWrapper = styled.div({
   display: "flex",
   flexDirection: "row",
   flex: 4,
   padding: 12,
-}));
+});
 
 export type ActionBlueprint = Omit<
   Action,

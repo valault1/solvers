@@ -7,19 +7,19 @@ import { theme } from "../../components/theme/theme";
 
 export const ROW_WIDTH = 300;
 
-const ReviewCardMain = styled.div(() => ({
+const ReviewCardMain = styled.div({
   display: "flex",
   gap: 4,
-}));
+});
 
-const ReviewCardContent = styled.div(() => ({
+const ReviewCardContent = styled.div({
   padding: 20,
   display: "flex",
   flexDirection: "column",
   gap: 8,
-}));
+});
 
-const RowWrapper = styled.div(() => ({
+const RowWrapper = styled.div({
   display: "flex",
   justifyContent: "space-around",
   padding: 20,
@@ -29,7 +29,7 @@ const RowWrapper = styled.div(() => ({
     cursor: "pointer",
     backgroundColor: lighten(theme.colors.background, 0.2),
   },
-}));
+});
 
 type ReviewDrawerProps = {
   titleInfo: Title;

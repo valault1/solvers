@@ -8,11 +8,11 @@ import styled from "@emotion/styled";
 
 type RemoteControllerProps = {};
 
-const ButtonContainer = styled.div(() => ({
+const ButtonContainer = styled.div({
   display: "flex",
   flexDirection: "column",
   gap: 12,
-}));
+});
 
 const default_config = {
   config: {

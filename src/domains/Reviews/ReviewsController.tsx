@@ -13,7 +13,7 @@ export const ReviewsController = () => {
       setRatings(result);
     });
   });
-  const isLoading = titles === [];
+  const isLoading = titles.length === 0;
   return (
     <>
       <div>Welcome to the video game reviews!</div>

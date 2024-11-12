@@ -90,6 +90,7 @@ export const DailyQueens = () => {
   return (
     <>
       {isMobile && (
+        /* @ts-ignore */
         <Helmet>
           <style>
             {/* reference: https://stackoverflow.com/questions/62508815/how-would-you-style-the-body-of-multiple-pages-in-a-reactjs-app-without-having */}

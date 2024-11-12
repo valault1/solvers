@@ -35,18 +35,18 @@ const HexagonWrapper = styled.div(() => ({
   width: HEXAGON_SIZE,
 }));
 
-const RowWrapper = styled.div(() => ({
+const RowWrapper = styled.div({
   display: "flex",
   flexDirection: "row",
   gap: gapBetweenColumns,
   marginBottom: gapBetweenRows,
-}));
+});
 
-const BoardWrapper = styled.div(() => ({
+const BoardWrapper = styled.div({
   display: "flex",
   flexDirection: "column",
   marginBottom: HEXAGON_SIZE,
-}));
+});
 
 export const HexBoardDisplay: React.FC<HexBoardProps> = ({
   board,

@@ -14,7 +14,7 @@ export const StyledGameSquare = styled.div<Omit<MancalaSquareProps, "value">>(
   })
 );
 
-export const StyledPlayerRocksSquare = styled.div(() => ({
+export const StyledPlayerRocksSquare = styled.div({
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
@@ -22,7 +22,7 @@ export const StyledPlayerRocksSquare = styled.div(() => ({
   width: SQUARE_SIZE * 2 + 3,
   height: SQUARE_SIZE,
   border: "solid",
-}));
+});
 
 type MancalaSquareProps = {
   value: string;
@@ -40,8 +40,7 @@ export const MancalaSquare: React.FC<MancalaSquareProps> = ({
 type MancalaPlayerRocksSquareProps = {
   value: string;
 };
-export const MancalaPlayerRocksSquare: React.FC<
-  MancalaPlayerRocksSquareProps
-> = ({ value }) => {
-  return <StyledPlayerRocksSquare>{value}</StyledPlayerRocksSquare>;
-};
+export const MancalaPlayerRocksSquare: React.FC<MancalaPlayerRocksSquareProps> =
+  ({ value }) => {
+    return <StyledPlayerRocksSquare>{value}</StyledPlayerRocksSquare>;
+  };

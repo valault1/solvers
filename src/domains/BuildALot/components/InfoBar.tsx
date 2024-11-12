@@ -9,19 +9,19 @@ import { ProgressBar } from "domains/BuildALot/components/ProgressBar";
 import { GameState } from "domains/BuildALot/sharedTypes";
 import React from "react";
 
-const InfoBarContainer = styled.div(() => ({
+const InfoBarContainer = styled.div({
   display: "flex",
   flexDirection: "row",
   gap: 12,
   alignItems: "center",
-}));
+});
 
-const RentCollectionWrapper = styled.div(() => ({
+const RentCollectionWrapper = styled.div({
   display: "flex",
   flexDirection: "row",
   gap: 12,
   alignItems: "center",
-}));
+});
 
 export type InfoBarProps = {
   gameState: GameState;

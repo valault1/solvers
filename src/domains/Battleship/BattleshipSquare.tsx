@@ -16,7 +16,7 @@ export type BattleshipSquareProps = {
 };
 
 const SQUARE_WIDTH = 75;
-const StyledSquare = styled.div(() => ({
+const StyledSquare = styled.div({
   border: "solid",
   width: SQUARE_WIDTH,
   height: SQUARE_WIDTH,
@@ -25,7 +25,7 @@ const StyledSquare = styled.div(() => ({
   gap: 4,
   justifyContent: "center",
   alignItems: "center",
-}));
+});
 
 const ICON_SIZE = 25;
 export const mapSymbolToIcon = (symbol: Symbol, iconSize = ICON_SIZE) => {

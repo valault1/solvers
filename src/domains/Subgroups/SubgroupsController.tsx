@@ -9,21 +9,21 @@ import { PrimaryButton } from "components/Form.elements";
 
 type SubgroupsControllerProps = {};
 
-export const ListsContainer = styled.div(() => ({
+export const ListsContainer = styled.div({
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "start",
 
   gap: 12,
-}));
+});
 
-export const SelectContainer = styled.div(() => ({
+export const SelectContainer = styled.div({
   display: "flex",
   flexDirection: "column",
   minWidth: "200px",
   color: theme.colors.textPrimary,
-}));
+});
 
 export const NAMES = [
   "Val",

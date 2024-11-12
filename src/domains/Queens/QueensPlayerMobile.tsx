@@ -1,11 +1,9 @@
 import { Box, Stack } from "@mui/material";
 import { MainContainer } from "components/MainPage.elements";
-
 import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
 import { useNavigateBoards } from "domains/Queens/hooks/useNavigateBoards";
 import { getSeeds } from "domains/Queens/boards/seeds";
 import { Helmet } from "react-helmet";
-
 import * as React from "react";
 import { WinTime } from "domains/Queens/components/Time";
 import {
@@ -103,9 +101,13 @@ export const QueensPlayerMobile = () => {
   }, [currentBoardIndex, boardSize]);
 
   React.useEffect(() => {
-    // document.body.style.overflow = "hidden";
-    // document.body.style.userSelect = "none";
-    // document.body.style.webkitUserSelect = "none";
+    // this disables the double tapping. However, it also breaks other taps...
+    // const eventParams = { passive: false };
+    // function ignore(e: any) {
+    //   e.preventDefault();
+    // }
+    // document.body.addEventListener("touchcancel", ignore, eventParams);
+    // document.body.addEventListener("touchend", ignore, eventParams);
 
     return () => {
       // this is where I would put cleanup
@@ -119,14 +121,21 @@ export const QueensPlayerMobile = () => {
 
   return (
     <>
+      {/* @ts-ignore */}
       <Helmet>
         <style>
           {/* reference: https://stackoverflow.com/questions/62508815/how-would-you-style-the-body-of-multiple-pages-in-a-reactjs-app-without-having */}
           {`
             body {
               overflow: hidden;
-              user-select: none;
+              -webkit-touch-callout: none;
               -webkit-user-select: none;
+              -khtml-user-select: none;
+              -moz-user-select: none;
+              -ms-user-select: none;
+              user-select: none;
+              -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+              touch-action: manipulation;
             }
           `}
         </style>

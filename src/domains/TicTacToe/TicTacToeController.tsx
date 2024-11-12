@@ -12,12 +12,12 @@ import {
 import { Square } from "domains/TicTacToe/Square";
 import * as React from "react";
 
-export const StyledRow = styled.div(() => ({
+export const StyledRow = styled.div({
   display: "flex",
   flexDirection: "row",
   justifyContent: "center",
   alignItems: "center",
-}));
+});
 
 export enum WINNER {
   COMPUTER = "COMPUTER",

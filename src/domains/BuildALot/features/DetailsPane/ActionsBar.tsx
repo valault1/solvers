@@ -3,22 +3,22 @@ import { PrimaryButton } from "components/Form.elements";
 import { Action } from "domains/BuildALot/features/DetailsPane/DetailsPaneController";
 import * as React from "react";
 
-const MainWrapper = styled.div(() => ({
+const MainWrapper = styled.div({
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
   height: "100%",
   gap: 10,
-}));
+});
 
-const ActionsWrapper = styled.div(() => ({
+const ActionsWrapper = styled.div({
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "flex-start",
 
   gap: 10,
-}));
+});
 
 export const ActionIconWrapper = styled.div<{ isSelected: boolean }>(
   ({ isSelected }) => ({

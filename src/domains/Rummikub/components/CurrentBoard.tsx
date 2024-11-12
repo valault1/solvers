@@ -1,13 +1,12 @@
 import styled from "@emotion/styled";
 import { PrimaryButton } from "components/Form.elements";
-import { Tile } from "domains/Rummikub/components/Tile";
+import { Tile, TILE_HEIGHT } from "domains/Rummikub/components/Tile";
 import { TileSet } from "domains/Rummikub/components/TileSet";
 import { TILES_TO_SELECT } from "domains/Rummikub/constants";
 import { getBestSolution } from "domains/Rummikub/getSolutions";
 
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import {
-  MAX_SELECTION_WIDTH,
   SectionHeading,
   TileSelection,
 } from "domains/Rummikub/RummikubController";
@@ -15,7 +14,9 @@ import { TileData } from "domains/Rummikub/sharedTypes";
 import React from "react";
 import nextId from "react-id-generator";
 
-export const BoardWrapper = styled.div(() => ({
+const MAX_SELECTION_WIDTH = (TILE_HEIGHT + 4) * 13 - 4;
+
+export const BoardWrapper = styled.div({
   display: "flex",
   flexDirection: "column",
   borderStyle: "solid",
@@ -24,7 +25,7 @@ export const BoardWrapper = styled.div(() => ({
   borderRadius: 8,
   gap: 4,
   width: MAX_SELECTION_WIDTH,
-}));
+});
 
 export const TileSetRow = styled.div(({ color }) => ({
   display: "flex",

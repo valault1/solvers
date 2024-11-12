@@ -5,12 +5,12 @@ import { LotComponent } from "domains/BuildALot/features/Lots/LotComponent";
 import { Job, Lot } from "domains/BuildALot/sharedTypes";
 import React from "react";
 
-const LotsWrapper = styled.div(() => ({
+const LotsWrapper = styled.div({
   display: "flex",
   flexDirection: "row",
   gap: 12,
   height: "100%",
-}));
+});
 
 export const LOT_SIZE = 60;
 export const LOT_SIZE_PX = `${LOT_SIZE}px`;
@@ -27,12 +27,12 @@ const LotWrapper = styled.div<{ isSelected?: boolean }>(({ isSelected }) => ({
 }));
 
 const LOT_AND_JOB_BAR_GAP = 16;
-const LotAndJobBarWrapper = styled.div(() => ({
+const LotAndJobBarWrapper = styled.div({
   display: "flex",
   flexDirection: "column",
   gap: LOT_AND_JOB_BAR_GAP,
   height: `${LOT_AND_JOB_BAR_HEIGHT + LOT_AND_JOB_BAR_GAP}px`,
-}));
+});
 
 const JobBarWrapper = styled.div(() => ({}));
 

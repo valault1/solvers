@@ -17,13 +17,13 @@ import { Lots } from "domains/BuildALot/features/Lots/Lots";
 import { useDetailsPaneActions } from "domains/BuildALot/features/DetailsPane/useDetailsPaneActions";
 import { useDetailsPaneState } from "domains/BuildALot/features/DetailsPane/useDetailsPaneState";
 
-const GameContainer = styled.div(() => ({
+const GameContainer = styled.div({
   display: "flex",
   flexDirection: "column",
   width: "99%",
   height: "700px",
   color: theme.colors.textPrimary,
-}));
+});
 
 const TopGameSection = styled.div(() => ({
   flex: 5,

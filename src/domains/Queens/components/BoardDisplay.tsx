@@ -72,7 +72,7 @@ export const BoardDisplay = ({
                 tile={tile}
                 onClickTile={hasWon ? undefined : () => onClickTile?.(i, j)}
                 onDragTouchOntoTile={
-                  hasWon ? undefined : () => onDragTouchOntoTile?.(i, j)
+                  hasWon ? () => {} : () => onDragTouchOntoTile?.(i, j)
                 }
                 squareSize={SQUARE_SIZE}
                 isTouchScreenDevice={isTouchScreenDevice}

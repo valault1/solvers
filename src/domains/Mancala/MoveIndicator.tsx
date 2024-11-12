@@ -10,7 +10,7 @@ export enum MoveCoords {
   Player2RocksSquareNum = 100,
 }
 const SQUARE_SIZE = 53;
-export const StyledMoveIndicatorSquare = styled.div(() => ({
+export const StyledMoveIndicatorSquare = styled.div({
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
@@ -19,7 +19,7 @@ export const StyledMoveIndicatorSquare = styled.div(() => ({
 
   height: SQUARE_SIZE,
   fontSize: 45,
-}));
+});
 let dot = "·";
 type MoveIndicatorProps = {
   showDot?: boolean;

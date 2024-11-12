@@ -2,12 +2,12 @@ import styled from "@emotion/styled";
 import { Button, ButtonProps, TextField, TextFieldProps } from "@mui/material";
 import React from "react";
 
-export const InputWrapper = styled.div(() => ({
+export const InputWrapper = styled.div({
   // for some reason, this gap doesn't show up?
   display: "flex",
   flexDirection: "column",
   gap: 8,
-}));
+});
 export const LabelWrapper = styled.div(() => ({
   // paddingBottom: 8,
 }));

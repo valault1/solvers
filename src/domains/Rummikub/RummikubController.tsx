@@ -10,9 +10,9 @@ import { theme } from "../../components/theme/theme";
 
 type RummikubControllerProps = {};
 
-export const MAX_SELECTION_WIDTH = (TILE_HEIGHT + 4) * 13 - 4;
+const MAX_SELECTION_WIDTH = (TILE_HEIGHT + 4) * 13 - 4;
 
-export const RummikubMainContainer = styled.div(() => ({
+export const RummikubMainContainer = styled.div({
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
@@ -21,8 +21,8 @@ export const RummikubMainContainer = styled.div(() => ({
   color: theme.colors.textPrimary,
   paddingTop: 12,
   gap: 12,
-}));
-export const TileSelection = styled.div(() => ({
+});
+export const TileSelection = styled.div({
   display: "flex",
   alignItems: "center",
   flexWrap: "wrap",
@@ -30,7 +30,7 @@ export const TileSelection = styled.div(() => ({
   columnGap: 4,
   rowGap: 4,
   maxWidth: MAX_SELECTION_WIDTH,
-}));
+});
 
 export const SectionWrapper = styled.div(() => ({
   borderStyle: "solid",

@@ -2,20 +2,20 @@ import styled from "@emotion/styled";
 import { Button } from "@mui/material";
 import { theme } from "components/theme/theme";
 
-export const MainCard = styled.div(() => ({
+export const MainCard = styled.div({
   color: theme.colors.textPrimary,
   padding: 20,
   display: "flex",
   flexDirection: "column",
   gap: 8,
-}));
+});
 
-export const DialogContent = styled.div(() => ({
+export const DialogContent = styled.div({
   display: "flex",
   flexWrap: "wrap",
   paddingLeft: 16,
   paddingBottom: 16,
-}));
+});
 
 export const DialogWord = styled.div(() => ({
   // 21% is just enough that it could never make 5 columns; so always 4 columns
@@ -38,8 +38,8 @@ export const Recommendations = styled.div(() => ({
   gap: 12,
 }));
 
-export const WordGeneratorContainer = styled.div(() => ({
+export const WordGeneratorContainer = styled.div({
   display: "flex",
   flexDirection: "column",
   gap: 12,
-}));
+});
