@@ -3,6 +3,7 @@ const fs = require("node:fs");
 const CONFERENCE_TALKS_URL =
   "https://www.churchofjesuschrist.org/study/general-conference?lang=eng";
 
+//TODO: Make this path relative
 const BASE_FILE_PATH = "/Users/vault/src/solvers/scripts/conference_talks/";
 
 const BASE_URL = "https://www.churchofjesuschrist.org";
