@@ -3,6 +3,8 @@ const fs = require("node:fs");
 const CONFERENCE_TALKS_URL =
   "https://www.churchofjesuschrist.org/study/general-conference?lang=eng";
 
+const BASE_FILE_PATH = "/Users/vault/src/solvers/scripts/conference_talks/";
+
 const BASE_URL = "https://www.churchofjesuschrist.org";
 const CONFERENCE_TALK_URLS_FILE = "conferenceTalkUrls.txt";
 
@@ -73,6 +75,7 @@ const getAllTalkUrls = async () => {
   const END_YEAR = new Date().getFullYear();
   const allLinks = [];
   for (let year = START_YEAR; year <= END_YEAR; year++) {
+    console.log("getting talks from " + year);
     const aprilUrls = await getTalkUrls(year, "04");
     allLinks.push(...aprilUrls);
     allLinks.push(...(await getTalkUrls(year, "10")));
@@ -84,7 +87,7 @@ const getAllTalkUrls = async () => {
   for (let idx in links) console.log(`${idx} - ${links[idx]}`);
   const content = links.join("\n");
   fs.writeFile(
-    `/Users/valault/Programming/solvers/scripts/conference_talks/${CONFERENCE_TALK_URLS_FILE}`,
+    `${BASE_FILE_PATH}${CONFERENCE_TALK_URLS_FILE}`,
     content,
     (err) => {
       if (err) {
@@ -96,4 +99,4 @@ const getAllTalkUrls = async () => {
   );
 };
 
-//getAllTalkUrls();
+getAllTalkUrls();

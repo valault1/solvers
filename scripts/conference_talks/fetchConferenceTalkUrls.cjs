@@ -1,5 +1,6 @@
 const fs = require("node:fs/promises");
-const URLS_FILE_PATH = `/Users/valault/Programming/solvers/scripts/conference_talks/conferenceTalkUrls.txt`;
+const BASE_FILE_PATH = `/Users/vault/src/solvers/scripts/conference_talks/`;
+const URLS_FILE_PATH = `${BASE_FILE_PATH}conferenceTalkUrls.txt`;
 const SEPARATOR = "----- NEW TALK -----\n";
 const CONFERENCE_TALKS_TEXT_FILE = "conferenceTalkTexts.txt";
 const stripHtml = (htmlText) => {
@@ -18,7 +19,7 @@ async function readFileAsText(filePath) {
 
 const writeFile = async (content) => {
   fs.writeFile(
-    `/Users/valault/Programming/solvers/scripts/conference_talks/${CONFERENCE_TALKS_TEXT_FILE}`,
+    `${BASE_FILE_PATH}${CONFERENCE_TALKS_TEXT_FILE}`,
     content,
     (err) => {
       if (err) {
