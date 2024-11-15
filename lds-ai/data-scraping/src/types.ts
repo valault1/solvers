@@ -1,18 +1,26 @@
 export const ContentTypes = ["conference-talk", "book-of-mormon"] as const;
 
 export type ContentType = (typeof ContentTypes)[number];
-export type UrlType = "content" | "table-of-contents";
+export type UrlType = "content" | "links";
 
-export type TableOfContentUrl = {
+// a LinksUrl is a url that is used to get more links
+// these links can be either more LinksUrls, or contentUrls
+export type LinksUrl = {
   contentType: ContentType;
   url: string;
-  // the function to get the body text out that is searchable by the regexes
-  getBodyText: (rawBody: string) => string;
-  regexes: {
-    regexString: string;
-    resultingUrlsType: UrlType;
-    getContentText: (rawBody: string) => string;
-  }[];
+  links: Sublink[];
+};
+
+type Sublink =
+  | { getLinksFromBody: (rawBody: string) => string[]; baseUrl?: string } & {
+      resultingUrlsType: "content";
+      getContentText: (rawBody: string) => string;
+    };
+
+export type ContentUrl = {
+  contentType: ContentType;
+  url: string;
+  getContentText: (rawBody: string) => string;
 };
 
 export type Content = {
@@ -20,4 +28,5 @@ export type Content = {
   text: string;
   // todo: make this typing better, so that each content type has specific metadata
   metadata: any;
+  url: string;
 };
