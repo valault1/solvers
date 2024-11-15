@@ -1,12 +1,9 @@
-const fs = require("node:fs");
+import { TableOfContentUrl } from "./types";
 
-const CONFERENCE_TALKS_URL =
-  "https://www.churchofjesuschrist.org/study/general-conference?lang=eng";
+const fs = import("node:fs");
 
-//TODO: Make this path relative
 const BASE_FILE_PATH = `${__dirname}/`;
 const BASE_URL = "https://www.churchofjesuschrist.org";
-const CONFERENCE_TALK_URLS_FILE = "conferenceTalkUrls.txt";
 
 const SEPARATOR = "----- NEW TALK -----\n";
 const CONFERENCE_TALKS_TEXT_FILE = "conferenceTalkTexts.txt";
@@ -39,10 +36,6 @@ function getAllMatches(string, regex) {
   return matches;
 }
 
-// note: Only month `10` or `4` will probably work.
-const getConferenceUrl = (year, month) => {
-  return `https://www.churchofjesuschrist.org/study/general-conference/${year}/${month}?lang=eng`;
-};
 const fetchUrl = async (url) => {
   try {
     const response = await fetch(url);
@@ -50,6 +43,11 @@ const fetchUrl = async (url) => {
   } catch (error) {
     console.error("There has been a problem with your fetch operation:", error);
   }
+};
+
+// note: Only month `10` or `4` will probably work.
+const getConferenceUrl = (year, month) => {
+  return `https://www.churchofjesuschrist.org/study/general-conference/${year}/${month}?lang=eng`;
 };
 
 // given a month and year of a general conference, return the urls of the talks
@@ -87,7 +85,7 @@ async function getTalkUrls(year, month) {
   // /study/general-conference/2023/10/saturday-afternoon-session?lang=eng
 }
 
-const getAllTalkUrls = async () => {
+export const main = async () => {
   const startTime = new Date();
   const START_YEAR = 1971;
   const END_YEAR = new Date().getFullYear();
@@ -114,42 +112,46 @@ const getAllTalkUrls = async () => {
   );
 };
 
-const processUrl = async (url, failedUrls) => {
+const processUrl = async (url) => {
   const text = await fetchUrl(url);
   const encodedText = text
     ?.split('<script>window.__INITIAL_STATE__="')[1]
     ?.split('";</script>')[0];
   if (!encodedText) {
     console.log("url didn't work: " + url);
-    failedUrls.push(url);
-    return undefined;
+    return { text: undefined, error: true, url };
   }
   const decodedText = atob(encodedText);
   const obj = JSON.parse(decodedText);
   const uri = Object.keys(obj.reader.contentStore)[0];
-  const content = obj.reader.contentStore[uri].content;
-  const body = content.body;
-  const title = content.head["page-meta-social"].pageMeta.title;
+  const content = obj?.reader?.contentStore?.[uri]?.content;
+  const body = content?.body;
+  const title = content?.head?.["page-meta-social"]?.pageMeta?.title;
 
   const year = uri.split("/")[3];
   const month = uri.split("/")[4];
   const fileMetadata = { title, year, month };
   const plainText = stripHtml(body);
-  return `${SEPARATOR}${JSON.stringify(fileMetadata)}\n${plainText}`;
+  return {
+    text: `${SEPARATOR}${JSON.stringify(fileMetadata)}\n${plainText}`,
+    error: false,
+    url,
+  };
 };
 
 const fetchContentFromUrlsAndWriteToFile = async (urls) => {
   const promises = [];
-  const failedUrls = [];
   for (let idx in urls) {
     const url = urls[idx];
     console.log("processing URL #" + idx);
-    promises.push(processUrl(url, failedUrls));
+    promises.push(processUrl(url));
   }
   const values = await Promise.all(promises);
+  const texts = values.filter((v) => !!v.text).map((v) => v.text);
+  const failedUrls = values.filter((v) => !!v.error).map((v) => v.url);
   await writeFile(
     `${BASE_FILE_PATH}${CONFERENCE_TALKS_TEXT_FILE}`,
-    values.join("\n")
+    texts.join("\n")
   );
   await writeFile(
     `${BASE_FILE_PATH}${FAILED_CONFERENCE_TALK_URLS}`,
@@ -157,4 +159,57 @@ const fetchContentFromUrlsAndWriteToFile = async (urls) => {
   );
 };
 
-getAllTalkUrls();
+export const getConferenceTalkSeedUrls = () => {
+  const START_YEAR = 1971;
+  const END_YEAR = new Date().getFullYear();
+  const tocUrls: TableOfContentUrl[] = [];
+
+  for (let year = START_YEAR; year <= END_YEAR; year++) {
+    console.log("getting talks from " + year);
+    ["04", "10"].forEach((month) => {
+      tocUrls.push({
+        url: getConferenceUrl(year, month),
+        contentType: "conference-talk",
+        getBodyText: (rawBody) => {
+          const encodedText = rawBody
+            .split('<script>window.__INITIAL_STATE__="')[1]
+            .split('";</script>')[0];
+
+          const plainText = atob(encodedText);
+          const obj = JSON.parse(plainText);
+
+          const contentStoreKey = `/eng/general-conference/${year}/${month}`;
+          const body =
+            obj?.reader?.contentStore?.[contentStoreKey]?.content?.body;
+          return body;
+        },
+        regexes: [
+          {
+            regexString: String.raw`study\/general-conference\/${year}\/${month}\/.*lang\=eng`,
+            resultingUrlsType: "content",
+            getContentText: (rawBody) => {
+              const encodedText = rawBody
+                ?.split('<script>window.__INITIAL_STATE__="')[1]
+                ?.split('";</script>')[0];
+              const decodedText = atob(encodedText);
+              const obj = JSON.parse(decodedText);
+              const uri = Object.keys(obj.reader.contentStore)[0];
+              const content = obj?.reader?.contentStore?.[uri]?.content;
+              const body = content?.body;
+              const title =
+                content?.head?.["page-meta-social"]?.pageMeta?.title;
+
+              const year = uri.split("/")[3];
+              const month = uri.split("/")[4];
+              const fileMetadata = { title, year, month };
+              const plainText = stripHtml(body);
+              return plainText;
+            },
+          },
+        ],
+      });
+    });
+  }
+
+  return tocUrls;
+};
