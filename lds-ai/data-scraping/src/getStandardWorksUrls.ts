@@ -2,13 +2,13 @@ import {
   getContentTextFromBodyLdsWebsite,
   getLinksFromBodyLdsWebsite,
 } from "./helpers";
-import { LinksUrl } from "./types";
+import { LinksUrl, StandardWorksContentTypes, worksByUrl } from "./types";
 
-export const getBookOfMormonUrls = (): LinksUrl[] => {
-  return [
-    {
-      url: "https://www.churchofjesuschrist.org/study/scriptures/bofm?lang=eng",
-      contentType: "book-of-mormon",
+export const getStandardWorksUrls = (): LinksUrl[] => {
+  return StandardWorksContentTypes.map((contentType) => {
+    return {
+      url: worksByUrl[contentType],
+      contentType,
       links: [
         {
           getLinksFromBody: getLinksFromBodyLdsWebsite,
@@ -16,6 +16,6 @@ export const getBookOfMormonUrls = (): LinksUrl[] => {
           getContentText: getContentTextFromBodyLdsWebsite,
         },
       ],
-    },
-  ];
+    };
+  });
 };

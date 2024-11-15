@@ -1,5 +1,6 @@
 import { getBookOfMormonUrls } from "./getBookOfMormonUrls";
 import { getConferenceTalkSeedUrls } from "./getConferenceTalkUrls";
+import { getStandardWorksUrls } from "./getStandardWorksUrls";
 import { fetchUrl, writeFile } from "./helpers";
 import {
   Content,
@@ -15,36 +16,45 @@ const SEPARATOR = "----- NEW TALK -----\n";
 let RETRY_COUNT = 5;
 
 async function processContentType(contentType: ContentType) {
-  let linksUrls = [];
+  let linksUrls: LinksUrl[] = [];
   switch (contentType) {
     case "conference-talk":
       linksUrls = getConferenceTalkSeedUrls();
       break;
     case "book-of-mormon": {
-      linksUrls = getBookOfMormonUrls();
+      linksUrls = getStandardWorksUrls();
       console.log({ linksUrls });
     }
   }
-  await processUrlsAndWriteResults(linksUrls, contentType);
+  await processUrlsAndWriteResults(linksUrls);
 }
 
-async function processUrlsAndWriteResults(
-  linksUrls: LinksUrl[],
-  contentType: ContentType
-) {
+async function processUrlsAndWriteResults(linksUrls: LinksUrl[]) {
+  const contentType = linksUrls[0].contentType;
   console.log(`------------------- ${contentType} ------------------------`);
   console.log(
     `found ${linksUrls.length} links urls - processing them to get content urls...`
   );
-  let contentUrls = await processLinksUrls(linksUrls);
-  console.log(`got ${contentUrls.length} content urls!`);
+  let allContentUrls = await processLinksUrls(linksUrls);
+  console.log(`got ${allContentUrls.length} content urls!`);
 
   let contents: Content[] = [];
   let failCount = 0;
-  while (contentUrls.length && failCount < RETRY_COUNT) {
+  let MAX_ATTEMPTS_AT_ONCE = 2000;
+  const MINIMUM_ATTEMPTS_NEEDED = Math.ceil(
+    allContentUrls.length / MAX_ATTEMPTS_AT_ONCE
+  );
+  const attemptsToTry = RETRY_COUNT + MINIMUM_ATTEMPTS_NEEDED;
+  let contentUrls = allContentUrls.slice(0, MAX_ATTEMPTS_AT_ONCE);
+  allContentUrls = allContentUrls.slice(contentUrls.length);
+  while (contentUrls.length && failCount < attemptsToTry) {
+    let startTime = new Date();
     failCount += 1;
     console.log(`successful contents so far: ${contents.length} `);
-    console.log(`Fetching ${contentUrls.length} urls - attempt #${failCount}`);
+    console.log(
+      `Fetching ${contentUrls.length} urls - attempt #${failCount} / ${attemptsToTry}`
+    );
+    console.log(`total urls left to fetch: ${allContentUrls.length}`);
 
     const newContents = await processContentUrls(contentUrls);
     const successfulContents = newContents.filter((c) => !!c.text);
@@ -52,6 +62,13 @@ async function processUrlsAndWriteResults(
     contents.push(...successfulContents);
     const failedUrls = newContents.filter((c) => !c.text).map((c) => c.url);
     contentUrls = contentUrls.filter((url) => failedUrls.includes(url.url));
+    contentUrls.push(...allContentUrls.slice(0, successfulContents.length));
+    allContentUrls = allContentUrls.slice(successfulContents.length);
+    console.log(
+      `total time for that set of calls: ${
+        (new Date().getTime() - startTime.getTime()) / 1000
+      } s`
+    );
   }
   const fileContents = contents
     .filter((c) => !!c.text)
@@ -62,7 +79,7 @@ async function processUrlsAndWriteResults(
   await writeFile(`${BASE_FILE_PATH}${contentType}-success.txt`, fileContents);
   if (contentUrls.length) {
     await writeFile(
-      `${BASE_FILE_PATH}${FAILED_CONFERENCE_TALK_URLS}-error`,
+      `${BASE_FILE_PATH}${contentType}-error`,
       contentUrls.map((u) => u.url).join("\n")
     );
   }
@@ -96,10 +113,23 @@ async function processContentUrl(contentUrl: ContentUrl): Promise<Content> {
 }
 
 async function processLinksUrls(linksUrls: LinksUrl[]): Promise<ContentUrl[]> {
+  const startTime = new Date();
   const promises = linksUrls.map((link) => processLinksUrl(link));
   const contentLists = await Promise.all(promises);
   let result: ContentUrl[] = [];
-  contentLists.forEach((list) => result.push(...list));
+  const failedUrls: string[] = [];
+  contentLists.forEach((list, idx) => {
+    if (!list.length) failedUrls.push(linksUrls[idx].url);
+    result.push(...list);
+  });
+  if (failedUrls.length) {
+    failedUrls.forEach((url) => console.log("failed to get links from url: "));
+  }
+  console.log(
+    `total time to process links urls: ${
+      (new Date().getTime() - startTime.getTime()) / 1000
+    } s`
+  );
   return result;
 }
 

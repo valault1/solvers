@@ -1,4 +1,29 @@
-export const ContentTypes = ["conference-talk", "book-of-mormon"] as const;
+export const getStandardWorksUrl = (abbr: string) =>
+  `https://www.churchofjesuschrist.org/study/scriptures/${abbr}?lang=eng`;
+
+export const worksByUrl = {
+  "book-of-mormon": getStandardWorksUrl("bofm"),
+  "old-testament": getStandardWorksUrl("ot"),
+  "new-testament": getStandardWorksUrl("nt"),
+  "pearl-of-great-price": getStandardWorksUrl("pgp"),
+  "doctrine-and-covenants": getStandardWorksUrl("dc-testament"),
+  "guide-to-the-scriptures": getStandardWorksUrl("gs"),
+  "topical-guide": getStandardWorksUrl("tg"),
+  "bible-dictionary": getStandardWorksUrl("bd"),
+  "index-to-the-triple-combination": getStandardWorksUrl("triple-index"),
+  "reference-guide-to-the-book-of-mormon":
+    getStandardWorksUrl("bofm-reference"),
+  "reference-guide-to-the-holy-bible": getStandardWorksUrl("bible-reference"),
+  "joseph-smith-translation-appendix": getStandardWorksUrl("jst"),
+} as const;
+
+export const StandardWorksContentTypes = Object.keys(worksByUrl) as Array<
+  keyof typeof worksByUrl
+>;
+export const ContentTypes = [
+  "conference-talk",
+  ...StandardWorksContentTypes,
+] as const;
 
 export type ContentType = (typeof ContentTypes)[number];
 export type UrlType = "content" | "links";
