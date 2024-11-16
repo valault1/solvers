@@ -24,6 +24,9 @@ yarn-error.log*
 node_modules
 node_modules_OLD
 scripts/node_modules
+lds-ai/bard/.apikey
+lds-ai/data-scraping/src/db
+lds-ai/data-scraping/node_modules
+lds-ai/search/node_modules
 .firebase
 
-scripts/lds-ai/bard/.apikey

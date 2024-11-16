@@ -1,18 +1,14 @@
-import { getBookOfMormonUrls } from "./getBookOfMormonUrls";
 import { getConferenceTalkSeedUrls } from "./getConferenceTalkUrls";
 import { getStandardWorksUrls } from "./getStandardWorksUrls";
-import { fetchUrl, writeFile } from "./helpers";
 import {
-  Content,
-  ContentType,
-  ContentTypes,
-  ContentUrl,
-  LinksUrl,
-} from "./types";
+  contentTypesToProcess,
+  fetchUrl,
+  getFilePath,
+  SEPARATOR,
+  writeFile,
+} from "./helpers";
+import { Content, ContentType, ContentUrl, LinksUrl } from "./types";
 
-const BASE_FILE_PATH = `${__dirname}/data/`;
-const FAILED_CONFERENCE_TALK_URLS = "failedUrls.txt";
-const SEPARATOR = "----- NEW TALK -----\n";
 let RETRY_COUNT = 5;
 
 async function processContentType(contentType: ContentType) {
@@ -23,7 +19,6 @@ async function processContentType(contentType: ContentType) {
       break;
     case "book-of-mormon": {
       linksUrls = getStandardWorksUrls();
-      console.log({ linksUrls });
     }
   }
   await processUrlsAndWriteResults(linksUrls);
@@ -76,10 +71,10 @@ async function processUrlsAndWriteResults(linksUrls: LinksUrl[]) {
     .join(SEPARATOR);
 
   console.log(`Num failed urls: ${contentUrls.length}`);
-  await writeFile(`${BASE_FILE_PATH}${contentType}-success.txt`, fileContents);
+  await writeFile(getFilePath(contentType, "success"), fileContents);
   if (contentUrls.length) {
     await writeFile(
-      `${BASE_FILE_PATH}${contentType}-error`,
+      getFilePath(contentType, "error"),
       contentUrls.map((u) => u.url).join("\n")
     );
   }
@@ -103,7 +98,11 @@ async function processContentUrl(contentUrl: ContentUrl): Promise<Content> {
       contentType: contentUrl.contentType,
       metadata: "temp",
     };
-  const contentText = contentUrl.getContentText(rawBody);
+  const contentText = contentUrl.getContentText(
+    rawBody,
+    contentUrl.contentType,
+    contentUrl.url
+  );
   return {
     text: contentText,
     contentType: contentUrl.contentType,
@@ -152,8 +151,9 @@ async function processLinksUrl(linksUrl: LinksUrl): Promise<ContentUrl[]> {
 }
 
 async function main() {
-  await processContentType("book-of-mormon");
-  await processContentType("conference-talk");
+  contentTypesToProcess.forEach(
+    async (type) => await processContentType(type as ContentType)
+  );
 }
 
 main();

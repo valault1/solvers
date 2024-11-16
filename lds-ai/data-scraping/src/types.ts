@@ -39,13 +39,21 @@ export type LinksUrl = {
 type Sublink =
   | { getLinksFromBody: (rawBody: string) => string[]; baseUrl?: string } & {
       resultingUrlsType: "content";
-      getContentText: (rawBody: string) => string;
+      getContentText: (
+        rawBody: string,
+        contentType: ContentType,
+        url: string
+      ) => string;
     };
 
 export type ContentUrl = {
   contentType: ContentType;
   url: string;
-  getContentText: (rawBody: string) => string;
+  getContentText: (
+    rawBody: string,
+    contentType: ContentType,
+    url: string
+  ) => string;
 };
 
 export type Content = {
