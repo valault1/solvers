@@ -7,14 +7,14 @@ export const worksByUrl = {
   "new-testament": getStandardWorksUrl("nt"),
   "pearl-of-great-price": getStandardWorksUrl("pgp"),
   "doctrine-and-covenants": getStandardWorksUrl("dc-testament"),
-  "guide-to-the-scriptures": getStandardWorksUrl("gs"),
-  "topical-guide": getStandardWorksUrl("tg"),
-  "bible-dictionary": getStandardWorksUrl("bd"),
-  "index-to-the-triple-combination": getStandardWorksUrl("triple-index"),
-  "reference-guide-to-the-book-of-mormon":
-    getStandardWorksUrl("bofm-reference"),
-  "reference-guide-to-the-holy-bible": getStandardWorksUrl("bible-reference"),
-  "joseph-smith-translation-appendix": getStandardWorksUrl("jst"),
+  // "guide-to-the-scriptures": getStandardWorksUrl("gs"),
+  // "topical-guide": getStandardWorksUrl("tg"),
+  // "bible-dictionary": getStandardWorksUrl("bd"),
+  // "index-to-the-triple-combination": getStandardWorksUrl("triple-index"),
+  // "reference-guide-to-the-book-of-mormon":
+  //   getStandardWorksUrl("bofm-reference"),
+  // "reference-guide-to-the-holy-bible": getStandardWorksUrl("bible-reference"),
+  // "joseph-smith-translation-appendix": getStandardWorksUrl("jst"),
 } as const;
 
 export const StandardWorksContentTypes = Object.keys(worksByUrl) as Array<

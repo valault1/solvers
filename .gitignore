@@ -29,5 +29,7 @@ lds-ai/data-scraping/src/db
 lds-ai/data-scraping/node_modules
 lds-ai/search/node_modules
 lds-ai/search/search-env
+lds-ai/search/chroma_db
+lds-ai/search/.apikey
 .firebase
 

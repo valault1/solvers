@@ -40,11 +40,15 @@
             const results = await response.json();
             resultsDiv.innerHTML = "<h4>Results:</h4>";
             console.log(results);
-            results.documents[0]?.forEach((doc, i) => {
+
+            results.documents?.forEach((doc, i) => {
               const a = document.createElement("a");
-              a.textContent = results.metadatas[0][i]?.title;
-              a.href = results.metadatas[0][i]?.url;
+              a.textContent = results.metadatas[i]?.title;
+              a.href = results.metadatas[i]?.url;
               resultsDiv.appendChild(a);
+              const div = document.createElement("div");
+              div.textContent = results.ai_answers[i];
+              resultsDiv.appendChild(div)
               resultsDiv.appendChild(document.createElement("br"));
             });
           } else {
