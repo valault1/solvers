@@ -24,7 +24,6 @@ export const FinishedAllBoards = ({ boardSize }: { boardSize: number }) => {
     console.log("resetting boards...");
     resetBoards({ boardSize });
     handleRemoveParam(SEED_INDEX_PARAM);
-    for (let i = 0; i < 10000000000; i++) {}
     window.location.reload();
   }, [boardSize, handleRemoveParam]);
 
