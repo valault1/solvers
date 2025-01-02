@@ -119,5 +119,5 @@ export const runRemoveSavedStarsMigration = () => {
   console.log(
     `finished removeSavedStarsMigration in ${timer.getSeconds()} seconds`
   );
-  //localStorage.setItem(removeSavedStarsMigration, "true");
+  localStorage.setItem(removeSavedStarsMigration, "true");
 };
