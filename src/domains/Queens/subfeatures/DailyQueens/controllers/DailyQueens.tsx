@@ -10,7 +10,6 @@ import {
 import { TimedBoard } from "domains/Queens/components/TimedBoard";
 import { millisecondsToTimeFormat } from "domains/Queens/components/TimerDisplay";
 import { saveDailyBoardProgress } from "domains/Queens/helpers/localStorageHelper";
-import { getStarPositions } from "domains/Queens/helpers/solver/solveBoard";
 import useWindowDimensions from "domains/Queens/hooks/useWindowDimensions";
 import { QUEENS_MOBILE_WIDTH_THRESHOLD } from "domains/Queens/QueensPlayerPage";
 
@@ -52,7 +51,6 @@ export const DailyQueens = () => {
       saveDailyBoardProgress({
         newTimeStorageObject: {
           time: timeTaken,
-          starPositions: getStarPositions(board),
           isFinished: true,
         },
         dayIndex,

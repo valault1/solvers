@@ -5,7 +5,6 @@ import {
   INSTRUCTIONS_PADDING,
   INSTRUCTIONS_WIDTH,
 } from "domains/Queens/components/Instructions";
-import { PlayableBoard } from "domains/Queens/components/PlayableBoard";
 import {
   BOARD_SIZE_PARAM,
   useNavigateBoards,
@@ -22,14 +21,10 @@ import {
   saveBoardProgress,
 } from "domains/Queens/helpers/localStorageHelper";
 import { Board } from "domains/Queens/sharedTypes";
-import {
-  addBordersToBoard,
-  generateBoardFromSeedStatic,
-} from "domains/Queens/helpers/boardGenerators/generateNewBoard";
+import { generateBoardFromSeedStatic } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import {
   checkForVictory,
-  getStarPositions,
-  placeQueen,
+  solveBoardSync,
 } from "domains/Queens/helpers/solver/solveBoard";
 import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
 import { useNavigate } from "react-router-dom";
@@ -70,7 +65,6 @@ export const QueensPlayerV2 = () => {
           time: new Date().getTime() - startTime,
           isFinished: didWin,
           boardState: didWin ? undefined : boardToTokens(board),
-          starPositions: didWin ? getStarPositions(board) : undefined,
         },
         boardSize: boardSize,
         seedIndex: currentBoardIndex,
@@ -96,14 +90,13 @@ export const QueensPlayerV2 = () => {
       boardSize,
       seeds[currentBoardIndex]
     );
-    const { isFinished, time, starPositions }: TimeStorageObject =
-      getStorageTimeObject({
-        boardSize: boardSize,
-        seedIndex: currentBoardIndex,
-      });
+    const { isFinished, time }: TimeStorageObject = getStorageTimeObject({
+      boardSize: boardSize,
+      seedIndex: currentBoardIndex,
+    });
 
     if (isFinished) {
-      starPositions?.forEach(({ row, col }) => placeQueen(newBoard, row, col));
+      solveBoardSync(newBoard);
       setHasWon(true);
       setTimeTaken(time);
     } else {

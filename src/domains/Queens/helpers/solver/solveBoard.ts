@@ -643,6 +643,11 @@ export const solveBoard = async (blankBoard: BlankBoard): Promise<Board> => {
   return solvedBoard;
 };
 
+export const solveBoardSync = (board: Board) => {
+  board.forEach((row) => row.forEach((tile) => (tile.token = "")));
+  solveBoardAndReportDifficulty(board);
+};
+
 /**
  * Solve times
  * v1

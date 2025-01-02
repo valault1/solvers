@@ -80,3 +80,10 @@ export type Guess = {
 };
 
 export type BoardType = "normal" | "daily";
+
+export type Stats = {
+  [key: string]: {
+    seeds: number[];
+    times: number[];
+  };
+};

@@ -9,6 +9,7 @@ import { WinTime } from "domains/Queens/components/Time";
 import {
   TimeStorageObject,
   boardToTokens,
+  getHasFinishedAllBoards,
   getStorageTimeObject,
   saveBoardProgress,
 } from "domains/Queens/helpers/localStorageHelper";
@@ -16,12 +17,12 @@ import { Board } from "domains/Queens/sharedTypes";
 import { generateBoardFromSeedStatic } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
 import {
   checkForVictory,
-  getStarPositions,
-  placeQueen,
+  solveBoardSync,
 } from "domains/Queens/helpers/solver/solveBoard";
 import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
 import { LevelNavigation } from "domains/Queens/LevelNavigation";
 import { TimerDisplay } from "domains/Queens/components/TimerDisplay";
+import { FinishedAllBoards } from "domains/Queens/components/FinishedAllBoards";
 
 const DEFAULT_SEED_INDEX = 0;
 export const DEFAULT_SIDE_LENGTH = 8;
@@ -48,6 +49,14 @@ export const QueensPlayerMobile = () => {
     setBoardSize,
   } = useNavigateBoards();
 
+  const hasFinishedAllBoards = React.useMemo(
+    () => {
+      return getHasFinishedAllBoards({ boardSize });
+    },
+    // keep all these dependencies - we need to recalculate if currentBoardIndex or hasWon changed
+    [boardSize, currentBoardIndex, hasWon]
+  );
+
   const saveBoard = React.useCallback(
     (board: Board) => {
       const didWin = checkForVictory(board);
@@ -56,7 +65,6 @@ export const QueensPlayerMobile = () => {
           time: new Date().getTime() - startTime,
           isFinished: didWin,
           boardState: didWin ? undefined : boardToTokens(board),
-          starPositions: didWin ? getStarPositions(board) : undefined,
         },
         boardSize: boardSize,
         seedIndex: currentBoardIndex,
@@ -82,14 +90,13 @@ export const QueensPlayerMobile = () => {
       boardSize,
       seeds[currentBoardIndex]
     );
-    const { isFinished, time, starPositions }: TimeStorageObject =
-      getStorageTimeObject({
-        boardSize: boardSize,
-        seedIndex: currentBoardIndex,
-      });
+    const { isFinished, time }: TimeStorageObject = getStorageTimeObject({
+      boardSize: boardSize,
+      seedIndex: currentBoardIndex,
+    });
 
     if (isFinished) {
-      starPositions?.forEach(({ row, col }) => placeQueen(newBoard, row, col));
+      solveBoardSync(newBoard);
       setHasWon(true);
       setTimeTaken(time);
     } else {
@@ -190,21 +197,27 @@ export const QueensPlayerMobile = () => {
             </Box>
           </Stack>
         </Stack>
-        <PlayableBoard
-          initialBoard={board}
-          onWin={onWin}
-          hasWon={hasWon}
-          showActionsOnTop
-        />
-        <LevelNavigation
-          prevBoard={prevBoard}
-          disablePrev={disablePrev}
-          nextBoard={nextBoard}
-          disableNext={disableNext}
-          currentBoardIndex={currentBoardIndex}
-          maxBoardIndex={maxBoardIndex}
-          boardSize={boardSize}
-        />
+        {hasFinishedAllBoards ? (
+          <FinishedAllBoards boardSize={boardSize} />
+        ) : (
+          <>
+            <PlayableBoard
+              initialBoard={board}
+              onWin={onWin}
+              hasWon={hasWon}
+              showActionsOnTop
+            />
+            <LevelNavigation
+              prevBoard={prevBoard}
+              disablePrev={disablePrev}
+              nextBoard={nextBoard}
+              disableNext={disableNext}
+              currentBoardIndex={currentBoardIndex}
+              maxBoardIndex={maxBoardIndex}
+              boardSize={boardSize}
+            />
+          </>
+        )}
       </MainContainer>
     </>
   );

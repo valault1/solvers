@@ -2,11 +2,13 @@ import { getSeeds } from "domains/Queens/boards/seeds";
 import {
   runClearOldLevelsMigration,
   runFixSavedStarsMigration,
+  runRemoveSavedStarsMigration,
 } from "domains/Queens/helpers/localStorageMigrations";
-import { Board, BoardType, Coords, Token } from "domains/Queens/sharedTypes";
+import { Board, Stats, Token } from "domains/Queens/sharedTypes";
 
 const TIMES_STORAGE_KEY = "queensTimes";
 const DAILY_STORAGE_KEY = "dailyQueens";
+const STATS_STORAGE_KEY = "queensStats";
 
 export const getStorageKey = ({
   seedIndex,
@@ -36,8 +38,6 @@ export type TimeStorageObject =
   | {
       time?: number;
       isFinished?: boolean;
-      // starPositions will exist if they are finished.
-      starPositions?: Coords[];
       // boardState will exist if they have started but haven't finished
       boardState?: Token[][];
     }
@@ -63,21 +63,24 @@ export const saveBoardProgress = ({
   newTimeStorageObject,
   seedIndex,
   boardSize,
+  overrideExisting,
 }: {
   newTimeStorageObject: TimeStorageObject;
   seedIndex: number;
   boardSize: number;
+  overrideExisting?: boolean;
 }) => {
   const currentTimeObject = getStorageTimeObject({ seedIndex, boardSize });
 
   const key = getStorageKey({ seedIndex, boardSize });
-  localStorage.setItem(
-    key,
-    JSON.stringify({
-      ...(currentTimeObject || {}),
-      ...(newTimeStorageObject || {}),
-    })
-  );
+
+  const newObject = overrideExisting
+    ? newTimeStorageObject
+    : {
+        ...(currentTimeObject || {}),
+        ...(newTimeStorageObject || {}),
+      };
+  localStorage.setItem(key, JSON.stringify(newObject));
 };
 
 export const getStorageTimeObject = ({
@@ -131,8 +134,44 @@ export const getFirstUnfinishedBoard = ({
   return 0;
 };
 
+export const getHasFinishedAllBoards = ({
+  boardSize,
+}: {
+  boardSize: number;
+}) => {
+  for (let i = getSeeds(boardSize).length - 1; i >= 0; i--) {
+    const currentTimeObject = getStorageTimeObject({ seedIndex: i, boardSize });
+    if (!currentTimeObject.isFinished) {
+      return false;
+    }
+  }
+  return true;
+};
+
+// removes local storage for a given board size, and adds the numbers to
+// that data is stored in 2 arrays, and accessed by size
+export const resetBoards = ({ boardSize }: { boardSize: number }) => {
+  const allStats = JSON.parse(
+    localStorage.getItem(STATS_STORAGE_KEY) || "{}"
+  ) as Stats;
+  const stats = allStats[boardSize.toString()] || { seeds: [], times: [] };
+  allStats[boardSize.toString()] = stats;
+  for (let i = 0; i < getSeeds(boardSize).length; i++) {
+    const currentTimeObject = getStorageTimeObject({ seedIndex: i, boardSize });
+    if (currentTimeObject.isFinished) {
+      stats.seeds.push(getSeeds(boardSize)[i]);
+      stats.times.push(currentTimeObject.time);
+    }
+    const key = getStorageKey({ seedIndex: i, boardSize });
+    localStorage.removeItem(key);
+  }
+  console.log({ allStats });
+  localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(allStats));
+};
+
 // runs the migrations
 if (!!localStorage) {
   runClearOldLevelsMigration();
   runFixSavedStarsMigration();
+  runRemoveSavedStarsMigration();
 }

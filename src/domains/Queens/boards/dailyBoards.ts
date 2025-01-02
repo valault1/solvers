@@ -1,10 +1,7 @@
 import DAILY_BOARDS from "domains/Queens/boards/dailyBoardsList";
 import { generateBoardFromSeedStatic } from "domains/Queens/helpers/boardGenerators/generateNewBoard";
-import {
-  getDailyBoardProgressFromIndex,
-  getStorageTimeObject,
-} from "domains/Queens/helpers/localStorageHelper";
-import { placeQueen } from "domains/Queens/helpers/solver/solveBoard";
+import { getDailyBoardProgressFromIndex } from "domains/Queens/helpers/localStorageHelper";
+import { solveBoardSync } from "domains/Queens/helpers/solver/solveBoard";
 
 export const START_DATE = "07/03/24";
 
@@ -30,9 +27,7 @@ export const getDailyBoard = () => {
 
   const progress = getDailyBoardProgress();
   if (progress.isFinished) {
-    progress.starPositions?.forEach(({ row, col }) =>
-      placeQueen(board, row, col)
-    );
+    solveBoardSync(board);
   }
 
   return board;
