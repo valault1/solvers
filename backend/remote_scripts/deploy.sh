@@ -19,10 +19,7 @@ echo "starting image..."
 # mtg-be is the name of the built container (specified above)
 docker run -d --name $CONTAINER_NAME -p 8080:1213 $IMAGE_NAME
 
-echo ""
-echo ""
-echo "DOCKER CONTAINER STATUS:"
-docker ps
+
 
 # todo: check if the container is running - something like this
 
@@ -37,7 +34,7 @@ while [ $attempt -le $MAX_ATTEMPTS ]; do
   if [ -n "$result" ]; then
       echo "server is up!"
     else
-      echo "server still down with error message: $result"
+      echo "server still down with error message: $result" 
       docker logs $CONTAINER_NAME
       sleep 5
     
@@ -49,7 +46,12 @@ if [ $attempt -gt $MAX_ATTEMPTS ]; then
   echo "server still down after $MAX_ATTEMPTS attempts"
   exit 1
 fi
-echo "done!"
+
+echo "\n\nDOCKER CONTAINER STATUS:"
+docker ps
+
+
+echo "Server successfuly started!"
 
 # if you want to test this:
 # curl 10.0.0.20:8080/getDecks
