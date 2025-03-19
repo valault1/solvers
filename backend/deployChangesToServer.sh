@@ -4,7 +4,8 @@
 REPO_FOLDER="~/src"
 REPO_NAME=solvers
 REPO_PATH=$REPO_FOLDER/$REPO_NAME
-SCRIPTS_PATH=$REPO_PATH/backend/remote_scripts
+BE_PROJECT_PATH=$REPO_PATH/backend
+SCRIPTS_PATH=$BE_PROJECT_PATH/remote_scripts
 REPO_URL=https://github.com/valault1/$REPO_NAME
 
 source .deploy-script-env
@@ -21,8 +22,8 @@ cd '$REPO_FOLDER' &&
 if [ ! -d '$REPO_PATH' ]; then echo "repo does not exist - cloning... " && git clone '$REPO_URL'; fi && 
 '$git_script' && 
 echo "##### STEP 2: run deploy script." &&
-cd '$SCRIPTS_PATH'
-sh main.sh'
+cd '$BE_PROJECT_PATH'
+sh '$SCRIPTS_PATH'/main.sh'
 
 #echo $cmd
 # note: USERNAME and HOST_IP come from the .deploy-script-env file

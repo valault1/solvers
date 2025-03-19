@@ -20,6 +20,20 @@ echo ""
 echo "DOCKER CONTAINER STATUS:"
 docker ps
 
+# todo: check if the container is running - something like this
+MAX_ATTEMPTS=30
+attempt=0
+while [ $attempt -le $MAX_ATTEMPTS ]; do
+    attempt=$(( $attempt + 1 ))
+    echo "Waiting for server to be up (attempt: $attempt)..."
+    result=$(curl localhost:8080/test)
+    if grep -q 'Failed to connect' <<< $result ; then
+      echo "Server is running!"
+      break
+    fi
+    sleep 2
+done
+
 echo "done!"
 
 # if you want to test this:
