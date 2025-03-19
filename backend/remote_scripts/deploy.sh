@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "deploy script - v8"
 # ok. This script is responsible for creating the docker container, and running it.
 
@@ -21,12 +22,12 @@ echo "DOCKER CONTAINER STATUS:"
 docker ps
 
 # todo: check if the container is running - something like this
-MAX_ATTEMPTS=30
+MAX_ATTEMPTS=3
 attempt=0
 while [ $attempt -le $MAX_ATTEMPTS ]; do
   attempt=$(( $attempt + 1 ))
   echo "Waiting for server to be up (attempt: $attempt)..."
-  result=$(curl -s -L localhost:8080/test)
+  result=$(curl localhost:8080/test)
   echo "$result"
   if echo "$result" | grep -q "Failed to connect"; then
       echo "server still down"
