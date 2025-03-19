@@ -23,6 +23,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { PATHS, PATHS_WITHOUT_SLASHES } from "shared/helpers/paths";
 import { QueensPlayerPage } from "domains/Queens/QueensPlayerPage";
+import { MTGDeckBuilderController } from "domains/MTG/MTGDeckBuilderController";
 
 type NavbarPage = {
   label: string;
@@ -37,6 +38,7 @@ export function getRoute(label: string) {
 
 export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Queens Player", element: <QueensPlayerPage />, isHidden: false },
+
   { label: "Test", element: <QueensTestCenter />, isHidden: true },
   {
     label: "Daily Queens",
@@ -47,6 +49,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "login", element: <Login />, isHidden: true },
 
   { label: "Wordle Solver", element: <WordleController /> },
+  { label: "MTG", element: <MTGDeckBuilderController />, isHidden: false },
   { label: "Queens Solver", element: <QueensSolver />, isHidden: false },
   { label: "Trap The Cat", element: <TrapTheCat /> },
   {

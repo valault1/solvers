@@ -13,6 +13,7 @@ export declare interface Theme {
     error?: string;
     textPrimary?: string;
     background?: string;
+    textError?: string;
   };
 }
 
@@ -66,5 +67,6 @@ export const theme: Theme = {
     contentTertiary: myGray,
     error: "#9a031e",
     background: background,
+    textError: "red",
   },
 };

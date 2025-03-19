@@ -31,7 +31,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "PORT=3007 craco start",
+    "start": "PORT=3007 craco start & node ./backend/main.js",
     "build": "webpack --mode=production --node-env=production",
     "build:analyze": "webpack --mode=production --node-env=production --profile --json > stats.json",
     "analyze": "node ./analyzeBundle.js",
