@@ -23,9 +23,9 @@ docker ps
 
 # todo: check if the container is running - something like this
 MAX_ATTEMPTS=3
-attempt=0
+attempt=1
 while [ $attempt -le $MAX_ATTEMPTS ]; do
-  attempt=$(( $attempt + 1 ))
+
   echo "Waiting for server to be up (attempt: $attempt)..."
   result=$(curl -sS localhost:8080/test)
   echo "$result"
@@ -36,7 +36,7 @@ while [ $attempt -le $MAX_ATTEMPTS ]; do
       sleep 2
     
   fi
-
+  attempt=$(( $attempt + 1 ))
 done
 
 if [ $attempt -gt $MAX_ATTEMPTS ]; then
