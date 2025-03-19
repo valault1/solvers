@@ -28,7 +28,7 @@ echo "\n\nRUNNING HEALTH CHECK..."
 INTERVAL=5
 MAX_ATTEMPTS=3
 attempt=1
-sleep INTERVAL
+sleep $INTERVAL
 while [ $attempt -le $MAX_ATTEMPTS ]; do
 
   echo "ATTEMPT $attempt: Health check..."
