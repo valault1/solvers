@@ -8,7 +8,9 @@ const server = express();
 
 var whitelist = [
   "https://solvers.valault.com",
-  "http://https://web-wordle-solver-ca3be.web.app",
+  "https://solvers.valault.com/",
+  "https://web-wordle-solver-ca3be.web.app/",
+  "https://web-wordle-solver-ca3be.web.app",
   "http://localhost:3007",
 ];
 var corsOptions = {

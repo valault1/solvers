@@ -1,4 +1,4 @@
-const PROD_URL = "http://10.0.0.20:8080/";
+const PROD_URL = "https://10.0.0.20:8080/";
 const DEV_URL = "http://localhost:1213/";
 
 export const BASE_URL =
