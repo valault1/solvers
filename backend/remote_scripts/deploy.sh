@@ -23,19 +23,19 @@ docker ps
 
 # todo: check if the container is running - something like this
 
-echo "\n\n running health check..."
+echo "\n\n RUNNING HEALTH CHECK..."
 MAX_ATTEMPTS=3
 attempt=1
 while [ $attempt -le $MAX_ATTEMPTS ]; do
 
-  echo "Waiting for server to be up (attempt: $attempt)..."
+  echo "ATTEMPT $attempt: Health check..."
   result=$(curl -sS localhost:8080/test)
-  echo "$result"
+
   if [ -n "$result" ]; then
       echo "server is up!"
     else
-      echo "server still down"
-      sleep 2
+      echo "server still down with error message: $result"
+      sleep 5
     
   fi
   attempt=$(( $attempt + 1 ))
