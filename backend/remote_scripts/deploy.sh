@@ -22,6 +22,8 @@ echo "DOCKER CONTAINER STATUS:"
 docker ps
 
 # todo: check if the container is running - something like this
+
+echo "\n\n running health check..."
 MAX_ATTEMPTS=3
 attempt=1
 while [ $attempt -le $MAX_ATTEMPTS ]; do
