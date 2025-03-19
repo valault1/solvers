@@ -9,7 +9,7 @@ const server = express();
 var whitelist = [
   "https://solvers.valault.com",
   "http://https://web-wordle-solver-ca3be.web.app",
-  "http://127.0.0.1:8888",
+  "http://localhost:3007",
 ];
 var corsOptions = {
   origin: function (origin, callback) {
