@@ -21,4 +21,4 @@ COPY . .
 EXPOSE 3000
 
 # Start your Express app
-CMD ["npm", "run", "start:be"]
+CMD ["npm", "run", "start"]
