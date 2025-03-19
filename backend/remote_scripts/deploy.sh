@@ -30,10 +30,11 @@ while [ $attempt -le $MAX_ATTEMPTS ]; do
   result=$(curl -sS localhost:8080/test)
   echo "$result"
   if [ -n "$result" ]; then
+      echo "server is up!"
+    else
       echo "server still down"
       sleep 2
-    else
-    echo "server is up!"
+    
   fi
 
 done
