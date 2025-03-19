@@ -27,10 +27,13 @@ while [ $attempt -le $MAX_ATTEMPTS ]; do
   attempt=$(( $attempt + 1 ))
   echo "Waiting for server to be up (attempt: $attempt)..."
   result=$(curl localhost:8080/test)
-  if [ $result == *"Failed to connect"* ]; then
-    echo "server still down!"
+  if echo "$result" | grep -q "Failed to connect"; then
+      echo "server still down"
+      sleep 2
+    else
+    echo "server is up!"
   fi
-  sleep 2
+
 done
 
 echo "done!"
