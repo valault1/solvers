@@ -24,8 +24,11 @@ docker run -d --name $CONTAINER_NAME -p 8080:1213 $IMAGE_NAME
 # todo: check if the container is running - something like this
 
 echo "\n\nRUNNING HEALTH CHECK..."
+
+INTERVAL=5
 MAX_ATTEMPTS=3
 attempt=1
+sleep INTERVAL
 while [ $attempt -le $MAX_ATTEMPTS ]; do
 
   echo "ATTEMPT $attempt: Health check..."
@@ -36,7 +39,7 @@ while [ $attempt -le $MAX_ATTEMPTS ]; do
     else
       echo "server still down with error message: $result" 
       docker logs $CONTAINER_NAME
-      sleep 5
+      sleep $INTERVAL
     
   fi
   attempt=$(( $attempt + 1 ))
