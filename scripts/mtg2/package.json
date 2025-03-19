@@ -1,0 +1,14 @@
+{
+  "type": "module",
+  "scripts": {
+    "build": "webpack"
+  },
+  "dependencies": {
+    "clipboardy": "^4.0.0",
+    "fs": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
+  }
+}
