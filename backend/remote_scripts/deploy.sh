@@ -39,6 +39,10 @@ while [ $attempt -le $MAX_ATTEMPTS ]; do
 
 done
 
+if [ $attempt -gt $MAX_ATTEMPTS ]; then
+  echo "server still down after $MAX_ATTEMPTS attempts"
+  exit 1
+fi
 echo "done!"
 
 # if you want to test this:
