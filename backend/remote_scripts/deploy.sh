@@ -36,6 +36,7 @@ while [ $attempt -le $MAX_ATTEMPTS ]; do
 
   if [ -n "$result" ]; then
       echo "server is up!"
+      break;
     else
       echo "server still down with error message: $result" 
       docker logs $CONTAINER_NAME
