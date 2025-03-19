@@ -8,9 +8,7 @@
 
 echo "in the main script!"
 
-echo "step 1: pull repo."
-cd ~/src/mtg
-sh remote_scripts/git-pull.sh
 
-echo "step 2: run deploy script."
+
+echo "##### step 3: run deploy script."
 sh remote_scripts/deploy.sh

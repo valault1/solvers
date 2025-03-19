@@ -1,8 +1,8 @@
-import express from 'express';
-import cors from 'cors';
-import { getDecks } from './services/getDecks.js';
-import { getCardsFromDeckUrl } from './services/getCardsFromDeckUrl.js';
-import { checkStock } from './services/checkStock.js';
+import express from "express";
+import cors from "cors";
+import { getDecks } from "./services/getDecks.js";
+import { getCardsFromDeckUrl } from "./services/getCardsFromDeckUrl.js";
+import { checkStock } from "./services/checkStock.js";
 
 const server = express();
 server.use(cors());
@@ -10,25 +10,29 @@ server.use(express.json());
 const startServer = () => {
   const app = server.listen(1213, function () {
     const address = app.address();
-    const ip = address.address === '::' ? 'localhost' : address.address;
+    const ip = address.address === "::" ? "localhost" : address.address;
     console.log(`server has started listening on ${ip}:${address.port}`);
   });
 };
 
-server.get('/getDecks', async (req, res) => {
+server.get("/getDecks", async (req, res) => {
   const { username } = req.query;
   const decks = await getDecks(username, res);
   res.send({ decks });
 });
 
-server.get('/getCardsFromDecks', async (req, res) => {
+server.get("/test", async (req, res) => {
+  res.send({ result: "hello world!" });
+});
+
+server.get("/getCardsFromDecks", async (req, res) => {
   const { decks: rawDeckIds } = req.query;
-  const deckIds = rawDeckIds.split(',');
+  const deckIds = rawDeckIds.split(",");
   const allCards = await getCardsFromDeckUrl(deckIds);
   res.send({ decks: allCards });
 });
 
-server.post('/checkStock', async (req, res) => {
+server.post("/checkStock", async (req, res) => {
   // quantity needs to be a string
   const body = req.body;
   const parsedCards = body.cards;
@@ -37,7 +41,7 @@ server.post('/checkStock', async (req, res) => {
       acc[card] = acc[card] || { card, quantity: 0 };
       acc[card].quantity += Number(quantity);
       return acc;
-    }, {}),
+    }, {})
   );
 
   const uniqueCardsFormatted = uniqueCards.map((c) => ({

@@ -15,6 +15,9 @@ echo "starting image..."
 # mtg-be is the name of the built container (specified above)
 docker run -d --name mtg-be-container -p 8080:1213 mtg-be-image
 
+echo ""
+echo ""
+echo "DOCKER CONTAINER STATUS:"
 docker ps
 
 echo "done!"

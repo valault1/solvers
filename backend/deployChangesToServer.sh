@@ -15,8 +15,6 @@ git pull https://valault1:$(cat ~/.config/mtg-hub-token)@github.com/valault1/'$R
 # this sleep is just so the logs from the git pull are printed before the next logs &&
 sleep 0.1s'
 
-echo $git_script
-
 cmd=$'echo "##### STEP 1: pull repo." &&
 mkdir -p '$REPO_FOLDER' &&
 cd '$REPO_FOLDER' &&
