@@ -5,7 +5,23 @@ import { getCardsFromDeckUrl } from "./services/getCardsFromDeckUrl.js";
 import { checkStock } from "./services/checkStock.js";
 
 const server = express();
-server.use(cors());
+
+var whitelist = [
+  "https://solvers.valault.com",
+  "http://https://web-wordle-solver-ca3be.web.app",
+  "http://127.0.0.1:8888",
+];
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+server.use(cors(corsOptions));
 server.use(express.json());
 const startServer = () => {
   const app = server.listen(1213, function () {
