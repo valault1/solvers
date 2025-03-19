@@ -2,19 +2,22 @@
 echo "deploy script - v8"
 # ok. This script is responsible for creating the docker container, and running it.
 
+IMAGE_NAME=mtg-be-image
+CONTAINER_NAME=mtg-be-container
+
 echo "removing old container"
-docker stop mtg-be-container
-docker rm mtg-be-container
+docker stop $CONTAINER_NAME
+docker rm $CONTAINER_NAME
 
 echo "building image..."
 # build the docker image. Needs to be done in the main mtg directory.
 # names it mtg-be
-docker build -t mtg-be-image -f Dockerfile.be .
+docker build -t $IMAGE_NAME -f Dockerfile.be .
 echo "starting image..."
 # -d runs in detached mode
 # -p forwards <host port>:<container port>. 1213 is currently used.
 # mtg-be is the name of the built container (specified above)
-docker run -d --name mtg-be-container -p 8080:1213 mtg-be-image
+docker run -d --name $CONTAINER_NAME -p 8080:1213 $IMAGE_NAME
 
 echo ""
 echo ""
@@ -23,7 +26,7 @@ docker ps
 
 # todo: check if the container is running - something like this
 
-echo "\n\n RUNNING HEALTH CHECK..."
+echo "\n\nRUNNING HEALTH CHECK..."
 MAX_ATTEMPTS=3
 attempt=1
 while [ $attempt -le $MAX_ATTEMPTS ]; do
@@ -35,6 +38,7 @@ while [ $attempt -le $MAX_ATTEMPTS ]; do
       echo "server is up!"
     else
       echo "server still down with error message: $result"
+      docker logs $CONTAINER_NAME
       sleep 5
     
   fi
