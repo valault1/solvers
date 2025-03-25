@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "moduleResolution": "node",
+      "module": "es6",
+      "noImplicitAny": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      "outDir": "./dist"
+    },
+    "include": ["services/**/*", "localServer.ts"],
+    "exclude": ["**/node_modules"]
+}
