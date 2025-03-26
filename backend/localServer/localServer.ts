@@ -1,20 +1,19 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response } from "express";
 import cors from "cors";
 import { getTasks } from "./services/getTasks.js";
 
-const PORT_NUMBER = 1214
+const PORT_NUMBER = 1214;
 
 const server = express();
-server.use(cors());
-server.use(express.json());
-
 server.use(cors());
 server.use(express.json());
 const startServer = () => {
   const app = server.listen(PORT_NUMBER, function () {
     const appAddress = app.address() as any;
     const ip = appAddress.address === "::" ? "localhost" : appAddress.address;
-    console.log(`server has started listening on ${ip}:${appAddress?.port ?? ""}`);
+    console.log(
+      `server has started listening on ${ip}:${appAddress?.port ?? ""}`
+    );
   });
 };
 

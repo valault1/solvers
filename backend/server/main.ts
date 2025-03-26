@@ -1,21 +1,23 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
-import { getDecks } from "./services/getDecks.js";
-import { getCardsFromDeckUrl } from "./services/getCardsFromDeckUrl.js";
-import { checkStock } from "./services/checkStock.js";
+
+import { getDecks } from "./services/getDecks";
+import { checkStock } from "./services/checkStock";
+import { getTasks } from "./services/getTasks";
 
 const server = express();
 
-var whitelist = [
+var prod_whitelist = [
   "https://solvers.valault.com",
   "https://solvers.valault.com/",
   "https://web-wordle-solver-ca3be.web.app/",
   "https://web-wordle-solver-ca3be.web.app",
-  "http://localhost:3007",
 ];
+
 var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+  origin: function (origin: any, callback: any) {
+    return callback(null, true);
+    if (prod_whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
@@ -27,15 +29,23 @@ server.use(cors(corsOptions));
 server.use(express.json());
 const startServer = () => {
   const app = server.listen(1213, function () {
-    const address = app.address();
+    const address = app.address() as any;
     const ip = address.address === "::" ? "localhost" : address.address;
     console.log(`server has started listening on ${ip}:${address.port}`);
   });
 };
 
-server.get("/getDecks", async (req, res) => {
+// these endpoints should only serve on local;
+if (process.env.NODE_ENV !== "production") {
+  server.get("/getTasks", async (req: Request, res: Response) => {
+    const result = getTasks();
+    res.send(result);
+  });
+}
+
+server.get("/getDecks", async (req: Request, res: Response) => {
   const { username } = req.query;
-  const decks = await getDecks(username, res);
+  const decks = await getDecks(username as string);
   res.send({ decks });
 });
 
@@ -45,7 +55,7 @@ server.get("/test", async (req, res) => {
 
 server.get("/getCardsFromDecks", async (req, res) => {
   const { decks: rawDeckIds } = req.query;
-  const deckIds = rawDeckIds.split(",");
+  const deckIds = (rawDeckIds as any).split(",");
   const allCards = await getCardsFromDeckUrl(deckIds);
   res.send({ decks: allCards });
 });
@@ -55,14 +65,14 @@ server.post("/checkStock", async (req, res) => {
   const body = req.body;
   const parsedCards = body.cards;
   const uniqueCards = Object.values(
-    parsedCards.reduce((acc, { card, quantity }) => {
+    parsedCards.reduce((acc: Record<string, any>, { card, quantity }: any) => {
       acc[card] = acc[card] || { card, quantity: 0 };
       acc[card].quantity += Number(quantity);
       return acc;
     }, {})
   );
 
-  const uniqueCardsFormatted = uniqueCards.map((c) => ({
+  const uniqueCardsFormatted = uniqueCards.map((c: any) => ({
     card: c.card,
     quantity: c.quantity.toString(),
   }));
@@ -73,4 +83,7 @@ server.post("/checkStock", async (req, res) => {
   res.send({ ...result, storeName });
 });
 
-export default startServer;
+startServer();
+function getCardsFromDeckUrl(deckIds: any) {
+  throw new Error("Function not implemented.");
+}

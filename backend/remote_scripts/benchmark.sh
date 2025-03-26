@@ -8,6 +8,17 @@ MOST_RECENT_JSON_FILE=results.json
 SCRIPT_PATH=$(realpath "$0")
 SCRIPT_NAME=benchmark.sh
 
+SEPARATOR="############################ "
+# get info
+echo "$SEPARATOR Disks"
+sudo lshw -C disk | grep -E '\*\-|description|product|size:|serial'
+echo "$SEPARATOR RAM"
+free -h
+echo "$SEPARATOR CPU"
+lscpu | grep -E 'Model\sname|Thread|Core'
+echo "Press Enter to continue..."
+read dummy
+
 
 mkdir -p $BENCHMARK_PATH
 cd $BENCHMARK_PATH
