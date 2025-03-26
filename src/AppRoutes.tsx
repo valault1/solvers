@@ -24,6 +24,7 @@ import { Route, Routes } from "react-router-dom";
 import { PATHS, PATHS_WITHOUT_SLASHES } from "shared/helpers/paths";
 import { QueensPlayerPage } from "domains/Queens/QueensPlayerPage";
 import { MTGDeckBuilderController } from "domains/MTG/MTGDeckBuilderController";
+import { Tasks } from "domains/Tasks/Tasks";
 
 type NavbarPage = {
   label: string;
@@ -52,6 +53,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "MTG", element: <MTGDeckBuilderController />, isHidden: false },
   { label: "Queens Solver", element: <QueensSolver />, isHidden: false },
   { label: "Trap The Cat", element: <TrapTheCat /> },
+  { label: "Tasks", element: <Tasks /> },
   {
     label: "Rummikub Solver",
     route: "rummikub",
