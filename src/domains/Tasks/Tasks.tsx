@@ -4,7 +4,8 @@ import { useQuery } from "hooks/useQuery";
 
 import * as React from "react";
 
-const NUM_OPERATIONS = 1000000000;
+//const NUM_OPERATIONS = 1000000000; //  1,000,000,000 operations took .5 seconds on my m1, and 21 seconds on the pixel
+const NUM_OPERATIONS = 10; // interestingly, 100,000,000 took .295 s on the pixel...
 export const Tasks: React.VFC = () => {
   const url = `${BASE_URL}/test?numOperations=${NUM_OPERATIONS}`;
   console.log({ url });
