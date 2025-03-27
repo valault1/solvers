@@ -22,7 +22,13 @@ export const useQuery = ({
   const [data, setData] = React.useState<any>(undefined);
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [startTime, setStartTime] = React.useState(new Date());
+  const [endTime, setEndTime] = React.useState(new Date());
+  const queryTime = React.useMemo(() => {
+    return (endTime.getTime() - startTime.getTime()) / 1000;
+  }, [startTime, endTime]);
   React.useEffect(() => {
+    setStartTime(new Date());
     setLoading(true);
     fetch(`${url}${queryParams ? `?${queryParams}` : ""}`, {
       method,
@@ -33,7 +39,6 @@ export const useQuery = ({
       .then((data) => {
         if (shouldLog) console.log({ data });
         setData(data);
-        setError("");
       })
       .catch((err) => {
         if (shouldLog) console.log({ err });
@@ -41,8 +46,9 @@ export const useQuery = ({
       })
       .finally(() => {
         setLoading(false);
+        setEndTime(new Date());
       });
   }, [url, method, body, headers, queryParams, shouldLog]);
 
-  return { data, error, loading };
+  return { data, error, loading, queryTime };
 };

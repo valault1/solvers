@@ -50,6 +50,15 @@ server.get("/getDecks", async (req: Request, res: Response) => {
 });
 
 server.get("/test", async (req, res) => {
+  const { numOperations } = req.query;
+  const num = Number(numOperations);
+
+  console.log(`got test for ${num} operations`);
+
+  for (let i = 0; i < num; i++) {
+    const a = 1 + 1;
+  }
+
   res.send({ result: "hello world!" });
 });
 

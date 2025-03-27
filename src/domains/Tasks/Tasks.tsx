@@ -1,11 +1,15 @@
 import { MainContainer } from "components/MainPage.elements";
+import { BASE_URL } from "domains/MTG/constants";
 import { useQuery } from "hooks/useQuery";
 
 import * as React from "react";
 
+const NUM_OPERATIONS = 1000000000;
 export const Tasks: React.VFC = () => {
-  const { data, loading, error } = useQuery({
-    url: "http://localhost:1213/getTasks",
+  const url = `${BASE_URL}/test?numOperations=${NUM_OPERATIONS}`;
+  console.log({ url });
+  const { data, loading, error, queryTime } = useQuery({
+    url,
     method: "GET",
     shouldLog: true,
   });
@@ -14,7 +18,9 @@ export const Tasks: React.VFC = () => {
   return (
     <MainContainer>
       Welcome to tasks, Val<br></br>
-      {data?.task}
+      {data?.result}
+      <br />
+      Queried in {queryTime}s
     </MainContainer>
   );
 };
