@@ -9,6 +9,7 @@ export type QueryInput = {
   queryParams?: string;
   headers?: any;
   shouldLog?: boolean;
+  shouldQueryOnInputChange?: boolean;
 };
 
 export const useQuery = ({
@@ -18,6 +19,7 @@ export const useQuery = ({
   headers,
   queryParams,
   shouldLog,
+  shouldQueryOnInputChange = true,
 }: QueryInput) => {
   const [data, setData] = React.useState<any>(undefined);
   const [error, setError] = React.useState<string>("");
@@ -27,7 +29,8 @@ export const useQuery = ({
   const queryTime = React.useMemo(() => {
     return (endTime.getTime() - startTime.getTime()) / 1000;
   }, [startTime, endTime]);
-  React.useEffect(() => {
+
+  const runQuery = React.useCallback(() => {
     setStartTime(new Date());
     setLoading(true);
     fetch(`${url}${queryParams ? `?${queryParams}` : ""}`, {
@@ -42,13 +45,18 @@ export const useQuery = ({
       })
       .catch((err) => {
         if (shouldLog) console.log({ err });
-        setError(err);
+        setError(err.message);
+        setData(undefined);
       })
       .finally(() => {
         setLoading(false);
         setEndTime(new Date());
       });
   }, [url, method, body, headers, queryParams, shouldLog]);
+  React.useEffect(() => {
+    if (!shouldQueryOnInputChange) return;
+    runQuery();
+  }, [runQuery, shouldQueryOnInputChange]);
 
-  return { data, error, loading, queryTime };
+  return { data, error, loading, queryTime, runQuery };
 };

@@ -34,9 +34,13 @@ export const runTest = async (numOperations: number) => {
 
   const deleteTime = new Date().getTime() - startTime;
 
+  const description = `ran ${num} operations on a JSON file.`;
+
   return {
     readTime,
     writeTime,
     deleteTime,
+    totalTime: new Date().getTime() - totalStartTime,
+    description,
   };
 };
