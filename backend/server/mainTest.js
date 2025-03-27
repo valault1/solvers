@@ -27,6 +27,7 @@ const startServer = () => {
 };
 
 server.get("/test", async (req, res) => {
+  const startTime = new Date().getTime();
   const { numOperations } = req.query;
   const num = Number(numOperations);
 
@@ -35,7 +36,7 @@ server.get("/test", async (req, res) => {
   for (let i = 0; i < num; i++) {
     const a = 1 + 1;
   }
-
+  console.log("time to run: ", new Date().getTime() - startTime);
   res.send({ result: "hello world!" });
 });
 
