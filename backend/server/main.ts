@@ -1,9 +1,11 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
+import { promises as fs } from "fs";
 
 import { getDecks } from "./services/getDecks";
 import { checkStock } from "./services/checkStock";
 import { getTasks } from "./services/getTasks";
+import { runTest } from "./services/runTest";
 
 const server = express();
 
@@ -51,15 +53,14 @@ server.get("/getDecks", async (req: Request, res: Response) => {
 
 server.get("/test", async (req, res) => {
   const { numOperations } = req.query;
-  const num = Number(numOperations);
+  const asNum = Number(numOperations);
+  const num = isNaN(asNum) ? 100 : asNum;
 
   console.log(`got test for ${num} operations`);
 
-  for (let i = 0; i < num; i++) {
-    const a = 1 + 1;
-  }
+  const result = await runTest(num);
 
-  res.send({ result: "hello world!" });
+  res.send(result);
 });
 
 server.get("/getCardsFromDecks", async (req, res) => {
