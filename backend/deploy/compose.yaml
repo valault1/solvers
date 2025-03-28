@@ -1,7 +1,7 @@
 services:
   solvers-be:
     build: 
-      context: ../server
+      context: ..
       dockerfile: deploy/Dockerfile.be
     ports:
       - "1213:1213"
