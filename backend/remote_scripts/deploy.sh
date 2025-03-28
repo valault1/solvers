@@ -24,8 +24,7 @@ CONTAINER_NAME=solvers-be-container
 
 echo "running docker compose..."
 # the compose.production only specifies the changes for the production version. 
-docker compose --build -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.yaml up -d
-
+docker compose  -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.yaml up -d --build
 
 
 # todo: check if the container is running - something like this
