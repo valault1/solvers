@@ -8,4 +8,4 @@
 
 echo "##### step 3: run deploy script."
 # DEPLOY_PATH is defined in deployChangesToServer.sh
-sh $DEPLOY_PATH/deploy.sh
+sh $SCRIPTS_PATH/deploy.sh

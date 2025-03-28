@@ -27,6 +27,7 @@ if [ ! -d '$REPO_PATH' ]; then echo "repo does not exist - cloning... " && git c
 echo "##### STEP 2: run deploy script." &&
 export BE_PROJECT_PATH='$BE_PROJECT_PATH' &&
 export DEPLOY_PATH='$DEPLOY_PATH' &&
+export SCRIPTS_PATH='$SCRIPTS_PATH' &&
 sh '$SCRIPTS_PATH'/main.sh'
 
 #echo $cmd
