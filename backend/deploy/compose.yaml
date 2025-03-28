@@ -1,6 +1,6 @@
 services:
   solvers-be:
-    build: .
+    build: Dockerfile.be .
     ports:
       - "1213:1213"
     # develop:

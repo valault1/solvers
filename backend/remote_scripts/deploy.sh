@@ -14,9 +14,9 @@ echo "removing old container"
 docker stop $CONTAINER_NAME
 docker rm $CONTAINER_NAME
 
-echo "building image..."
-# build the docker image. $DOCKER_PATH is defined in deployChangesToServer.sh
-docker build -t $IMAGE_NAME -f $DOCKER_PATH/Dockerfile.be .
+#echo "building image..."
+# build the docker image. $DEPLOY_PATH is defined in deployChangesToServer.sh
+#docker build -t $IMAGE_NAME -f $DEPLOY_PATH/Dockerfile.be .
 
 # -d runs in detached mode
 # -p forwards <host port>:<container port>. 1213 is currently used.
@@ -24,7 +24,7 @@ docker build -t $IMAGE_NAME -f $DOCKER_PATH/Dockerfile.be .
 
 echo "running docker compose..."
 # the compose.production only specifies the changes for the production version. 
-docker compose -f $DOCKER_PATH/compose.yaml -f $DOCKER_PATH/compose.production.yaml up -d
+sudo docker compose -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.yaml up -d
 
 
 
