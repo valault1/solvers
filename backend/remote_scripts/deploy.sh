@@ -38,7 +38,7 @@ sleep $INTERVAL
 while [ $attempt -le $MAX_ATTEMPTS ]; do
 
   echo "ATTEMPT $attempt: Health check..."
-  result=$(curl -sS localhost:1213/test)
+  result=$(curl -sS localhost:1213/health)
 
   if [ -n "$result" ]; then
       echo "server is up!"

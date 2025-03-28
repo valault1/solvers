@@ -40,4 +40,8 @@ server.get("/test", async (req, res) => {
   res.send({ result: "hello world!" });
 });
 
+server.get("/health", async (req, res) => {
+  res.send({ status: "healthy!" });
+});
+
 startServer();
