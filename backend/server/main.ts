@@ -1,11 +1,10 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import { promises as fs } from "fs";
-
 import { getDecks } from "./services/getDecks";
 import { checkStock } from "./services/checkStock";
 import { getTasks } from "./services/getTasks";
 import { runTest } from "./services/runTest";
+import { getCardsFromDeckUrl } from "./services/getCardsFromDeckUrl";
 
 const server = express();
 
@@ -93,7 +92,9 @@ server.post("/checkStock", async (req, res) => {
   res.send({ ...result, storeName });
 });
 
+server.get("/health", async (req, res) => {
+  console.log("got health check!");
+  res.send({ status: "healthy!" });
+});
+
 startServer();
-function getCardsFromDeckUrl(deckIds: any) {
-  throw new Error("Function not implemented.");
-}
