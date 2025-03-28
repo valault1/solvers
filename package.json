@@ -35,6 +35,7 @@
     "dev:fe": "PORT=3007 craco start",
     "dev:be": "nodemon --watch ./backend/server -e ts,tsx --exec 'npx tsx ./backend/server/main.ts'",
     "be": "NODE_ENV=production npx tsx ./backend/server/main.ts",
+    "deploy": "sh ./backend/deploy/deployChangesToServer.sh",
     "start": "npm run dev:fe & npm run dev:be",
     "local": "PORT=3007 craco start & npm run local:be",
     "build": "webpack --mode=production --node-env=production",

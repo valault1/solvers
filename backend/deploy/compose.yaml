@@ -1,0 +1,12 @@
+services:
+  solvers-be:
+    build: .
+    ports:
+      - "1213:1213"
+    # develop:
+    #   watch:
+    #     - action: sync
+    #       path: .
+    #       target: /code
+  # redis:
+  #   image: "redis:alpine"

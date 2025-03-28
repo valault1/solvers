@@ -1,23 +1,30 @@
 #!/bin/bash
 echo "deploy script - v8"
-# ok. This script is responsible for creating the docker container, and running it.
+# This script is responsible for creating the docker container, and running it.
+# It will use docker compose. 
 
-IMAGE_NAME=mtg-be-image
-CONTAINER_NAME=mtg-be-container
+# BE_PROJECT_PATH is defined in deploChangesToServer.sh
+cd $BE_PROJECT_PATH
+
+
+IMAGE_NAME=solvers-be-image
+CONTAINER_NAME=solvers-be-container
 
 echo "removing old container"
 docker stop $CONTAINER_NAME
 docker rm $CONTAINER_NAME
 
 echo "building image..."
-# build the docker image. Needs to be done in the main mtg directory.
-# names it mtg-be
-docker build -t $IMAGE_NAME -f Dockerfile.be .
+# build the docker image. $DOCKER_PATH is defined in deployChangesToServer.sh
+docker build -t $IMAGE_NAME -f $DOCKER_PATH/Dockerfile.be .
 echo "starting image..."
 # -d runs in detached mode
 # -p forwards <host port>:<container port>. 1213 is currently used.
 # mtg-be is the name of the built container (specified above)
 docker run -d --name $CONTAINER_NAME -p 8080:1213 $IMAGE_NAME
+
+# the compose.production only specifies the changes for the production version. 
+docker compose -f $DOCKER_PATH/compose.yaml -f $DOCKER_PATH/compose.production.yaml up -d
 
 
 

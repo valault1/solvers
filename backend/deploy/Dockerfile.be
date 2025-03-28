@@ -11,7 +11,7 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-COPY . .
+COPY ./server .
 
 
 # Copy the rest of your app's source code into the container

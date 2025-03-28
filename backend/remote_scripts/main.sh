@@ -1,14 +1,10 @@
 #!/bin/bash
 
-#ok. This script will be executed on the server.
-# first, pull the git repo. Then execute the real deploy script.
+# This script is executed on the server. 
+# It's triggered by npm run deploy -> deploy/deployChangesToServer.sh
+# Previous to this step, that other script pulled the repo
 # (this makes sure that the deploy script is up to date before it is run).
-
-#echo "SCRIPT NOT IMPLEMENTED YET"
-
-echo "in the main script!"
-
-
+# it is run from the backend folder. 
 
 echo "##### step 3: run deploy script."
 sh remote_scripts/deploy.sh
