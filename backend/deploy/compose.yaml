@@ -5,6 +5,11 @@ services:
       dockerfile: deploy/Dockerfile.be
     ports:
       - "1213:1213"
+    healthcheck:
+      test: "curl -f http://localhost:1213/health || exit 1"
+      interval: 10s
+      timeout: 3s
+      retries: 5
     # develop:
     #   watch:
     #     - action: sync

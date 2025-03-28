@@ -29,34 +29,6 @@ docker compose  -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.
 
 # todo: check if the container is running - something like this
 
-echo "\n\nRUNNING HEALTH CHECK..."
-
-INTERVAL=5
-MAX_ATTEMPTS=3
-attempt=1
-sleep $INTERVAL
-while [ $attempt -le $MAX_ATTEMPTS ]; do
-
-  echo "ATTEMPT $attempt: Health check..."
-  result=$(curl -sS localhost:1213/health)
-
-  if [ -n "$result" ]; then
-      echo "server is up!"
-      break;
-    else
-      echo "server still down with error message: $result" 
-      docker logs $CONTAINER_NAME
-      sleep $INTERVAL
-    
-  fi
-  attempt=$(( $attempt + 1 ))
-done
-
-if [ $attempt -gt $MAX_ATTEMPTS ]; then
-  echo "server still down after $MAX_ATTEMPTS attempts"
-  exit 1
-fi
-
 echo "\n\nDOCKER CONTAINER STATUS:"
 docker ps
 
