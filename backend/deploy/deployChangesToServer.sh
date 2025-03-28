@@ -6,7 +6,7 @@ REPO_NAME=solvers
 REPO_PATH=$REPO_FOLDER/$REPO_NAME
 BE_PROJECT_PATH=$REPO_PATH/backend
 RELATIVE_DEPLOY_PATH=/backend/deploy
-DEPLOY_PATH=$REPO_PATH/deploy
+DEPLOY_PATH=$REPO_PATH/backend/deploy
 SCRIPTS_PATH=$BE_PROJECT_PATH/remote_scripts
 REPO_URL=https://github.com/valault1/$REPO_NAME
 
