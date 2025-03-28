@@ -17,12 +17,12 @@ docker rm $CONTAINER_NAME
 echo "building image..."
 # build the docker image. $DOCKER_PATH is defined in deployChangesToServer.sh
 docker build -t $IMAGE_NAME -f $DOCKER_PATH/Dockerfile.be .
-echo "starting image..."
+
 # -d runs in detached mode
 # -p forwards <host port>:<container port>. 1213 is currently used.
-# mtg-be is the name of the built container (specified above)
-docker run -d --name $CONTAINER_NAME -p 8080:1213 $IMAGE_NAME
+# docker run -d --name $CONTAINER_NAME -p 8080:1213 $IMAGE_NAME
 
+echo "running docker compose..."
 # the compose.production only specifies the changes for the production version. 
 docker compose -f $DOCKER_PATH/compose.yaml -f $DOCKER_PATH/compose.production.yaml up -d
 
@@ -39,7 +39,7 @@ sleep $INTERVAL
 while [ $attempt -le $MAX_ATTEMPTS ]; do
 
   echo "ATTEMPT $attempt: Health check..."
-  result=$(curl -sS localhost:8080/test)
+  result=$(curl -sS localhost:1213/test)
 
   if [ -n "$result" ]; then
       echo "server is up!"
