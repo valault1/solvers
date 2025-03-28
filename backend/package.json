@@ -2,7 +2,7 @@
   "type": "module",
   "name": "solvers-be",
   "scripts": {
-    "start": "npx tsx ./main.ts"
+    "start": "npx tsx server/main.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
