@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 
-const DIR = "./backend/server/data/";
+const DIR = "./server/data/";
 
 const getFileName = (i: number) => `${DIR}benchmark-${i}.json`;
 

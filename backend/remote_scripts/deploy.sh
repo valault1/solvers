@@ -10,9 +10,9 @@ cd $BE_PROJECT_PATH
 IMAGE_NAME=solvers-be-image
 CONTAINER_NAME=solvers-be-container
 
-echo "removing old container"
-docker stop $CONTAINER_NAME
-docker rm $CONTAINER_NAME
+# echo "removing old container"
+# docker stop $CONTAINER_NAME
+# docker rm $CONTAINER_NAME
 
 #echo "building image..."
 # build the docker image. $DEPLOY_PATH is defined in deployChangesToServer.sh
@@ -24,7 +24,7 @@ docker rm $CONTAINER_NAME
 
 echo "running docker compose..."
 # the compose.production only specifies the changes for the production version. 
-docker compose -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.yaml up -d
+docker compose up --build -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.yaml -d
 
 
 
