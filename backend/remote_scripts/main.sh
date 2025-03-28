@@ -7,4 +7,5 @@
 # it is run from the backend folder. 
 
 echo "##### step 3: run deploy script."
-sh remote_scripts/deploy.sh
+# DEPLOY_PATH is defined in deployChangesToServer.sh
+sh $DEPLOY_PATH/deploy.sh
