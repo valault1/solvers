@@ -24,7 +24,7 @@ docker rm $CONTAINER_NAME
 
 echo "running docker compose..."
 # the compose.production only specifies the changes for the production version. 
-sudo docker compose -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.yaml up -d
+docker compose -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.yaml up -d
 
 
 

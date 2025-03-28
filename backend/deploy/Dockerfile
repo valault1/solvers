@@ -10,7 +10,7 @@ COPY server/package*.json ./
 # Install dependencies
 RUN npm install
 
-COPY server .
+COPY server server
 
 
 # Copy the rest of your app's source code into the container
