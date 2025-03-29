@@ -27,7 +27,7 @@ echo "running docker compose..."
 docker compose  -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.yaml up -d --build
 
 echo "making sure it's healthy before quitting..."
-services=$(docker compose ps -f $DEPLOY_PATH/compose.yaml -q)
+services=$(docker compose -f $DEPLOY_PATH/compose.yaml ps -q)
 echo "checking services: $services"
 tries_left=10
 for service_id in $services; do
