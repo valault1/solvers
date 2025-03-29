@@ -27,6 +27,16 @@ echo "running docker compose..."
 echo $DEPLOY_PATH
 docker compose  -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.yaml up -d --build
 
+services=$(docker compose ps -q)
+tries_left=10
+for service_id in $services; do
+  service_name=$(docker inspect --format '{{.Name}}' $service_id)
+  until [ "$(docker inspect --format='{{json .State.Health.Status}}' $service_id)" == '"healthy"' ]; do
+    echo "Waiting for $service_name to become healthy - $((tries_left--)) tries left"
+    sleep 3
+  done
+  echo "$service_name is healthy"
+done
 
 # todo: check if the container is running - something like this
 
