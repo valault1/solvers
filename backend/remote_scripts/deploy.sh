@@ -26,6 +26,7 @@ echo "running docker compose..."
 # the compose.production only specifies the changes for the production version. 
 docker compose  -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.yaml up -d --build
 
+echo "making sure it's healthy before quitting..."
 services=$(docker compose ps -q)
 tries_left=10
 for service_id in $services; do
