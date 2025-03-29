@@ -28,9 +28,10 @@ docker compose  -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.
 
 echo "making sure it's healthy before quitting..."
 services=$(docker compose ps -q)
-echo "services"
+echo "$services"
 tries_left=10
 for service_id in $services; do
+  echo "checking $service_id"
   service_name=$(docker inspect --format '{{.Name}}' $service_id)
   $status="$(docker inspect --format='{{json .State.Health.Status}}' $service_id)"
   echo "current status: $status"
