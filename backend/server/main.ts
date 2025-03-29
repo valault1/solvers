@@ -93,10 +93,9 @@ server.post("/checkStock", async (req, res) => {
 });
 
 server.get("/health", async (req, res) => {
-  console.log("got health check!");
   res.send({ status: "healthy!" });
 });
 
-console.log("process.env.NODE_ENV: ", process.env.NODE_ENV);
+console.log("process.env.NODE_ENV:", process.env.NODE_ENV);
 
 startServer();

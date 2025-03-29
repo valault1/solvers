@@ -1,58 +1,47 @@
 #!/bin/bash
 echo "deploy script - v8"
-# This script is responsible for creating the docker container, and running it.
-# It will use docker compose. 
 
-# BE_PROJECT_PATH is defined in deploChangesToServer.sh
-cd $BE_PROJECT_PATH
+# this script pulls the git repo and runs docker compose up, then waits for a healthy container
 
+REPO_FOLDER=~/src
+REPO_NAME=solvers
+REPO_PATH=$REPO_FOLDER/$REPO_NAME
+BE_PROJECT_PATH=$REPO_PATH/backend
+DEPLOY_PATH=$BE_PROJECT_PATH/deploy
+SCRIPTS_PATH=$BE_PROJECT_PATH/remote_scripts
+REPO_URL=https://github.com/valault1/$REPO_NAME
 
-IMAGE_NAME=solvers-be-image
-CONTAINER_NAME=solvers-be-container
-
-# echo "removing old container"
-# docker stop $CONTAINER_NAME
-# docker rm $CONTAINER_NAME
-
-#echo "building image..."
-# build the docker image. $DEPLOY_PATH is defined in deployChangesToServer.sh
-#docker build -t $IMAGE_NAME -f $DEPLOY_PATH/Dockerfile.be .
-
-# -d runs in detached mode
-# -p forwards <host port>:<container port>. 1213 is currently used.
-# docker run -d --name $CONTAINER_NAME -p 8080:1213 $IMAGE_NAME
+echo "##### STEP 1: pull repo."
+mkdir -p $REPO_FOLDER
+cd $REPO_FOLDER
+if [ ! -d "$REPO_PATH" ]; then echo "repo does not exist - cloning... " && git clone $REPO_URL; fi && 
+cd $REPO_PATH
+git pull 
+# this sleep is just for the output to show up right
+sleep 0.1s
+echo "##### STEP 2: run deploy script." 
 
 echo "running docker compose..."
 # the compose.production only specifies the changes for the production version. 
 docker compose  -f $DEPLOY_PATH/compose.yaml -f $DEPLOY_PATH/compose.production.yaml up -d --build
 
-echo "making sure it's healthy before quitting..."
+echo "Running health check..."
 services=$(docker compose -f $DEPLOY_PATH/compose.yaml ps -q)
-echo "checking services: $services"
 tries_left=10
 for service_id in $services; do
-  echo "checking $service_id"
   service_name=$(docker inspect --format '{{.Name}}' $service_id)
   status="$(docker inspect --format='{{json .State.Health.Status}}' $service_id)"
-  echo "current status of $service_name: $status"
+  echo "Waiting for $service_name to become healthy"
+  echo "$tries_left attempts left. current status: $status"
   until [ "$status" = '"healthy"' ]  || [ "$tries_left" -eq 0 ]; do
-    echo "Waiting for $service_name to become healthy - $tries_left tries left"
-    status="$(docker inspect --format='{{json .State.Health.Status}}' $service_id)"
-    echo "current status of $service_name: $status"
-    tries_left=$((tries_left - 1))
     sleep 3
-  done
-  echo "$service_name is healthy"
-done
+    tries_left=$((tries_left - 1))
+    status="$(docker inspect --format='{{json .State.Health.Status}}' $service_id)"
+    echo "$tries_left attempts left. current status: $status"
 
-# todo: check if the container is running - something like this
+  done
+  echo "current status: $status"
+done
 
 echo "\n\nDOCKER CONTAINER STATUS:"
 docker ps
-
-
-echo "Server successfuly started!"
-
-# if you want to test this:
-# curl 10.0.0.20:8080/getDecks
-
