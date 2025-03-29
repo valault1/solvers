@@ -37,6 +37,8 @@ for service_id in $services; do
   echo "current status of $service_name: $status"
   until [ "$status" = '"healthy"' ]  || [ "$tries_left" -eq 0 ]; do
     echo "Waiting for $service_name to become healthy - $tries_left tries left"
+    status="$(docker inspect --format='{{json .State.Health.Status}}' $service_id)"
+    echo "current status of $service_name: $status"
     tries_left=$((tries_left - 1))
     sleep 3
   done
