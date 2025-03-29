@@ -31,7 +31,9 @@ services=$(docker compose ps -q)
 tries_left=10
 for service_id in $services; do
   service_name=$(docker inspect --format '{{.Name}}' $service_id)
-  until [ "$(docker inspect --format='{{json .State.Health.Status}}' $service_id)" == '"healthy"' ]; do
+  $status="$(docker inspect --format='{{json .State.Health.Status}}' $service_id)"
+  echo "current status: $status"
+  until [ $status== '"healthy"' ]; do
     echo "Waiting for $service_name to become healthy - $((tries_left--)) tries left"
     sleep 3
   done

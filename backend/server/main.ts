@@ -97,6 +97,6 @@ server.get("/health", async (req, res) => {
   res.send({ status: "healthy!" });
 });
 
-console.log("process.env.NODE_ENV:", process.env.NODE_ENV);
+console.log("process.env.NODE_ENV: ", process.env.NODE_ENV);
 
 startServer();
