@@ -26,6 +26,7 @@ import { QueensPlayerPage } from "domains/Queens/QueensPlayerPage";
 import { MTGDeckBuilderController } from "domains/MTG/MTGDeckBuilderController";
 import { Tasks } from "domains/Tasks/Tasks";
 import { Benchmarks } from "domains/Benchmarks/Benchmarks";
+import { SpellingBeeSolver } from "domains/SpellingBee/SpellingBeeSolver";
 
 type NavbarPage = {
   label: string;
@@ -51,11 +52,12 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "login", element: <Login />, isHidden: true },
 
   { label: "Wordle Solver", element: <WordleController /> },
+  { label: "Spelling Bee", element: <SpellingBeeSolver /> },
   { label: "MTG", element: <MTGDeckBuilderController />, isHidden: false },
   { label: "Queens Solver", element: <QueensSolver />, isHidden: false },
   { label: "Trap The Cat", element: <TrapTheCat /> },
-  { label: "Tasks", element: <Tasks /> },
-  { label: "Benchmarks", element: <Benchmarks /> },
+  { label: "Tasks", element: <Tasks />, isHidden: true },
+  { label: "Benchmarks", element: <Benchmarks />, isHidden: true },
   {
     label: "Rummikub Solver",
     route: "rummikub",
