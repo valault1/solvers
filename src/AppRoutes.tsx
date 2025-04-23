@@ -25,6 +25,7 @@ import { PATHS, PATHS_WITHOUT_SLASHES } from "shared/helpers/paths";
 import { QueensPlayerPage } from "domains/Queens/QueensPlayerPage";
 import { MTGDeckBuilderController } from "domains/MTG/MTGDeckBuilderController";
 import { Tasks } from "domains/Tasks/Tasks";
+import { Benchmarks } from "domains/Benchmarks/Benchmarks";
 
 type NavbarPage = {
   label: string;
@@ -54,6 +55,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Queens Solver", element: <QueensSolver />, isHidden: false },
   { label: "Trap The Cat", element: <TrapTheCat /> },
   { label: "Tasks", element: <Tasks /> },
+  { label: "Benchmarks", element: <Benchmarks /> },
   {
     label: "Rummikub Solver",
     route: "rummikub",
@@ -67,7 +69,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   {
     label: "Wordcounter",
     element: <Wordcounter />,
-    isHidden: false,
+    isHidden: true,
   },
   {
     label: "3rd World Farmer",

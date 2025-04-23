@@ -36,6 +36,13 @@ const startServer = () => {
   });
 };
 
+// this sets up middleware so we can catch all the errors
+const asyncHandler = (fn: any) => {
+  return (req: Request, res: Response, next: any) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+};
+
 // these endpoints should only serve on local;
 if (process.env.NODE_ENV !== "production") {
   server.get("/getTasks", async (req: Request, res: Response) => {
@@ -44,23 +51,29 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-server.get("/getDecks", async (req: Request, res: Response) => {
-  const { username } = req.query;
-  const decks = await getDecks(username as string);
-  res.send({ decks });
-});
+server.get(
+  "/getDecks",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { username } = req.query;
+    const decks = await getDecks(username as string);
+    res.send({ decks });
+  })
+);
 
-server.get("/test", async (req, res) => {
-  const { numOperations } = req.query;
-  const asNum = Number(numOperations);
-  const num = isNaN(asNum) ? 100 : asNum;
+server.get(
+  "/test",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { numOperations } = req.query;
+    const asNum = Number(numOperations);
+    const num = isNaN(asNum) ? 100 : asNum;
 
-  console.log(`got test for ${num} operations`);
+    console.log(`got test for ${num} operations`);
 
-  const result = await runTest(num);
+    const result = await runTest(num);
 
-  res.send(result);
-});
+    res.send(result);
+  })
+);
 
 server.get("/getCardsFromDecks", async (req, res) => {
   const { decks: rawDeckIds } = req.query;
@@ -97,5 +110,13 @@ server.get("/health", async (req, res) => {
 });
 
 console.log("process.env.NODE_ENV: ", process.env.NODE_ENV);
+
+// this is the final middleware, that logs and sends the error
+server.use((err: Error, req: Request, res: Response, next: any) => {
+  console.error(err.stack);
+  res.status(500).send({
+    message: err.message,
+  });
+});
 
 startServer();

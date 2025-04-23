@@ -1,15 +1,28 @@
 import { promises as fs } from "fs";
 
-const DIR = "./server/data/";
-
-const getFileName = (i: number) => `${DIR}benchmark-${i}.json`;
+const PROD_DIR = "./server/datads//";
+// when testing, this app is rudn from the main project folder
+const TEST_DIR = "./backend/server/datasd//";
 
 export const runTest = async (numOperations: number) => {
+  let isProd = true;
+
+  const getFileName = (i: number) =>
+    `${isProd ? PROD_DIR : TEST_DIR}/benchmark-${i}.json`;
+  const getBaseFile = () => `${isProd ? PROD_DIR : TEST_DIR}/benchmark.json`;
+
+  // attempt to read the file. If it doesn't exist, go to test.
+  try {
+    await fs.readFile(getBaseFile(), "utf-8");
+  } catch (e) {
+    isProd = false;
+  }
+
   const num = numOperations;
   const totalStartTime = new Date().getTime();
   let startTime = totalStartTime;
 
-  let json = JSON.parse(await fs.readFile(`${DIR}benchmark.json`, "utf-8"));
+  let json = JSON.parse(await fs.readFile(getBaseFile(), "utf-8"));
 
   // write test
   for (let i = 0; i < num; i++) {
@@ -21,6 +34,7 @@ export const runTest = async (numOperations: number) => {
   // read test
   for (let i = 0; i < num; i++) {
     const text = await fs.readFile(getFileName(i), "utf-8");
+    // parse the file, to help test performance
     const throwaway = JSON.parse(text);
   }
 
