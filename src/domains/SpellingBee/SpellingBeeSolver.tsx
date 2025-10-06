@@ -6,7 +6,7 @@ import { solveSpellingBee } from "domains/SpellingBee/solveSpellingBee";
 import React from "react";
 
 export const SpellingBeeSolver = () => {
-  const [letters, setLetters] = React.useState<string>("NFLBAIE");
+  const [letters, setLetters] = React.useState<string>("");
   const [solved, setSolved] = React.useState(false);
   const [allWords, setWords] = React.useState<string[]>([]);
   const [solutionWords, setSolutionWords] = React.useState<

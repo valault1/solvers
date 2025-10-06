@@ -47,16 +47,14 @@ export const HexagonFlower = ({ letters }: { letters: string }) => {
   return (
     <FlowerContainer>
       {/* Center hexagon */}
-      {firstLetter && (
-        <Hex
-          style={{
-            backgroundColor: "#e9ab17",
-            transform: "translate(-50%, -50%) rotate(90deg)",
-          }}
-        >
-          <div style={{ transform: "rotate(-90deg)" }}>{firstLetter} </div>
-        </Hex>
-      )}
+      <Hex
+        style={{
+          backgroundColor: "#e9ab17",
+          transform: "translate(-50%, -50%) rotate(90deg)",
+        }}
+      >
+        <div style={{ transform: "rotate(-90deg)" }}>{firstLetter} </div>
+      </Hex>
 
       {/* Surrounding 6 hexagons */}
       {letters
