@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  app:
+    build: ./app
+    container_name: valault_app
+    restart: always
+    ports:
+      - "80:3000"
+      - "443:3443"
+    volumes:
+      - ./data:/usr/src/app/data
+      - ./certs:/usr/src/app/certs

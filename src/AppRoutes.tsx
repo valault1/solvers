@@ -27,6 +27,7 @@ import { MTGDeckBuilderController } from "domains/MTG/MTGDeckBuilderController";
 import { Tasks } from "domains/Tasks/Tasks";
 import { Benchmarks } from "domains/Benchmarks/Benchmarks";
 import { SpellingBeeSolver } from "domains/SpellingBee/SpellingBeeSolver";
+import { TreasureHunt } from "domains/TreasureHunt/TreasureHunt";
 
 type NavbarPage = {
   label: string;
@@ -62,7 +63,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
     label: "Rummikub Solver",
     route: "rummikub",
     element: <RummikubController />,
-    isHidden: true,
+    isHidden: false,
   },
 
   { label: "Calculators", element: <CalculatorsView />, isHidden: true },
@@ -73,6 +74,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
     element: <Wordcounter />,
     isHidden: true,
   },
+  { label: "Treasure Hunt", element: <TreasureHunt />, isHidden: false },
   {
     label: "3rd World Farmer",
     route: "farmer",

@@ -28,3 +28,5 @@ node_modules_OLD
 ios
 
 venv
+server-venv
+__pycache__
