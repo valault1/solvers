@@ -1,8 +1,8 @@
 from flask import Flask, render_template
 from dataclasses import dataclass, asdict
 from typing import List
-
-from marketplace import get_marketplace_listings, get_full_listing
+from marketplace.marketplace import search_full_marketplace_listings
+from marketplace.full_listings import get_full_listing
 
 app = Flask(__name__)
 
@@ -10,9 +10,9 @@ app = Flask(__name__)
 
 # Route to render listings
 @app.route("/")
-def home():
+async def home():
     # Convert dataclasses to dicts for templates
-    listings = get_marketplace_listings("couch")
+    listings = await search_full_marketplace_listings("couch")
     listings_dict = [asdict(l) for l in listings]
     return render_template("listings.html", listings=listings_dict)
 

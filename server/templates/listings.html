@@ -11,8 +11,8 @@
     <h1>Marketplace Listings</h1>
     {% for listing in listings %}
         <div class="listing" display="flex" flex-direction="row">
-            <img src="{{ listing.image_url }}" alt="{{ listing.title }}">
-            {% for url in listing.listing_urls %}
+            <!-- <img src="{{ listing.image_url }}" alt="{{ listing.title }}"> -->
+            {% for url in listing.image_urls %}
                 <img src="{{ url }}" alt="{{ listing.title }}">
             {% endfor %}
             <h2>{{ listing.title }}</h2>

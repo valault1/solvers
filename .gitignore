@@ -30,3 +30,4 @@ ios
 venv
 server-venv
 __pycache__
+games/pyglet/env
