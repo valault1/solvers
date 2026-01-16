@@ -28,6 +28,7 @@ import { Tasks } from "domains/Tasks/Tasks";
 import { Benchmarks } from "domains/Benchmarks/Benchmarks";
 import { SpellingBeeSolver } from "domains/SpellingBee/SpellingBeeSolver";
 import { TreasureHunt } from "domains/TreasureHunt/TreasureHunt";
+import { FarmBot } from "domains/FarmBot/FarmBot";
 
 type NavbarPage = {
   label: string;
@@ -42,7 +43,7 @@ export function getRoute(label: string) {
 
 export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Queens Player", element: <QueensPlayerPage />, isHidden: false },
-
+  { label: "FarmBot", element: <FarmBot />, isHidden: true },
   { label: "Test", element: <QueensTestCenter />, isHidden: true },
   {
     label: "Daily Queens",

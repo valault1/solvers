@@ -72,6 +72,7 @@
   "devDependencies": {
     "@craco/craco": "^7.1.0",
     "@types/cors": "^2.8.17",
+    "@types/jest": "^29.5.3",
     "@types/node": "^22.13.13",
     "@types/react": "^17.0.39",
     "@types/react-helmet": "^6.1.11",

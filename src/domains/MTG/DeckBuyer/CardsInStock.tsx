@@ -4,14 +4,9 @@ import { Deck } from "./DeckBuyerController";
 import { StockList } from "./StockList";
 import { STORE_NAMES, useCardStocks } from "./hooks/useCardStocks";
 
-export function StoreStocks({ decks }: { decks: Deck[] }) {
-  const {
-    isLoading,
-    loadings,
-    stockInOrder,
-    numCardsRequested,
-    numCardsFoundInStock,
-  } = useCardStocks({ decks });
+export function CardsInStock({ decks }: { decks: Deck[] }) {
+  const { stockByStore, numCardsRequested, numCardsFoundInStock } =
+    useCardStocks({ decks });
 
   return (
     <Stack direction="column">
@@ -22,17 +17,17 @@ export function StoreStocks({ decks }: { decks: Deck[] }) {
           <Stack flex={1}>
             <StockList
               storeName={storeName}
-              cards={stockInOrder[index]?.cards || []}
-              isLoading={loadings[index]}
-              timeToQuery={stockInOrder[index]?.timeToQuery}
+              cards={stockByStore[index]?.cards || []}
+              // isLoading={loadings[index]}
+              timeToQuery={stockByStore[index]?.timeToQuery}
             />
           </Stack>
         ))}
         <Stack flex={1}>
           <StockList
             storeName="Cards not in stock at either"
-            cards={stockInOrder.at(-1)?.cards || []}
-            isLoading={isLoading}
+            cards={stockByStore.at(-1)?.cards || []}
+            // isLoading={isLoading}
           />
         </Stack>
       </Stack>

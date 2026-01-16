@@ -4,11 +4,13 @@ import { Deck } from "../DeckBuyerController";
 import { getPrice, Stock } from "../StockList";
 import { useQueries } from "./useQueries";
 import { BASE_URL } from "domains/MTG/constants";
+import { fetchGameGridStock } from "../data/fetchGameGridStock";
+import { fetchCardKingdomStock } from "../data/fetchCardKingdomStock";
 
 export const STORE_NAMES = ["Gamegrid", "Card Kingdom"] as const;
 // export const STORE_NAMES = ['Gamegrid'] as const;
 export type StoreName = (typeof STORE_NAMES)[number];
-type APICardInput = {
+export type APICardInput = {
   card: string;
   quantity: string;
 };
@@ -76,58 +78,36 @@ export const useCardStocks = ({ decks }: { decks: Deck[] }) => {
     });
   }, [uniqueCards]);
 
-  const { datas, loadings, errors, isLoading } = useQueries(queryInputs);
+  const [gamegridData, setGamegridData] = React.useState<any>([]);
+  const [cardKingdomData, setCardKingdomData] = React.useState<any>([]);
+  React.useEffect(() => {
+    fetchGameGridStock(uniqueCards).then((data) => setGamegridData(data));
+    fetchCardKingdomStock(uniqueCards).then((data) => setCardKingdomData(data));
+  }, []);
 
   // we want to see cards to buy in whatever order they are needed.
   const stockInOrder: StoreCardsList[] = React.useMemo(() => {
-    const orderedDatas: any[] = [];
-    storeNamesInOrder.forEach((storeName) => {
-      const data = datas.find((d) => d?.storeName === storeName);
-      if (data) orderedDatas.push(data);
-      else orderedDatas.push([]);
-    });
+    const orderedDatas: any[] = [gamegridData, cardKingdomData];
+    // storeNamesInOrder.forEach((storeName) => {
+    //   const data = datas.find((d) => d?.storeName === storeName);
+    //   if (data) orderedDatas.push(data);
+    //   else orderedDatas.push([]);
+    // });
 
     let cardsToProcessInit = uniqueCards.map((c) => c.card);
 
     let resultsInit: StoreCardsList[] = [];
 
-    // for (const data of orderedDatas) {
-    //   const stocks: Stock[] = data?.results || [];
-    //   console.log({ data });
-
-    //   // eslint-disable-next-line no-loop-func
-    //   const stocksToProcess = stocks.filter((c) =>
-    //     cardsToProcess.includes(c.name),
-    //   );
-    //   console.log({ stocksToProcess });
-    //   const cardsInStock = stocksToProcess.filter(
-    //     // eslint-disable-next-line no-loop-func
-    //     (c) => cardIsInStock(c) && cardsToProcess.includes(c.name),
-    //   );
-    //   console.log({ stocksToProcess });
-    //   cardsInStock.sort((a, b) => getPrice(b) - getPrice(a));
-    //   results.push({
-    //     storeName: data.storeName,
-    //     cards: cardsInStock,
-    //     timeToQuery: data.time,
-    //   });
-    //   const cardsOutOfStock = stocksToProcess.filter((c) => !cardIsInStock(c));
-    //   console.log({ cardsOutOfStock, cardsToProcess });
-    //   cardsToProcess = cardsOutOfStock.map((c) => c.name);
-    // }
     const [resultsAcc, cardsToProcessAcc] = orderedDatas.reduce(
       ([results, cardsToProcess], data) => {
         const stocks: Stock[] = data?.results || [];
-        console.log({ data });
 
         const stocksToProcess = stocks.filter((c) =>
           cardsToProcess.includes(c.name)
         );
-        console.log({ stocksToProcess });
         const cardsInStock = stocksToProcess.filter(
           (c) => cardIsInStock(c) && cardsToProcess.includes(c.name)
         );
-        console.log({ stocksToProcess });
         cardsInStock.sort((a, b) => getPrice(b) - getPrice(a));
         const newResults = [
           ...results,
@@ -140,7 +120,6 @@ export const useCardStocks = ({ decks }: { decks: Deck[] }) => {
         const cardsOutOfStock = stocksToProcess.filter(
           (c) => !cardIsInStock(c)
         );
-        console.log({ cardsOutOfStock, cardsToProcess });
         const newCardsToProcess = cardsOutOfStock.map((c) => c.name);
         return [newResults, newCardsToProcess];
       },
@@ -163,7 +142,7 @@ export const useCardStocks = ({ decks }: { decks: Deck[] }) => {
     });
 
     return resultsAcc;
-  }, [storeNamesInOrder, datas, uniqueCards]);
+  }, [storeNamesInOrder, gamegridData, cardKingdomData, uniqueCards]);
 
   const numCardsRequested = React.useMemo(() => {
     return uniqueCards.reduce(
@@ -172,7 +151,6 @@ export const useCardStocks = ({ decks }: { decks: Deck[] }) => {
     );
   }, [uniqueCards]);
   const numCardsFoundInStock = React.useMemo(() => {
-    console.log({ stockInOrder });
     return stockInOrder.reduce((acc, result) => {
       if (result.storeName === "Out of Stock") return acc;
       return acc + numberOfCards(result.cards);
@@ -187,9 +165,7 @@ export const useCardStocks = ({ decks }: { decks: Deck[] }) => {
   }, [stockInOrder]);
 
   return {
-    isLoading,
-    loadings,
-    stockInOrder,
+    stockByStore: stockInOrder,
     numCardsRequested,
     numCardsFoundInStock,
     cardsWithWrongNames,

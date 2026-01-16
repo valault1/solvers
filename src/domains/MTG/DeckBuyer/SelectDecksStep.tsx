@@ -2,8 +2,9 @@ import { Button, Card, Checkbox, Chip, Stack, TextField } from "@mui/material";
 import React, { useEffect } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 import { Deck } from "./DeckBuyerController";
-import { BASE_URL } from "domains/MTG/constants";
+import { CORS_PROXY_URL } from "domains/MTG/constants";
 import { PrimaryButton } from "components/Form.elements";
+import { fetchMoxfieldDecks } from "./data/fetchMoxfieldDecks";
 
 const USERNAME_STORAGE_KEY = "moxfield_username";
 
@@ -18,21 +19,11 @@ function SelectDecksStep({
     storedValue: storedUsername,
     updateStoredValue: updateStoredUsername,
   } = useLocalStorage(USERNAME_STORAGE_KEY, "");
-
   const [username, setUsername] = React.useState<string>("");
-  console.log({ username, storedUsername });
   const [decks, setDecks] = React.useState<Deck[]>([]);
-  const fetchDecks = React.useCallback(() => {
-    fetch(`${BASE_URL}getDecks?username=${storedUsername}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setDecks(data?.decks || []);
-      })
-      .catch((e) => {
-        console.log(`error: ${e}`);
-      });
+  const fetchDecks = React.useCallback(async () => {
+    const decks = await fetchMoxfieldDecks(storedUsername);
+    setDecks(decks);
   }, [storedUsername]);
 
   useEffect(() => {
@@ -48,6 +39,9 @@ function SelectDecksStep({
 
   return (
     <>
+      <div>
+        see decks on <a href="https://moxfield.com">Moxfield</a>
+      </div>
       {!storedUsername && (
         <>
           <div>Enter your Moxfield username to see your decks</div>
@@ -61,7 +55,6 @@ function SelectDecksStep({
             <Button
               variant="contained"
               onClick={() => {
-                console.log("updating username...");
                 updateStoredUsername(username);
               }}
             >
