@@ -6,7 +6,7 @@ import { theme } from "./components/theme/theme";
 
 export const AppLayout = () => {
     const location = useLocation();
-    const isPrizeSelection = location.pathname.toLowerCase().includes('/bryce');
+    const isPrizeSelection = location.pathname.toLowerCase().includes('/brexipo');
 
     if (isPrizeSelection) {
         return (

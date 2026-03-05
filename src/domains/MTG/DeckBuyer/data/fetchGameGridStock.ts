@@ -2,13 +2,13 @@ import { CORS_PROXY_URL } from "domains/MTG/constants";
 import { APICardInput } from "../hooks/useCardStocks";
 
 // takes in results as the current results and cards as the original request
-const addNumRequested = (results, cards) => {
-  const dict = cards.reduce((acc, card) => {
+const addNumRequested = (results: any[], cards: APICardInput[]) => {
+  const dict = cards.reduce((acc: any, card: APICardInput) => {
     acc[card.card] = card.quantity;
     return acc;
   }, {});
 
-  const newResults = results.map((r) => ({
+  const newResults = results.map((r: any) => ({
     ...r,
     numRequested: Number(dict[r.name]),
   }));
@@ -27,10 +27,10 @@ export const fetchGameGridStock = async (cards: APICardInput[]) => {
       method: "POST",
     }
   );
-  const responseObj = await response.json();
-  const getQuantities = (cardResult) => {
+  const responseObj: any = await response.json();
+  const getQuantities = (cardResult: any) => {
     const { products } = cardResult;
-    const quantities = products.map((p) => ({
+    const quantities = (products || []).map((p: any) => ({
       setName: p.setName,
       variation: p.variants[0].title,
       maxQtyAvailable: Number(p.variants[0].quantity),
@@ -38,15 +38,15 @@ export const fetchGameGridStock = async (cards: APICardInput[]) => {
     }));
     return quantities;
   };
-  let results = responseObj.map((r) => ({
+  let results = (responseObj || []).map((r: any) => ({
     name: r.searchName,
     ...(r.found === 0 && !r.imageUrl ? { notFound: true } : {}),
     quantities: getQuantities(r),
   }));
 
   results = [
-    ...results.filter((r) => !r.notFound),
-    ...results.filter((r) => r.notFound),
+    ...results.filter((r: any) => !r.notFound),
+    ...results.filter((r: any) => r.notFound),
   ];
 
   results = addNumRequested(results, cards);

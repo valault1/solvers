@@ -2,7 +2,7 @@ import { CORS_PROXY_URL } from "domains/MTG/constants";
 import { APICardInput } from "../hooks/useCardStocks";
 
 // calls getCardKingdomStock in parallel with one card each
-export const fetchCardKingdomStock = async (cards, numChunks = 12) => {
+export const fetchCardKingdomStock = async (cards: APICardInput[], numChunks = 12) => {
   console.log("running in parallel");
 
   const chunkSize = Math.ceil(cards.length / numChunks);
@@ -10,15 +10,15 @@ export const fetchCardKingdomStock = async (cards, numChunks = 12) => {
     cards.slice(i * chunkSize, (i + 1) * chunkSize)
   );
 
-  const promises = chunks.map((c) => getCardKingdomStock(c));
+  const promises = chunks.map((c: APICardInput[]) => getCardKingdomStock(c));
   const resolvedPromises = await Promise.all(promises);
 
-  const results = resolvedPromises.reduce((accum, p) => {
+  const results = resolvedPromises.reduce((accum: any[], p: any) => {
     accum.push(...p.results);
     return accum;
   }, []);
 
-  resolvedPromises.forEach((r) => {
+  resolvedPromises.forEach((r: any) => {
     const { list, results } = r.rawResponse;
   });
 
@@ -31,13 +31,13 @@ export const fetchCardKingdomStock = async (cards, numChunks = 12) => {
 };
 
 // takes in results as the current results and cards as the original request
-const addNumRequested = (results, cards) => {
-  const dict = cards.reduce((acc, card) => {
+const addNumRequested = (results: any[], cards: APICardInput[]) => {
+  const dict = cards.reduce((acc: any, card: APICardInput) => {
     acc[card.card] = card.quantity;
     return acc;
   }, {});
 
-  const newResults = results.map((r) => ({
+  const newResults = results.map((r: any) => ({
     ...r,
     numRequested: Number(dict[r.name]),
   }));
@@ -47,8 +47,9 @@ const addNumRequested = (results, cards) => {
 
 export const getCardKingdomStock = async (cards: APICardInput[]) => {
   const cardData = cards.map((c) => `${c.quantity} ${c.card}`).join("\r\n");
+  let response: Response | undefined;
   try {
-    const response = await fetch(`https://www.cardkingdom.com/api/builder`, {
+    response = await fetch(`https://www.cardkingdom.com/api/builder`, {
       headers: {
         accept: "application/json, text/plain, */*",
         "accept-language": "en-US,en;q=0.9",
@@ -90,55 +91,55 @@ export const getCardKingdomStock = async (cards: APICardInput[]) => {
     return { results: [], rawResponse: {} };
   }
 
-  let responseObj = {};
+  let responseObj: any = {};
   try {
-    responseObj = await response.json();
+    responseObj = await response?.json();
   } catch (e) {
     console.log("ERROR on card: ");
     console.log({ cards, e, response });
   }
-  const getQuantities = (cardResult) => {
+  const getQuantities = (cardResult: any) => {
     // each result is an array of editions, each with style_qty
-    const variations = cardResult.map((r) => ({
+    const variations = cardResult.map((r: any) => ({
       style_qty: r.style_qty,
       name: r.edition.name,
       variation: r.variation,
     }));
-    let quantities = variations.flatMap((v) =>
-      v.style_qty.map((s) => ({
+    let quantities: any[] = variations.flatMap((v: any) =>
+      v.style_qty.map((s: any) => ({
         setName: v.name,
         variation: v.variation,
         maxQtyAvailable: Number(s.maxQtyAvailable),
         price: Number(s.price),
       }))
     );
-    quantities = quantities.filter((q) => q.maxQtyAvailable > 0);
-    quantities.sort((a, b) => Number(a.price) - Number(b.price));
+    quantities = quantities.filter((q: any) => q.maxQtyAvailable > 0);
+    quantities.sort((a: any, b: any) => Number(a.price) - Number(b.price));
     return quantities;
   };
 
-  const foundCards = responseObj.results.map((r, idx) => ({
+  const foundCards = (responseObj?.results || []).map((r: any, idx: number) => ({
     // this logic looks strange, but we have to do this because the title returned
     // has to match the name we provided. Occasionally, like with Lim-Dûl's Vault,
     // the name returned of the card is different (Lim-Dul's Vault),
     // and it doesn't show in our list because it doesn't match the name we provided.
-    name: responseObj.list[idx].title,
+    name: responseObj?.list?.[idx]?.title,
     quantities: getQuantities(r),
   }));
-  const notFoundCards = responseObj.not_found
-    .map((n) => {
+  const notFoundCards = (responseObj?.not_found || [])
+    .map((n: any) => {
       // some cards in this not_found list are... actually found...
       // if so, don't add them again
-      const cardIsAlreadyFound = !!foundCards.find((f) => f.name === n);
+      const cardIsAlreadyFound = !!foundCards.find((f: any) => f.name === n);
       return cardIsAlreadyFound
         ? undefined
         : {
-            name: n,
-            notFound: true,
-            quantities: [],
-          };
+          name: n,
+          notFound: true,
+          quantities: [] as any[],
+        };
     })
-    .filter((a) => !!a);
+    .filter((a: any) => !!a);
 
   let results = [...foundCards, ...notFoundCards];
 

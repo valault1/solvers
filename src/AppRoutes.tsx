@@ -108,7 +108,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   },
   {
     label: "Prize Selection",
-    route: "bryce",
+    route: "brexipo",
     element: <PrizeSelectionPage />,
     isHidden: true,
   },
