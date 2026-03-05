@@ -113,14 +113,13 @@ export const QueensPlayerV2 = () => {
       //This bottom padding stops mobile from cutting off right below the text
       paddingBottom={40}
     >
-      <h1>Play Queens!</h1>
+
       <Card
         style={{ padding: INSTRUCTIONS_PADDING, maxWidth: INSTRUCTIONS_WIDTH }}
       >
         These boards are procedurally generated. They are guaranteed to be
         solvable without guessing!
       </Card>
-      {/* <LevelsProgress boardSize={boardSize} width={INSTRUCTIONS_WIDTH} /> */}
       <BoardSizeSelect onChange={setBoardSize} value={boardSize} />
       {!hasWon ? (
         <TimerDisplay startTime={startTime} />

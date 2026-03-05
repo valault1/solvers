@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Marketplace Listings</title>
+    <style>
+        .listing { border: 1px solid #ccc; padding: 10px; margin: 10px; width: 250px; display: inline-block; vertical-align: top; }
+        img { width: 100%; }
+    </style>
+</head>
+<body>
+    <h1>Marketplace Listings</h1>
+    {% for listing in listings %}
+        <div class="listing" display="flex" flex-direction="row">
+            <!-- <img src="{{ listing.image_url }}" alt="{{ listing.title }}"> -->
+            {% for url in listing.image_urls %}
+                <img src="{{ url }}" alt="{{ listing.title }}">
+            {% endfor %}
+            <h2>{{ listing.title }}</h2>
+            <p><strong>Price:</strong> {{ listing.formatted_price }}</p>
+            <a href="{{ listing.listing_url }}" target="_blank">View Listing</a>
+            <p>{{ listing.description }}</p>
+        </div>
+    {% endfor %}
+</body>
+</html>

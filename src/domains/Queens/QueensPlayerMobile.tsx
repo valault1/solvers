@@ -23,6 +23,7 @@ import { BoardSizeSelect } from "domains/Queens/components/BoardSizeSelect";
 import { LevelNavigation } from "domains/Queens/LevelNavigation";
 import { TimerDisplay } from "domains/Queens/components/TimerDisplay";
 import { FinishedAllBoards } from "domains/Queens/components/FinishedAllBoards";
+import DismissableBanner from "components/DismissibleBanner";
 
 const DEFAULT_SEED_INDEX = 0;
 export const DEFAULT_SIDE_LENGTH = 8;
@@ -151,6 +152,7 @@ export const QueensPlayerMobile = () => {
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
         ></meta>
       </Helmet>
+      
       <MainContainer
         gap="24px"
         style={{
@@ -159,6 +161,9 @@ export const QueensPlayerMobile = () => {
           //backgroundColor: "lightblue", // Optional: Just to see the div
         }}
       >
+         
+        
+          
         <Stack width="100%" display="flex" alignItems="center">
           <Stack
             direction="row"

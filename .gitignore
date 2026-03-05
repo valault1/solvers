@@ -26,3 +26,8 @@ node_modules
 node_modules_OLD
 .firebase
 ios
+
+venv
+server-venv
+__pycache__
+games/pyglet/env

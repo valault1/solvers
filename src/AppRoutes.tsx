@@ -26,6 +26,10 @@ import { QueensPlayerPage } from "domains/Queens/QueensPlayerPage";
 import { MTGDeckBuilderController } from "domains/MTG/MTGDeckBuilderController";
 import { Tasks } from "domains/Tasks/Tasks";
 import { PrizeSelectionPage } from "domains/PrizeSelection/PrizeSelectionPage";
+import { Benchmarks } from "domains/Benchmarks/Benchmarks";
+import { SpellingBeeSolver } from "domains/SpellingBee/SpellingBeeSolver";
+import { TreasureHunt } from "domains/TreasureHunt/TreasureHunt";
+import { FarmBot } from "domains/FarmBot/FarmBot";
 
 type NavbarPage = {
   label: string;
@@ -40,7 +44,7 @@ export function getRoute(label: string) {
 
 export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "Queens Player", element: <QueensPlayerPage />, isHidden: false },
-
+  { label: "FarmBot", element: <FarmBot />, isHidden: true },
   { label: "Test", element: <QueensTestCenter />, isHidden: true },
   {
     label: "Daily Queens",
@@ -51,15 +55,17 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   { label: "login", element: <Login />, isHidden: true },
 
   { label: "Wordle Solver", element: <WordleController /> },
+  { label: "Spelling Bee", element: <SpellingBeeSolver /> },
   { label: "MTG", element: <MTGDeckBuilderController />, isHidden: false },
   { label: "Queens Solver", element: <QueensSolver />, isHidden: false },
   { label: "Trap The Cat", element: <TrapTheCat /> },
-  { label: "Tasks", element: <Tasks /> },
+  { label: "Tasks", element: <Tasks />, isHidden: true },
+  { label: "Benchmarks", element: <Benchmarks />, isHidden: true },
   {
     label: "Rummikub Solver",
     route: "rummikub",
     element: <RummikubController />,
-    isHidden: true,
+    isHidden: false,
   },
 
   { label: "Calculators", element: <CalculatorsView />, isHidden: true },
@@ -68,8 +74,9 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   {
     label: "Wordcounter",
     element: <Wordcounter />,
-    isHidden: false,
+    isHidden: true,
   },
+  { label: "Treasure Hunt", element: <TreasureHunt />, isHidden: false },
   {
     label: "3rd World Farmer",
     route: "farmer",

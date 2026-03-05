@@ -8,19 +8,19 @@ import {
 import { PrimaryButton, TextInput } from "components/Form.elements";
 import { MainContainer } from "components/MainPage.elements";
 import { BASE_URL } from "domains/MTG/constants";
-import { useQuery } from "../../hooks/useQuery";
+import { useQuery } from "shared/hooks/useQuery";
 
 import * as React from "react";
 
 //const NUM_OPERATIONS = 1000000000; //  1,000,000,000 operations took .5 seconds on my m1, and 21 seconds on the pixel. then 11 seconds on the iphone 15, and 20 s on iphone 8
-const NUM_OPERATIONS = 10000; // interestingly, 100,000,000 took .295 s on the pixel... and 1.3 seconds on the iphone 15 (on ish shell), and 2.25 s on the iphone 8
+const NUM_OPERATIONS = 1000; // interestingly, 100,000,000 took .295 s on the pixel... and 1.3 seconds on the iphone 15 (on ish shell), and 2.25 s on the iphone 8
 export const Tasks: React.VFC = () => {
   const [numOperations, setnumOperations] = React.useState(
     NUM_OPERATIONS.toString()
   );
   const [baseUrl, setBaseUrl] = React.useState(BASE_URL);
   const url = React.useMemo(
-    () => `${baseUrl}/test?numOperations=${numOperations}`,
+    () => `${baseUrl}test?numOperations=${numOperations}`,
     [numOperations, baseUrl]
   );
   const { data, loading, error, queryTime, runQuery } = useQuery({

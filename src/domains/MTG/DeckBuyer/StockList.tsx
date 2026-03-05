@@ -93,7 +93,6 @@ export function StockList({
       })
       .join("\n");
     navigator.clipboard.writeText(text);
-    console.log(process.env.NODE_ENV);
   }, [cardsInStock]);
 
   const title = React.useMemo(() => {

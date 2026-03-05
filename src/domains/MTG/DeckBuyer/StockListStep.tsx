@@ -8,9 +8,10 @@ import {
 import React, { useState } from "react";
 import { Deck } from "./DeckBuyerController";
 import { CollapsibleCard } from "./CollapsibleCard";
-import { StoreStocks } from "./StoreStocks";
+import { CardsInStock } from "./CardsInStock";
 import { BASE_URL } from "domains/MTG/constants";
 import { PrimaryButton } from "components/Form.elements";
+import { fetchMoxfieldCardsFromDecks } from "./data/fetchMoxfieldCardsFromDecks";
 
 const basicLands = ["Plains", "Island", "Swamp", "Mountain", "Forest"].map(
   (l) => l.toLowerCase()
@@ -81,15 +82,12 @@ export const StockListStep = ({
   React.useEffect(() => {
     // query the cards from each deck
     setIsLoading(true);
-    fetch(
-      `${BASE_URL}getCardsFromDecks?decks=${selectedDecks.map((d) => d.id)}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log({ deckData: data });
-        setFullDecks(data?.decks || []);
+    fetchMoxfieldCardsFromDecks(selectedDecks.map((d) => d.id)).then(
+      (decks) => {
+        setFullDecks(decks);
         setIsLoading(false);
-      });
+      }
+    );
   }, [selectedDecks]);
   return (
     <Stack direction="column" spacing={2}>
@@ -134,7 +132,8 @@ export const StockListStep = ({
               ))}
         </>
       )}
-      {decksWithCards.length >= 1 && <StoreStocks decks={decksWithCards} />}
+
+      {decksWithCards.length >= 1 && <CardsInStock decks={decksWithCards} />}
     </Stack>
   );
 };
