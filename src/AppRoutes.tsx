@@ -25,6 +25,7 @@ import { PATHS, PATHS_WITHOUT_SLASHES } from "shared/helpers/paths";
 import { QueensPlayerPage } from "domains/Queens/QueensPlayerPage";
 import { MTGDeckBuilderController } from "domains/MTG/MTGDeckBuilderController";
 import { Tasks } from "domains/Tasks/Tasks";
+import { PrizeSelectionPage } from "domains/PrizeSelection/PrizeSelectionPage";
 
 type NavbarPage = {
   label: string;
@@ -96,6 +97,12 @@ export const NAVBAR_PAGES: NavbarPage[] = [
   {
     label: "Dyson Sphere",
     element: <DysonSphereCalculator />,
+    isHidden: true,
+  },
+  {
+    label: "Prize Selection",
+    route: "bryce",
+    element: <PrizeSelectionPage />,
     isHidden: true,
   },
 ];

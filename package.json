@@ -32,16 +32,16 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "dev:fe": "PORT=3007 craco start",
+    "dev:fe": "PORT=3007 react-scripts start",
     "dev:be": "nodemon --watch ./backend/server -e ts,tsx --exec 'npx tsx ./backend/server/main.ts'",
     "be": "NODE_ENV=production npx tsx ./backend/server/main.ts",
-    "start": "npm run dev:fe & npm run dev:be",
-    "local": "PORT=3007 craco start & npm run local:be",
+    "start": "npm run dev:fe",
+    "local": "PORT=3007 react-scripts start & npm run local:be",
     "build": "webpack --mode=production --node-env=production",
     "build:analyze2": "webpack --mode=production --node-env=production --profile --json > stats.json",
     "analyze": "node ./analyzeBundle.js",
-    "test": "craco test",
-    "eject": "craco eject",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
@@ -69,7 +69,6 @@
     ]
   },
   "devDependencies": {
-    "@craco/craco": "^7.1.0",
     "@types/cors": "^2.8.17",
     "@types/node": "^22.13.13",
     "@types/react": "^17.0.39",

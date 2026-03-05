@@ -8,7 +8,7 @@ import {
 import { PrimaryButton, TextInput } from "components/Form.elements";
 import { MainContainer } from "components/MainPage.elements";
 import { BASE_URL } from "domains/MTG/constants";
-import { useQuery } from "hooks/useQuery";
+import { useQuery } from "../../hooks/useQuery";
 
 import * as React from "react";
 
