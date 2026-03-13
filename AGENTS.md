@@ -12,3 +12,10 @@ When adding a new feature or page to this project, please follow these steps:
 
 3. **Build the Page**: 
    Begin building your page component. Most pages should use `MainContainer` as their base wrapper to ensure the content is properly centered and standardized.
+
+## Type and Syntax Checking
+
+When checking a file for TypeScript errors or syntax issues, **DO NOT run `npx tsc` or `npx tsc --noEmit`**, as this can freeze the development machine when `npm start` is already running.
+
+Instead, always prefer checking the specific file you are working on using ESLint:
+`npx eslint "path/to/file.tsx"`
