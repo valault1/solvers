@@ -30,6 +30,7 @@ import { Benchmarks } from "domains/Benchmarks/Benchmarks";
 import { SpellingBeeSolver } from "domains/SpellingBee/SpellingBeeSolver";
 import { TreasureHunt } from "domains/TreasureHunt/TreasureHunt";
 import { FarmBot } from "domains/FarmBot/FarmBot";
+import { Pokopia } from "domains/Pokopia/Pokopia";
 
 type NavbarPage = {
   label: string;
@@ -112,6 +113,7 @@ export const NAVBAR_PAGES: NavbarPage[] = [
     element: <PrizeSelectionPage />,
     isHidden: true,
   },
+  { label: "Pokopia", element: <Pokopia />, isHidden: false },
 ];
 export const AppRoutes: React.FC = () => {
   return (
