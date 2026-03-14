@@ -23,8 +23,9 @@ export const pokopiaData: Pokemon[] = [
         "id": 7,
         "name": "Squirtle",
         "types": ["Water"],
-        "specialties": ["Water Gun"],
+        "specialties": ["Litter", "Generate"],
         "idealHabitat": "Pond",
+        "itemDrop": "Bubbles",
         "favorites": ["Seaweed", "Fresh Spring Stream"],
         "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png"
     },

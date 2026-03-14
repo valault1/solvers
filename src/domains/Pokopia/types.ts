@@ -1,5 +1,6 @@
 export type Specialty = "Plant" | "Burn" | "Water Gun" | "Charge" | "Litter" | "Recycle" | "Legendary" | "Smash" | "Sleep" | string;
 
+export const CARD_HEIGHT = 190;
 export type Pokemon = {
     id: number;
     name: string;

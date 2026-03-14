@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "@emotion/styled";
-import { Pokemon, DragItem } from "../types";
+import { Pokemon, DragItem, CARD_HEIGHT } from "../types";
 import { Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 const TileContainer = styled.div<{ isDragging: boolean; disabled?: boolean }>`
   width: 100%;
-  height: 100%;
+  height: ${CARD_HEIGHT}px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -65,10 +65,17 @@ const TypeBadge = styled.span<{ type: string }>`
   text-transform: uppercase;
 `;
 
-const SpecialtyLabel = styled.div`
+const SpecialtiesWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+  width: 100%;
+`;
+
+const SpecialtyBadge = styled.div`
   font-size: 11px;
   color: #ccc;
-  margin-top: 6px;
   text-align: center;
   background: rgba(0, 0, 0, 0.3);
   padding: 2px 6px;
@@ -78,6 +85,10 @@ const SpecialtyLabel = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const InfoLabel = styled.div`
@@ -178,17 +189,21 @@ export const PokemonTile: React.FC<Props> = ({ pokemon, source, disabled = false
                 placement="top"
                 arrow
             >
-                <SpecialtyLabel>
+                <SpecialtiesWrapper>
                     {(() => {
                         const specs = pokemon.specialties || [(pokemon as any).specialty].filter(Boolean);
                         const list = specs.length > 0 ? specs : ((pokemon as any).abilities || []);
                         const drop = pokemon.itemDrop || ((pokemon as any).drops && (pokemon as any).drops[0]);
 
-                        return list.map((s: any, i: number) => {
+                        const slots = [0, 1];
+                        return slots.map((i) => {
+                            const s = list[i];
+                            if (!s) {
+                                return <SpecialtyBadge key={`empty-${i}`} style={{ visibility: "hidden" }} />;
+                            }
                             const isLitter = s === "Litter" || s === "Litter Specialty";
                             return (
-                                <React.Fragment key={i}>
-                                    {i > 0 && ", "}
+                                <SpecialtyBadge key={i}>
                                     {isLitter && drop ? (
                                         <span>
                                             Litter (<span style={{ color: "#F7D02C" }}>{drop}</span>)
@@ -196,11 +211,11 @@ export const PokemonTile: React.FC<Props> = ({ pokemon, source, disabled = false
                                     ) : (
                                         <span>{s}</span>
                                     )}
-                                </React.Fragment>
+                                </SpecialtyBadge>
                             );
                         });
                     })()}
-                </SpecialtyLabel>
+                </SpecialtiesWrapper>
             </Tooltip>
             <InfoLabel style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
                 <strong>Habitat:</strong> {pokemon.idealHabitat || "Unknown"}

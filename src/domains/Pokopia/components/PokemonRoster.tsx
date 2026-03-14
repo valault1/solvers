@@ -5,7 +5,7 @@ import { pokopiaData } from "../data/pokopia_data";
 import { PokemonTile } from "./PokemonTile";
 
 const RosterSidebar = styled.div`
-  width: 250px;
+  width: 360px;
   background: rgba(0, 0, 0, 0.4);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
@@ -25,7 +25,7 @@ const RosterHeader = styled.div`
 
 const PokemonGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
   padding: 16px;
   overflow-y: auto;

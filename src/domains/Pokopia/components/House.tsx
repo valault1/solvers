@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled";
-import { House, DragItem, Pokemon } from "../types";
+import { House, DragItem, Pokemon, CARD_HEIGHT } from "../types";
 import { PokemonTile } from "./PokemonTile";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -30,7 +30,6 @@ const SlotsGrid = styled.div`
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: 8px;
-  min-height: 260px;
 `;
 
 const SlotContainer = styled.div<{ isOver: boolean }>`
@@ -45,6 +44,7 @@ const SlotContainer = styled.div<{ isOver: boolean }>`
   justify-content: center;
   transition: all 0.2s;
   position: relative;
+  height: ${CARD_HEIGHT}px;
 `;
 
 const EmptySlotContent = styled.div`
